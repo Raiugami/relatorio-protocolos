@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório de Protocolos</title>
+  <style>
+    :root {
+      --ink: #3f2940;
+      --muted: #866f82;
+      --line: #f0dce9;
+      --surface: #ffffff;
+      --canvas: #fff7fb;
+      --brand: #d94f91;
+      --brand-dark: #b93876;
+      --green: #23805d;
+      --green-bg: #e8f7ef;
+      --yellow: #a56d18;
+      --yellow-bg: #fff4d9;
+      --red: #c84d60;
+      --red-bg: #fdebed;
+      --shadow: 0 12px 28px rgba(150, 67, 112, .10);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--canvas);
+      font: 15px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .app { max-width: 1240px; margin: 0 auto; padding: 30px 20px 48px; }
+    .topbar { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; margin-bottom: 26px; }
+    h1 { margin: 0 0 4px; font-size: clamp(26px, 4vw, 36px); letter-spacing: -.03em; }
+    h2 { margin: 0; font-size: 20px; }
+    .subtitle { color: var(--muted); margin: 0; }
+    .actions { display: flex; gap: 9px; flex-wrap: wrap; justify-content: flex-end; }
+    .btn {
+      border: 1px solid var(--line); border-radius: 9px; background: var(--surface);
+      color: var(--ink); padding: 10px 14px; font-weight: 650;
+    }
+    .btn:hover { border-color: #e6b6d0; background: #fffafd; }
+    .btn.primary { color: #fff; border-color: var(--brand); background: var(--brand); }
+    .btn.primary:hover { background: var(--brand-dark); }
+    .btn.danger { color: var(--red); }
+    .summary { display: grid; grid-template-columns: repeat(10, 1fr); gap: 14px; margin-bottom: 22px; }
+    .card { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+    .metric { padding: 18px; }
+    .metric-label { color: var(--muted); font-size: 13px; font-weight: 650; }
+    .metric-value { margin-top: 7px; font-size: 28px; font-weight: 760; letter-spacing: -.03em; }
+    .metric-note { color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+    .calendar-card { padding: 20px; }
+    .calendar-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 17px; }
+    .month-control { display: flex; align-items: center; gap: 9px; }
+    .icon-btn { border: 1px solid var(--line); background: #fff; width: 36px; height: 36px; border-radius: 8px; font-size: 19px; color: var(--brand); }
+    .month-label { min-width: 160px; text-align: center; font-weight: 750; text-transform: capitalize; }
+    .calendar { display: grid; grid-template-columns: repeat(7, minmax(78px, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+    .weekday, .day { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .weekday { padding: 9px 7px; background: #fff0f7; color: var(--muted); text-align: center; font-size: 12px; font-weight: 750; text-transform: uppercase; }
+    .day { min-height: 102px; padding: 9px; background: #fff; position: relative; transition: transform .12s, box-shadow .12s; }
+    .day.weekend { background: #faf7f9; color: #c5b6c1; cursor: not-allowed; }
+    .day.weekend .day-caption { color: #c5b6c1; }
+    .day.empty { background: #fffafd; }
+    .day:not(.empty):hover { z-index: 1; transform: translateY(-1px); box-shadow: inset 0 0 0 2px #f0a9ca; }
+    .day.today .day-number { color: var(--brand); font-weight: 800; }
+    .day-number { color: var(--muted); font-weight: 650; }
+    .day-value { display: block; margin-top: 17px; font-size: 22px; font-weight: 780; }
+    .day-caption { color: var(--muted); font-size: 11px; }
+    .day.status-green { background: var(--green-bg); }
+    .day.status-yellow { background: var(--yellow-bg); }
+    .day.status-red { background: var(--red-bg); }
+    .status-dot { position: absolute; top: 11px; right: 10px; width: 9px; height: 9px; border-radius: 50%; }
+    .status-green .status-dot { background: var(--green); }
+    .status-yellow .status-dot { background: #e2a400; }
+    .status-red .status-dot { background: var(--red); }
+    .legend { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 16px; color: var(--muted); font-size: 12px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+    .legend .green { background: var(--green-bg); border: 1px solid #a7dfc6; }
+    .legend .yellow { background: var(--yellow-bg); border: 1px solid #f2d786; }
+    .legend .red { background: var(--red-bg); border: 1px solid #efb3b1; }
+    .chart-card { padding: 20px; margin-top: 20px; }
+    .chart { display: flex; align-items: flex-end; gap: 5px; height: 175px; padding: 18px 4px 0; border-bottom: 1px solid var(--line); }
+    .bar-group { flex: 1; min-width: 7px; height: 100%; display: flex; align-items: flex-end; justify-content: center; gap: 2px; position: relative; }
+    .bar { width: 42%; min-height: 2px; border-radius: 4px 4px 0 0; position: relative; }
+    .bar.received { background: #f4b4d2; }
+    .bar.done { background: var(--brand); }
+    .bar-label { position: absolute; bottom: -20px; color: var(--muted); font-size: 10px; }
+    .chart-legend { display: flex; gap: 14px; margin-top: 26px; color: var(--muted); font-size: 12px; }
+    .chart-legend span::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 5px; background: #f4b4d2; }
+    .chart-legend span:last-child::before { background: var(--brand); }
+    .alert { border-radius: 9px; padding: 10px; font-size: 12px; background: #fff4d9; color: var(--yellow); }
+    textarea { width: 100%; min-height: 72px; resize: vertical; border: 1px solid #d0d5dd; border-radius: 8px; padding: 10px 11px; color: var(--ink); }
+    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+    .filter-btn { border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--muted); padding: 7px 11px; font-size: 12px; font-weight: 700; }
+    .filter-btn.active { color: var(--brand-dark); border-color: var(--brand); background: #fff0f7; }
+    .day.status-off { background: #f4f0f3; color: #a998a5; cursor: not-allowed; }
+    .day.status-off .day-caption { color: #a998a5; }
+    .ranking { margin: 0; padding-left: 20px; color: var(--muted); font-size: 13px; }
+    .ranking li { padding: 4px 0; }
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: #fff; }
+      .actions, aside, .legend, .chart-legend, .icon-btn { display: none !important; }
+      .app { max-width: none; padding: 0; }
+      .card { box-shadow: none; }
+      .layout { display: block; }
+      .calendar-card { border: 0; }
+      .day.status-green { background: var(--green-bg) !important; }
+      .day.status-yellow { background: var(--yellow-bg) !important; }
+      .day.status-red { background: var(--red-bg) !important; }
+      .chart-card { break-inside: avoid; }
+    }
+    .panel { padding: 20px; }
+    .panel + .panel { margin-top: 16px; }
+    .panel-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    label { display: block; color: var(--muted); font-size: 13px; font-weight: 650; margin-bottom: 6px; }
+    .field { margin-bottom: 14px; }
+    input[type="date"], input[type="number"], input[type="text"], input[type="file"], select {
+      width: 100%; border: 1px solid #d0d5dd; border-radius: 8px; padding: 10px 11px; background: #fff; color: var(--ink);
+    }
+    input:focus, select:focus, button:focus-visible { outline: 3px solid rgba(49, 94, 251, .18); border-color: var(--brand); }
+    .inline { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .radio-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .radio-option { position: relative; }
+    .radio-option input { position: absolute; opacity: 0; }
+    .radio-option span { display: block; text-align: center; border: 1px solid var(--line); border-radius: 8px; padding: 9px 5px; color: var(--muted); font-size: 13px; }
+    .radio-option input:checked + span { color: var(--brand-dark); border-color: var(--brand); background: #fff0f7; font-weight: 700; }
+    .hint { background: #fff0f7; color: var(--muted); border-radius: 8px; padding: 10px; font-size: 12px; margin: 4px 0 14px; }
+    .result { border-radius: 9px; padding: 10px; margin-bottom: 14px; font-size: 13px; font-weight: 650; }
+    .result.green { background: var(--green-bg); color: var(--green); }
+    .result.yellow { background: var(--yellow-bg); color: var(--yellow); }
+    .result.red { background: var(--red-bg); color: var(--red); }
+    .result.neutral { background: #f7f0f5; color: var(--muted); }
+    .secondary { display: flex; gap: 8px; }
+    .secondary .btn { flex: 1; padding: 8px 7px; font-size: 12px; }
+    .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; background: #6f3158; color: #fff; padding: 11px 16px; border-radius: 9px; transition: .2s; box-shadow: var(--shadow); }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    dialog { width: min(420px, calc(100% - 32px)); border: 0; border-radius: 14px; padding: 0; box-shadow: 0 24px 70px rgba(23, 32, 51, .25); }
+    dialog::backdrop { background: rgba(23, 32, 51, .38); }
+    .dialog-content { padding: 22px; }
+    .dialog-content h2 { margin-bottom: 15px; }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+    @media (max-width: 1200px) { .summary { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 1100px) { .summary { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .summary { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .app { padding: 22px 12px 36px; } .topbar { display: block; } .actions { justify-content: flex-start; margin-top: 15px; } .summary { gap: 9px; } .metric { padding: 13px; } .metric-value { font-size: 23px; } .calendar-card { padding: 11px; } .day { min-height: 76px; padding: 6px; } .day-value { margin-top: 11px; font-size: 17px; } .day-caption { display: none; } .weekday { font-size: 10px; padding: 7px 2px; } .month-label { min-width: 130px; } }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>Relatório de protocolos</h1>
+        <p class="subtitle">Acompanhe sua produção diária de forma simples e visual.</p>
+        <p class="metric-note" style="margin-top:8px">Última atualização: <strong id="lastSaved">Ainda não salvo</strong></p>
+      </div>
+      <div class="actions">
+        <button class="btn" id="todayBtn">Hoje</button>
+        <button class="btn" id="exportBtn">Exportar backup</button>
+        <button class="btn" id="importBtn">Importar backup</button>
+        <input id="importFile" type="file" accept="application/json" hidden>
+      </div>
+    </header>
+
+    <section class="summary" aria-label="Resumo do mês">
+      <article class="card metric"><div class="metric-label">Protocolos recebidos</div><div class="metric-value" id="totalReceived">0</div><div class="metric-note" id="monthNote"></div></article>
+      <article class="card metric"><div class="metric-label">Protocolos realizados</div><div class="metric-value" id="totalDone">0</div><div class="metric-note">No mês selecionado</div></article>
+      <article class="card metric"><div class="metric-label">Média realizada / dia</div><div class="metric-value" id="averageDone">0</div><div class="metric-note">Considerando dias lançados</div></article>
+      <article class="card metric"><div class="metric-label">Média por hora</div><div class="metric-value" id="averagePerHour">0</div><div class="metric-note">Jornada fixa de 6 horas</div></article>
+      <article class="card metric"><div class="metric-label">Meta atingida</div><div class="metric-value" id="goalRate">0%</div><div class="metric-note" id="goalNote">0 dias classificados</div></article>
+      <article class="card metric"><div class="metric-label">Saldo pendente</div><div class="metric-value" id="pendingTotal">0</div><div class="metric-note">Recebidos menos realizados</div></article>
+      <article class="card metric"><div class="metric-label">Maior produção</div><div class="metric-value" id="bestDay">0</div><div class="metric-note" id="bestDayNote">Nenhum dia lançado</div></article>
+      <article class="card metric"><div class="metric-label">Meta por hora</div><div class="metric-value" id="goalPerHour">0</div><div class="metric-note">Meta diária ÷ 6 horas</div></article>
+      <article class="card metric"><div class="metric-label">Dias sem lançamento</div><div class="metric-value" id="remainingDays">0</div><div class="metric-note">Dias úteis no mês</div></article>
+      <article class="card metric"><div class="metric-label">Projeção mensal</div><div class="metric-value" id="projection">0</div><div class="metric-note" id="performanceNote">Aguardando lançamentos</div></article>
+    </section>
+
+    <div class="layout">
+      <section class="card calendar-card">
+        <div class="calendar-head">
+          <h2 id="calendarTitle">Agosto de 2026</h2>
+          <div class="month-control">
+            <button class="icon-btn" id="previousMonth" aria-label="Mês anterior">&#8249;</button>
+            <span class="month-label" id="monthLabel"></span>
+            <button class="icon-btn" id="nextMonth" aria-label="Próximo mês">&#8250;</button>
+          </div>
+        </div>
+        <div class="calendar" id="calendar"></div>
+        <div class="legend">
+          <span><i class="green"></i> Meta atingida (<span id="legendGoal">80</span>+)</span>
+          <span><i class="yellow"></i> Parcial: demanda insuficiente</span>
+          <span><i class="red"></i> Não atingida</span>
+        </div>
+        <div class="filter-row" aria-label="Filtros do calendário">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="green">Atingidos</button>
+          <button class="filter-btn" data-filter="yellow">Parciais</button>
+          <button class="filter-btn" data-filter="red">Não atingidos</button>
+          <button class="filter-btn" data-filter="off">Não trabalhados</button>
+        </div>
+        <section class="card chart-card">
+          <div class="panel-title"><h2>Evolução do mês</h2><span class="subtitle" style="font-size:12px">Recebidos x realizados</span></div>
+          <div class="chart" id="chart"></div>
+          <div class="chart-legend"><span>Recebidos</span><span>Realizados</span></div>
+        </section>
+      </section>
+
+      <aside>
+        <section class="card panel">
+          <div class="panel-title"><h2 id="formTitle">Lançamento diário</h2><button class="btn danger" id="deleteBtn" hidden>Excluir</button></div>
+          <form id="entryForm">
+            <div class="field"><label for="entryDate">Data</label><input id="entryDate" type="date" required></div>
+            <div class="inline">
+              <div class="field"><label for="received">Recebidos</label><input id="received" type="number" min="0" step="1" placeholder="0" required></div>
+              <div class="field"><label for="done">Realizados</label><input id="done" type="number" min="0" step="1" placeholder="0" required></div>
+            </div>
+            <div class="field">
+              <div class="field"><label for="notes">Observações do dia <span style="font-weight:400">(opcional)</span></label><textarea id="notes" placeholder="Ex.: demanda insuficiente, treinamento, feriado..."></textarea></div>
+              <label class="check-option"><input id="notWorked" type="checkbox"> Marcar como feriado ou dia não trabalhado</label>
+            </div>
+            <div class="hint">Classificação automática: recebidos abaixo da meta (<strong id="goalHint">80</strong>) = parcial; realizados na meta ou acima = atingida; demais casos = não atingida.</div>
+            <div class="result neutral" id="liveResult">Preencha os dados para visualizar a classificação.</div>
+            <button class="btn primary" type="submit" style="width:100%">Salvar lançamento</button>
+          </form>
+        </section>
+        <section class="card panel">
+          <div class="panel-title"><h2>Configuração</h2></div>
+          <div class="field"><label for="goal">Meta diária de referência</label><input id="goal" type="number" min="1" step="1" value="80"></div>
+          <p class="subtitle" style="font-size:12px">A meta configurada controla automaticamente a classificação e os indicadores.</p>
+          <button class="btn" id="printBtn" style="width:100%;margin-top:12px">Imprimir / salvar em PDF</button>
+          <div class="alert" id="alertBox" style="margin-top:12px">Preencha os dias para acompanhar os alertas.</div>
+          <div class="alert" id="backupAlert" style="margin-top:8px;background:#fff0f7;color:var(--brand-dark)">Faça backups periódicos para manter seus dados seguros.</div>
+          <div style="margin-top:15px"><label>Melhores dias do mês</label><ol class="ranking" id="ranking"><li>Nenhum dia lançado</li></ol></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <dialog id="confirmDialog">
+    <div class="dialog-content">
+      <h2>Excluir lançamento?</h2>
+      <p class="subtitle">Este registro será removido deste navegador.</p>
+      <div class="dialog-actions"><button class="btn" id="cancelDelete">Cancelar</button><button class="btn danger" id="confirmDelete">Excluir</button></div>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = "relatorio-protocolos-v1";
+      const WORK_HOURS = 6;
+      const today = new Date();
+      let viewDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      let selectedDate = toISO(today);
+      let entries = {};
+      let settings = { goal: 80, lastSaved: null, lastExport: null };
+      let activeFilter = "all";
+
+      const $ = (id) => document.getElementById(id);
+      const monthNames = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+      const weekdays = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+
+      function toISO(date) {
+        const y = date.getFullYear(), m = String(date.getMonth() + 1).padStart(2, "0"), d = String(date.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+      }
+      function parseDate(value) { const [y, m, d] = value.split("-").map(Number); return new Date(y, m - 1, d); }
+      function formatDate(value) { return parseDate(value).toLocaleDateString("pt-BR"); }
+      function load() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+          entries = saved.entries && typeof saved.entries === "object" ? saved.entries : {};
+          settings = {
+            goal: Number(saved.settings && saved.settings.goal) > 0 ? Number(saved.settings.goal) : 80,
+            lastSaved: saved.settings && saved.settings.lastSaved ? saved.settings.lastSaved : null,
+            lastExport: saved.settings && saved.settings.lastExport ? saved.settings.lastExport : null
+          };
+        } catch (error) { throw new Error("Não foi possível carregar os dados salvos."); }
+      }
+      function persist() {
+        settings.lastSaved = new Date().toISOString();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, entries, settings }));
+        renderLastSaved();
+      }
+      function renderLastSaved() {
+        $("lastSaved").textContent = settings.lastSaved ? new Date(settings.lastSaved).toLocaleString("pt-BR") : "Ainda não salvo";
+        if (!settings.lastExport) {
+          $("backupAlert").textContent = "Ainda não existe backup exportado. Recomendamos exportar uma cópia.";
+          return;
+        }
+        const days = Math.floor((Date.now() - new Date(settings.lastExport).getTime()) / 86400000);
+        $("backupAlert").textContent = days >= 7 ? `Seu último backup tem ${days} dias. Exporte uma nova cópia para manter seus dados seguros.` : `Último backup: ${new Date(settings.lastExport).toLocaleDateString("pt-BR")}.`;
+      }
+      function classify(entry) {
+        if (entry && entry.notWorked) return "off";
+        if (!entry) return "neutral";
+        if (entry.done >= settings.goal) return "green";
+        if (entry.received < settings.goal) return "yellow";
+        return entry.done >= settings.goal ? "green" : "red";
+      }
+      function classificationText(status) {
+        return { green: "Meta atingida", yellow: "Parcial: demanda insuficiente", red: "Não atingida com demanda", neutral: "Sem lançamento" }[status];
+      }
+      function renderCalendar() {
+        const year = viewDate.getFullYear(), month = viewDate.getMonth();
+        $("monthLabel").textContent = `${monthNames[month]} ${year}`;
+        $("calendarTitle").textContent = `Calendário de ${monthNames[month]} de ${year}`;
+        const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+        const days = new Date(year, month + 1, 0).getDate();
+        let html = weekdays.map(day => `<div class="weekday">${day}</div>`).join("");
+        for (let i = 0; i < firstDay; i++) html += `<div class="day empty"></div>`;
+        for (let day = 1; day <= days; day++) {
+          const current = new Date(year, month, day), date = toISO(current), entry = entries[date], status = classify(entry);
+          const weekend = current.getDay() === 0 || current.getDay() === 6;
+          const isToday = date === toISO(today);
+          if (weekend) {
+            html += `<div class="day weekend" aria-label="${formatDate(date)}: fim de semana"><span class="day-number">${day}</span><span class="day-caption" style="display:block;margin-top:27px">Fim de semana</span></div>`;
+          } else {
+            const hiddenByFilter = activeFilter !== "all" && status !== activeFilter;
+            if (hiddenByFilter) html += `<div class="day empty"></div>`;
+            else {
+            html += `<button class="day ${status === "neutral" ? "" : "status-" + status} ${isToday ? "today" : ""}" data-date="${date}" aria-label="${formatDate(date)}${entry ? ": " + classificationText(status) : ""}">
+              <span class="day-number">${day}</span>${entry ? `<span class="status-dot"></span><strong class="day-value">${entry.done}</strong><span class="day-caption">de ${entry.received} recebidos</span>` : `<span class="day-caption" style="display:block;margin-top:27px">Clique para lançar</span>`}</button>`;
+            }
+          }
+        }
+        $("calendar").innerHTML = html;
+        document.querySelectorAll(".day[data-date]").forEach(button => button.addEventListener("click", () => selectDate(button.dataset.date)));
+      }
+      function renderSummary() {
+        const prefix = `${viewDate.getFullYear()}-${String(viewDate.getMonth() + 1).padStart(2, "0")}`;
+        const monthEntries = Object.entries(entries).filter(([date]) => date.startsWith(prefix)).sort(([a], [b]) => a.localeCompare(b)).map(([, entry]) => entry);
+        const workingEntries = monthEntries.filter(entry => !entry.notWorked);
+        const received = workingEntries.reduce((sum, entry) => sum + entry.received, 0);
+        const done = workingEntries.reduce((sum, entry) => sum + entry.done, 0);
+        const green = workingEntries.filter(entry => classify(entry) === "green").length;
+        $("totalReceived").textContent = received.toLocaleString("pt-BR");
+        $("totalDone").textContent = done.toLocaleString("pt-BR");
+        $("averageDone").textContent = workingEntries.length ? (done / workingEntries.length).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) : "0";
+        $("averagePerHour").textContent = workingEntries.length ? (done / workingEntries.length / WORK_HOURS).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) : "0";
+        $("goalPerHour").textContent = (settings.goal / WORK_HOURS).toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+        const calendarDays = yearMonthDays(prefix);
+        const businessDays = calendarDays.filter(day => { const weekday = parseDate(day.date).getDay(); return weekday > 0 && weekday < 6; });
+        const remaining = businessDays.filter(day => !day.entry).length;
+        const average = workingEntries.length ? done / workingEntries.length : 0;
+        const projected = Math.round(done + average * remaining);
+        $("remainingDays").textContent = remaining;
+        $("projection").textContent = projected.toLocaleString("pt-BR");
+        $("performanceNote").textContent = workingEntries.length ? (projected >= settings.goal * businessDays.length ? "Ritmo suficiente para a meta" : "Ritmo abaixo da meta") : "Aguardando lançamentos";
+        $("goalRate").textContent = workingEntries.length ? `${Math.round(green / workingEntries.length * 100)}%` : "0%";
+        $("goalNote").textContent = `${green} de ${workingEntries.length} dias classificados (meta: ${settings.goal})`;
+        $("monthNote").textContent = `${workingEntries.length} dia${workingEntries.length === 1 ? "" : "s"} útil${workingEntries.length === 1 ? "" : "eis"} lançado${workingEntries.length === 1 ? "" : "s"}; ${monthEntries.length - workingEntries.length} não trabalhado${monthEntries.length - workingEntries.length === 1 ? "" : "s"}`;
+        $("pendingTotal").textContent = Math.max(0, received - done).toLocaleString("pt-BR");
+        const best = monthEntries.reduce((winner, entry) => !winner || entry.done > winner.done ? entry : winner, null);
+        $("bestDay").textContent = best ? best.done.toLocaleString("pt-BR") : "0";
+        const bestDate = Object.entries(entries).find(([date, entry]) => date.startsWith(prefix) && best && entry.done === best.done);
+        $("bestDayNote").textContent = bestDate ? formatDate(bestDate[0]) : "Nenhum dia lançado";
+        renderChart(yearMonthDays(prefix));
+        const belowGoal = workingEntries.filter(entry => entry.done < settings.goal).length;
+        const weeklyEntries = workingEntries.slice(-7), weeklyDone = weeklyEntries.reduce((sum, entry) => sum + entry.done, 0);
+        $("alertBox").textContent = workingEntries.length ? (belowGoal ? `${belowGoal} dia${belowGoal === 1 ? "" : "s"} abaixo da meta de ${settings.goal}. Últimos 7 dias: ${weeklyDone} realizados.` : `Parabéns! Todos os dias lançados atingiram a meta. Últimos 7 dias: ${weeklyDone} realizados.`) : "Preencha os dias para acompanhar os alertas.";
+        const ranking = Object.entries(entries).filter(([date, entry]) => date.startsWith(prefix) && !entry.notWorked).sort(([, a], [, b]) => b.done - a.done).slice(0, 5);
+        $("ranking").innerHTML = ranking.length ? ranking.map(([date, entry]) => `<li><strong>${entry.done}</strong> realizados em ${formatDate(date)}</li>`).join("") : "<li>Nenhum dia lançado</li>";
+      }
+      function yearMonthDays(prefix) {
+        const [year, month] = prefix.split("-").map(Number), count = new Date(year, month, 0).getDate();
+        return Array.from({ length: count }, (_, index) => {
+          const date = `${prefix}-${String(index + 1).padStart(2, "0")}`;
+          return { date, entry: entries[date] };
+        });
+      }
+      function renderChart(days) {
+        const max = Math.max(settings.goal, ...days.map(day => day.entry ? day.entry.received : 0), 1);
+        $("chart").innerHTML = days.map(day => {
+          const received = day.entry ? day.entry.received : 0, done = day.entry ? day.entry.done : 0;
+          return `<div class="bar-group" title="${formatDate(day.date)}: ${received} recebidos, ${done} realizados"><span class="bar received" style="height:${received / max * 100}%"></span><span class="bar done" style="height:${done / max * 100}%"></span><span class="bar-label">${parseDate(day.date).getDate()}</span></div>`;
+        }).join("");
+      }
+      function renderForm() {
+        const entry = entries[selectedDate];
+        $("entryDate").value = selectedDate;
+        $("received").value = entry ? entry.received : "";
+        $("done").value = entry ? entry.done : "";
+        $("notes").value = entry && entry.notes ? entry.notes : "";
+        $("notWorked").checked = Boolean(entry && entry.notWorked);
+        $("received").disabled = Boolean(entry && entry.notWorked);
+        $("done").disabled = Boolean(entry && entry.notWorked);
+        $("deleteBtn").hidden = !entry;
+        $("formTitle").textContent = entry ? `Editar ${formatDate(selectedDate)}` : "Lançamento diário";
+        updateLiveResult();
+      }
+      function selectDate(date) {
+        const parsed = parseDate(date);
+        if (parsed.getDay() === 0 || parsed.getDay() === 6) {
+          showToast("Sábados e domingos não possuem lançamentos.");
+          return;
+        }
+        selectedDate = date;
+        viewDate = new Date(parsed.getFullYear(), parsed.getMonth(), 1);
+        renderCalendar(); renderSummary(); renderForm();
+        $("entryDate").focus();
+      }
+      function updateLiveResult() {
+        const received = Number($("received").value), done = Number($("done").value);
+        if (!Number.isFinite(received) || !Number.isFinite(done) || $("received").value === "" || $("done").value === "") {
+          $("liveResult").className = "result neutral"; $("liveResult").textContent = "Preencha os dados para visualizar a classificação."; return;
+        }
+        const status = classify({ received, done });
+        $("liveResult").className = `result ${status}`; $("liveResult").textContent = classificationText(status);
+      }
+      function showToast(message) {
+        $("toast").textContent = message; $("toast").classList.add("show");
+        setTimeout(() => $("toast").classList.remove("show"), 2500);
+      }
+      $("entryForm").addEventListener("submit", event => {
+        event.preventDefault();
+        if (parseDate(selectedDate).getDay() === 0 || parseDate(selectedDate).getDay() === 6) {
+          showToast("Escolha um dia útil para lançar protocolos.");
+          return;
+        }
+        const notWorked = $("notWorked").checked;
+        const received = notWorked ? 0 : Number($("received").value), done = notWorked ? 0 : Number($("done").value);
+        if (!Number.isInteger(received) || !Number.isInteger(done) || received < 0 || done < 0) return showToast("Informe quantidades inteiras válidas.");
+        if (done > received) return showToast("Realizados não pode ser maior que recebidos.");
+        entries[selectedDate] = { received, done, notes: $("notes").value.trim(), notWorked };
+        persist(); renderCalendar(); renderSummary(); renderForm(); showToast("Lançamento salvo.");
+      });
+      $("entryDate").addEventListener("change", event => {
+        const date = parseDate(event.target.value);
+        if (date.getDay() === 0 || date.getDay() === 6) {
+          showToast("Escolha um dia útil para lançar protocolos.");
+          renderForm();
+          return;
+        }
+        selectDate(event.target.value);
+      });
+      $("notWorked").addEventListener("change", event => {
+        const disabled = event.target.checked;
+        $("received").disabled = disabled; $("done").disabled = disabled;
+        if (disabled) { $("received").value = 0; $("done").value = 0; }
+        updateLiveResult();
+      });
+      document.querySelectorAll(".filter-btn").forEach(button => button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        document.querySelectorAll(".filter-btn").forEach(item => item.classList.toggle("active", item === button));
+        renderCalendar();
+      }));
+      ["received", "done"].forEach(id => $(id).addEventListener("input", updateLiveResult));
+      $("goal").addEventListener("change", event => {
+        const value = Number(event.target.value);
+        if (!Number.isInteger(value) || value < 1) return showToast("Informe uma meta válida.");
+        settings.goal = value; persist(); $("goalHint").textContent = value; $("legendGoal").textContent = value; renderCalendar(); renderSummary(); updateLiveResult(); showToast("Meta atualizada e calendário recalculado.");
+      });
+      $("previousMonth").addEventListener("click", () => { viewDate.setMonth(viewDate.getMonth() - 1); renderCalendar(); renderSummary(); });
+      $("nextMonth").addEventListener("click", () => { viewDate.setMonth(viewDate.getMonth() + 1); renderCalendar(); renderSummary(); });
+      $("todayBtn").addEventListener("click", () => {
+        if (today.getDay() === 0 || today.getDay() === 6) {
+          showToast("Hoje é fim de semana. Selecione um dia útil.");
+          return;
+        }
+        selectDate(toISO(today));
+      });
+      $("printBtn").addEventListener("click", () => window.print());
+      $("deleteBtn").addEventListener("click", () => $("confirmDialog").showModal());
+      $("cancelDelete").addEventListener("click", () => $("confirmDialog").close());
+      $("confirmDelete").addEventListener("click", () => { delete entries[selectedDate]; persist(); $("confirmDialog").close(); renderCalendar(); renderSummary(); renderForm(); showToast("Lançamento excluído."); });
+      $("exportBtn").addEventListener("click", () => {
+        settings.lastExport = new Date().toISOString(); persist();
+        const blob = new Blob([JSON.stringify({ version: 1, exportedAt: settings.lastExport, entries, settings }, null, 2)], { type: "application/json" });
+        const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `backup-protocolos-${toISO(today)}.json`; link.click(); URL.revokeObjectURL(link.href);
+      });
+      $("importBtn").addEventListener("click", () => $("importFile").click());
+      $("importFile").addEventListener("change", event => {
+        const file = event.target.files[0]; if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const data = JSON.parse(reader.result);
+            if (!data.entries || typeof data.entries !== "object") throw new Error();
+            entries = data.entries; if (data.settings && Number(data.settings.goal) > 0) settings.goal = Number(data.settings.goal);
+            persist(); $("goal").value = settings.goal; $("goalHint").textContent = settings.goal; $("legendGoal").textContent = settings.goal; renderCalendar(); renderSummary(); renderForm(); showToast("Backup importado.");
+          } catch (error) { showToast("Arquivo de backup inválido."); }
+          event.target.value = "";
+        };
+        reader.readAsText(file);
+      });
+      load(); $("goal").value = settings.goal; $("goalHint").textContent = settings.goal; $("legendGoal").textContent = settings.goal; renderCalendar(); renderSummary(); renderForm(); renderLastSaved();
+    })();
+  </script>
+</body>
+</html>
