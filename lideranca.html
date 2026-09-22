@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Gerencial - Vis&#xE3;o da Lideran&#xE7;a</title>
+    <style>
+        :root {
+            /* Identidade Visual Corporativa Bradesco */
+            --brand-primary: #cc092f;
+            --brand-secondary: #9e0724;
+            --brand-light: #fdf2f4;
+            --brand-black: #1f1f1f;
+            
+            /* Neutros e Estruturais */
+            --bg-color: #f4f5f7;
+            --sidebar-bg: #2d2d2d;
+            --sidebar-hover: #404040;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-light: #666666;
+            --border-color: #e2e4e7;
+            
+            /* Cores de Status */
+            --status-green: #208b59;
+            --status-yellow: #d39e00;
+            --status-red: #cc092f;
+            --status-blue: #2770c0; 
+            --status-gray: #6c757d;
+            
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            --radius: 4px;
+        }
+        body.dark-mode {
+            --bg-color: #2b2b2d;
+            --card-bg: #343437;
+            --text-main: #f4f4f4;
+            --text-light: #c2c2c7;
+            --border-color: #505057;
+            --brand-light: #4a202d;
+            --brand-border: #8a3045;
+            --brand-black: #ffffff;
+            --sidebar-bg: #56001f;
+            --sidebar-hover: #7b002b;
+        }
+        body.dark-mode .topbar,
+        body.dark-mode #global-month-selector,
+        body.dark-mode #global-area-selector { background: var(--card-bg); color: var(--text-main); border-color: var(--border-color); }
+        body.dark-mode .topbar h2 { color: var(--text-main); }
+        body.dark-mode .topbar-subtitle { color: var(--text-light); }
+        body.dark-mode aside { background: linear-gradient(180deg, #700024 0%, #4b001c 100%); }
+        body.dark-mode aside::before { border-color: rgba(255,39,88,0.22); box-shadow: 0 0 0 22px rgba(255,39,88,0.08), 0 0 0 44px rgba(255,39,88,0.045); }
+        body.dark-mode aside::after { border-color: rgba(255,39,88,0.24); }
+        body.dark-mode .nav-item.active { background: #cc092f; border-left-color: #ff496f; }
+        body.dark-mode .nav-item:hover { background: rgba(204,9,47,0.42); }
+        body.dark-mode .btn-micro.active { background: rgba(204,9,47,0.55); border-left-color: #ff496f; }
+        body.dark-mode .topbar { background: #29292b; }
+        body.dark-mode .topbar-controls select { background: #343437; color: var(--text-main); border-color: var(--border-color); box-shadow: none; }
+        body.dark-mode .occurrence-filter { background: #343437; color: var(--text-main); }
+
+        @font-face {
+            font-family: 'Bradesco Sans';
+            src: local('Bradesco Sans'), local('BradescoSans-Regular');
+            font-weight: 400; font-style: normal;
+        }
+        @font-face {
+            font-family: 'Bradesco Sans';
+            src: local('Bradesco Sans Bold'), local('BradescoSans-Bold');
+            font-weight: 700; font-style: normal;
+        }
+
+        * {
+            box-sizing: border-box; margin: 0; padding: 0;
+            font-family: 'Bradesco Sans', 'Segoe UI', Tahoma, sans-serif;
+        }
+        * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.45) transparent; }
+        *::-webkit-scrollbar { width: 8px; height: 8px; }
+        *::-webkit-scrollbar-track { background: transparent; }
+        *::-webkit-scrollbar-thumb { background: rgba(204,9,47,0.72); border-radius: 999px; border: 2px solid transparent; background-clip: padding-box; }
+        *::-webkit-scrollbar-thumb:hover { background: #cc092f; border-width: 1px; }
+        body.dark-mode * { scrollbar-color: rgba(255,255,255,0.38) transparent; }
+        body.dark-mode *::-webkit-scrollbar-thumb { background: rgba(255,39,88,0.72); background-clip: padding-box; }
+
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar - Menu Lateral */
+        aside {
+            width: 280px; position: relative; overflow: hidden;
+            background: linear-gradient(180deg, #cc092f 0%, #a4002b 100%); color: white;
+            display: flex; flex-direction: column; height: 100%; box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        aside::before,
+        aside::after {
+            content: ""; position: absolute; pointer-events: none; border-radius: 50%;
+            transform: rotate(-25deg); z-index: 0;
+        }
+        aside::before {
+            width: 520px; height: 300px; left: -300px; bottom: 70px;
+            border: 2px solid rgba(255,255,255,0.14);
+            box-shadow: 0 0 0 22px rgba(255,255,255,0.05), 0 0 0 44px rgba(255,255,255,0.035);
+        }
+        aside::after {
+            width: 560px; height: 340px; left: -255px; bottom: -90px;
+            border: 2px solid rgba(90,0,25,0.22);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left;
+            background: transparent; border-top: 0; position: relative; z-index: 1;
+        }
+        .sidebar-header .brand-logo { width: 116px; height: 92px; object-fit: contain; object-position: left center; margin: 0 0 1rem; filter: brightness(0) invert(1); }
+        .sidebar-header h1 { font-size: 1.2rem; color: #fff; font-weight: 700; line-height: 1.2; }
+        .sidebar-header span { font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+
+        .import-btn-container { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.15); display: flex; flex-direction: column; gap: 0.8rem; position: relative; z-index: 1; }
+        .btn-import {
+            background-color: rgba(255,255,255,0.16); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 0.8rem; width: 100%;
+            border-radius: var(--radius); cursor: pointer; font-size: 0.9rem; font-weight: 700; transition: 0.2s;
+            text-align: center; display: block;
+        }
+        .btn-import:hover { background-color: rgba(255,255,255,0.25); }
+        button:focus-visible, select:focus-visible { outline: 3px solid rgba(204,9,47,0.35); outline-offset: 2px; }
+        .btn-clear {
+            background-color: transparent; border: 1px solid rgba(255,255,255,0.45); color: rgba(255,255,255,0.85); font-size: 0.75rem; padding: 0.4rem;
+            border-radius: var(--radius); cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .btn-clear:hover { background-color: rgba(255,255,255,0.12); color: white; border-color: white; }
+
+        .menu-section { flex: 1; overflow-y: auto; padding: 1rem 0; position: relative; z-index: 1; }
+        .menu-title { font-size: 0.7rem; color: rgba(255,255,255,0.7); text-transform: uppercase; padding: 0 1.5rem; margin-bottom: 0.5rem; font-weight: 700; }
+        
+        .nav-item {
+            display: block; width: 100%; text-align: left; background: none; border: none; color: rgba(255,255,255,0.92);
+            padding: 0.8rem 1.5rem; cursor: pointer; font-size: 0.9rem; transition: 0.2s; border-left: 3px solid transparent;
+        }
+        .nav-item:not(.btn-micro) { display: flex; align-items: center; gap: 0.85rem; }
+        .nav-icon { width: 22px; height: 22px; flex: 0 0 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .nav-item:hover { background-color: rgba(255,255,255,0.12); color: #fff; }
+        .nav-item.active { background-color: rgba(255,255,255,0.18); color: white; border-left-color: white; font-weight: 700; }
+        .btn-micro { display: flex; align-items: center; gap: 0.8rem; border-left: 3px solid transparent; }
+        .analyst-avatar {
+            width: 36px; height: 36px; flex: 0 0 36px; display: grid; place-items: center;
+            border-radius: 50%; background: rgba(30,0,20,0.32); color: #fff; font-size: 0.72rem; font-weight: 800;
+        }
+        .btn-micro.active { border-left-color: #ff174f; }
+        .sidebar-footer { position: relative; z-index: 1; margin-top: auto; padding: 0.75rem 1.1rem 1.1rem; border-top: 1px solid rgba(255,255,255,0.2); }
+        .sidebar-theme-toggle {
+            width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+            border: 0; background: transparent; color: #fff; padding: 0.35rem 0; cursor: pointer;
+        }
+        .sidebar-theme-label { display: flex; align-items: center; gap: 0.75rem; font-size: 0.82rem; }
+        .theme-switch { width: 38px; height: 22px; padding: 2px; border-radius: 999px; background: #ef1748; }
+        .theme-switch::after { content: ""; display: block; width: 18px; height: 18px; margin-left: 16px; border-radius: 50%; background: white; transition: margin 0.2s; }
+        body:not(.dark-mode) .theme-switch { background: rgba(255,255,255,0.35); }
+        body:not(.dark-mode) .theme-switch::after { margin-left: 0; }
+        
+        .analyst-list { margin-top: 1rem; }
+        .analyst-list { border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1rem; }
+        .analyst-search { margin: 0 1.1rem 0.75rem; position: relative; }
+        .analyst-search input {
+            width: 100%; padding: 0.65rem 0.75rem 0.65rem 2.35rem; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.4); background: rgba(20,0,15,0.24);
+            color: #fff; outline: none; font-size: 0.8rem;
+        }
+        .analyst-search input::placeholder { color: rgba(255,255,255,0.72); }
+        .analyst-search input:focus { border-color: #ff5a7d; box-shadow: 0 0 0 2px rgba(255,90,125,0.18); }
+        .analyst-search::before { content: "\2315"; position: absolute; left: 0.75rem; top: 0.42rem; color: #fff; font-size: 1.35rem; transform: rotate(-20deg); }
+
+        /* Main Content */
+        main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+        
+        .topbar {
+            background: linear-gradient(100deg, var(--card-bg) 0%, var(--card-bg) 75%, var(--brand-light) 100%);
+            padding: 1.25rem 2rem 1.5rem; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow);
+        }
+        .topbar-heading { display: flex; flex-direction: column; gap: 0.35rem; }
+        .topbar-breadcrumb { font-size: 0.78rem; color: var(--text-light); font-weight: 600; }
+        .topbar-breadcrumb strong { color: var(--brand-primary); }
+        .topbar h2 { color: #182849; font-size: 1.65rem; line-height: 1.15; }
+        .topbar-subtitle { color: #53617c; font-size: 0.95rem; }
+        
+        .topbar-controls { display: flex; align-items: center; gap: 0.65rem; }
+        .control-icon { width: 20px; height: 20px; flex: 0 0 20px; color: var(--text-light); margin: 0 -2.1rem 0 0.35rem; z-index: 1; pointer-events: none; display: grid; place-items: center; }
+        .control-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+        .topbar-controls select {
+            min-height: 42px; padding: 0.55rem 2.2rem 0.55rem 2.35rem;
+            border: 1px solid #d8deea; border-radius: 8px; background: #fff;
+            box-shadow: 0 2px 8px rgba(24,40,73,0.06);
+        }
+        .topbar-import {
+            min-height: 42px; padding: 0.65rem 1rem; border: 0; border-radius: 8px;
+            background: var(--brand-primary); color: #fff; font-weight: 700; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(204,9,47,0.2); transition: transform 0.2s, background 0.2s;
+        }
+        .topbar-import:hover { background: var(--brand-secondary); transform: translateY(-1px); }
+        .topbar-count { margin-left: 0.65rem; padding-left: 0.85rem; border-left: 1px solid var(--border-color); white-space: nowrap; }
+        .theme-toggle {
+            position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 90;
+            width: 44px; height: 44px; min-width: 44px; padding: 0;
+            border-radius: 50%; background: var(--card-bg); color: var(--brand-primary);
+            border: 1px solid var(--brand-border); box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+            font-size: 1.15rem; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .theme-toggle { display: none; }
+        .theme-toggle:hover { transform: translateY(-2px); box-shadow: 0 7px 18px rgba(0,0,0,0.24); }
+        .theme-icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; display: block; margin: auto; }
+        #global-month-selector {
+            padding: 0.4rem 0.8rem; border: 1px solid var(--border-color); border-radius: var(--radius);
+            font-size: 0.9rem; font-weight: 600; color: var(--text-main); cursor: pointer; outline: none;
+        }
+        #global-month-selector:focus { border-color: var(--brand-primary); }
+
+        .content-area { padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .content-area:has(#view-ocorrencias.active) { max-width: none; }
+
+        /* Telas (Views) */
+        .view { display: none; animation: fadeIn 0.3s ease; }
+        .view.active { display: block; }
+        #view-macro.charts-entering .stat-card {
+            animation: indicatorCardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        #view-macro.charts-entering .stat-card:nth-child(2) { animation-delay: 0.08s; }
+        #view-macro.charts-entering .stat-card:nth-child(3) { animation-delay: 0.16s; }
+        #view-macro.charts-entering .stat-card:nth-child(4) { animation-delay: 0.24s; }
+        #view-macro.charts-entering .ranking-card {
+            animation: indicatorPanelIn 0.55s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        #view-macro.charts-entering .conversion-bar span {
+            animation: indicatorBarIn 0.8s 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @keyframes indicatorCardIn {
+            from { opacity: 0; transform: translateY(18px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes indicatorPanelIn {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes indicatorBarIn {
+            from { transform: scaleX(0); transform-origin: left center; }
+            to { transform: scaleX(1); transform-origin: left center; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #view-macro.charts-entering .stat-card,
+            #view-macro.charts-entering .ranking-card,
+            #view-macro.charts-entering .conversion-bar span { animation: none; }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Empty State */
+        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-light); }
+        .empty-state h3 { color: var(--text-main); margin-bottom: 0.5rem; }
+
+        /* Cards & Grids */
+        .card { background: var(--card-bg); border-radius: 6px; padding: 1.5rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; border: 1px solid var(--border-color); }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card {
+            background: var(--card-bg); padding: 1.2rem; border-radius: var(--radius); border: 1px solid var(--border-color);
+            border-left: 4px solid var(--brand-primary); display: flex; flex-direction: column; justify-content: center;
+        }
+        .stat-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; background: rgba(204,9,47,0.18); color: #ff2758; margin-bottom: 0.75rem; }
+        .stat-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .stat-card.yellow .stat-icon { color: #f4bd00; background: rgba(244,189,0,0.16); }
+        .stat-card.gray .stat-icon { color: #b7c6d8; background: rgba(183,198,216,0.14); }
+        .stat-card.gray { border-left-color: var(--status-gray); background: var(--bg-color); }
+        .stat-card.green { border-left-color: var(--status-green); }
+        .stat-card.yellow { border-left-color: var(--status-yellow); }
+        .stat-title { font-size: 0.75rem; color: var(--text-main); text-transform: uppercase; font-weight: 700; }
+        .stat-subtitle { font-size: 0.7rem; color: var(--text-light); margin-top: 0.2rem; margin-bottom: 0.5rem; }
+        .stat-value { font-size: 1.8rem; color: var(--text-main); font-weight: 700; margin-top: auto; }
+        .micro-profile {
+            display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 1.25rem;
+            background: var(--card-bg) !important; border-color: var(--border-color) !important;
+        }
+        .micro-avatar {
+            width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center;
+            background: rgba(204,9,47,0.25); color: #fff; font-size: 1.4rem; font-weight: 800;
+        }
+        .micro-profile h3 { color: var(--text-main) !important; font-size: 1.35rem; margin: 0 0 0.3rem !important; }
+        .micro-profile p { color: var(--text-light) !important; margin: 0; }
+        .micro-profile-metric { border-left: 1px solid var(--border-color); padding: 0 2rem; min-width: 145px; }
+        .micro-profile-metric span { display: block; color: var(--text-light); font-size: 0.8rem; }
+        .micro-profile-metric strong { display: block; color: var(--text-main); font-size: 1.25rem; margin-top: 0.25rem; }
+        .micro-profile-metric strong span { display: inline; color: inherit; font-size: inherit; }
+        .micro-stats { grid-template-columns: repeat(6, minmax(135px, 1fr)); }
+        .micro-stats .stat-card { min-height: 130px; }
+        .micro-stats .stat-title { text-transform: none; font-size: 0.9rem; }
+        .micro-stats .stat-value { font-size: 2rem; }
+        .micro-justifications-card { padding: 1.5rem; }
+        .justifications-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+        .justifications-title { display: flex; align-items: center; gap: 0.85rem; }
+        .justifications-title h3 { font-size: 1.2rem; margin: 0; }
+        .justifications-title p { color: var(--text-light); font-size: 0.85rem; margin-top: 0.2rem; }
+        .section-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: rgba(204,9,47,0.12); color: #ff3b68; }
+        .section-icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .justifications-controls { display: flex; align-items: center; gap: 1rem; color: var(--text-light); font-size: 0.85rem; }
+        #micro-impact-filter { min-height: 40px; padding: 0.5rem 2rem 0.5rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-main); }
+        .occurrence-icon { width: 30px; height: 30px; display: inline-grid; place-items: center; color: #ff3b68; }
+        .occurrence-icon svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .micro-occ-table { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+        .micro-occ-row { display: grid; grid-template-columns: 160px 36px 1.2fr 2fr 110px; gap: 1rem; align-items: center; padding: 1rem 1.2rem; border-top: 1px solid var(--border-color); }
+        .micro-occ-row:first-child { border-top: 0; }
+        .micro-occ-row.header { color: var(--text-light); background: var(--bg-color); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .micro-occ-row strong { color: var(--text-main); font-size: 0.85rem; }
+        .micro-occ-row span { color: var(--text-light); font-size: 0.85rem; }
+        .macro-stats { grid-template-columns: repeat(4, minmax(190px, 1fr)); }
+        .macro-stats .stat-card { min-height: 125px; }
+        .macro-stats .stat-title { text-transform: uppercase; }
+        .ranking-card { padding: 1rem; }
+        .ranking-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0.5rem 1rem; }
+        .ranking-title { display: flex; align-items: center; gap: 0.8rem; }
+        .ranking-title h3 { margin: 0; font-size: 1.15rem; }
+        .ranking-title p { color: var(--text-light); font-size: 0.8rem; margin-top: 0.2rem; }
+        .ranking-icon { color: #ff3b68; width: 34px; height: 34px; }
+        .ranking-icon svg { width: 34px; height: 34px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .ranking-tools { display: flex; align-items: center; gap: 0.75rem; }
+        .ranking-count { color: var(--text-light); border: 1px solid var(--border-color); border-radius: 999px; padding: 0.5rem 0.8rem; font-size: 0.8rem; }
+        .ranking-table-wrap { border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+        .ranking-table-wrap table { margin: 0; }
+        .ranking-table-wrap th { background: transparent; color: var(--text-light); font-size: 0.7rem; }
+        .ranking-table-wrap td { height: 58px; }
+        .ranking-table-wrap tbody tr { cursor: pointer; transition: background 0.2s; }
+        .ranking-table-wrap tbody tr:hover { background: rgba(204,9,47,0.08); }
+        .rank-position { color: var(--text-light); font-weight: 800; }
+        .rank-person { display: flex; align-items: center; gap: 0.7rem; font-weight: 700; }
+        .rank-avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: rgba(204,9,47,0.28); color: #fff; font-size: 0.7rem; }
+        .conversion-cell { min-width: 150px; }
+        .conversion-cell strong { display: block; margin-bottom: 0.25rem; }
+        .conversion-bar { height: 6px; background: #343942; border-radius: 999px; overflow: hidden; }
+        .conversion-bar span { display: block; height: 100%; border-radius: inherit; }
+        .row-arrow { color: var(--text-light); font-size: 1.5rem; text-align: right; }
+        .ranking-footer { display: flex; justify-content: space-between; color: var(--text-light); font-size: 0.75rem; padding: 0.9rem 0.5rem 0.1rem; }
+
+        /* Tabelas */
+        table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; font-size: 0.9rem; }
+        th, td { padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background: var(--bg-color); color: var(--text-main); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
+        tbody tr:hover { background-color: var(--brand-light); }
+        
+        /* NOVO DESIGN DOS BADGES DE STATUS */
+        .status-badge { 
+            font-size: 0.7rem; 
+            padding: 0.35rem 0.6rem; 
+            border-radius: 4px; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            text-align: center;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+        
+        .bg-red { background-color: var(--status-red) !important; color: #ffffff !important; }
+        .bg-yellow { background-color: var(--status-yellow) !important; color: #ffffff !important; }
+        .bg-blue { background-color: var(--status-blue) !important; color: #ffffff !important; }
+        .bg-gray { background-color: var(--status-gray) !important; color: #ffffff !important; }
+        .bg-green { background-color: var(--status-green) !important; color: #ffffff !important; }
+        
+        /* Lista de Ocorr&#xEA;ncias (Painel Inferior e Micro) */
+        .occ-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.8rem; }
+        .occ-list li { background: var(--card-bg); padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border-color); border-left: 4px solid var(--brand-secondary); }
+        .occ-list li strong { display: block; color: var(--text-main); margin-bottom: 0.2rem; font-size: 0.95rem; }
+        .occ-list li span { display: block; color: var(--text-light); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .occ-list li em { font-size: 0.8rem; color: var(--text-main); font-style: normal; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; background: var(--bg-color); padding: 0.4rem 0.5rem; border-radius: 2px; border: 1px solid var(--border-color); }
+
+        /* Estilos do Calend&#xE1;rio Gest&#xE3;o */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; }
+        .cal-header { text-align: center; font-weight: 700; color: var(--text-light); padding: 0.5rem; font-size: 0.85rem; text-transform: uppercase; border-bottom: 1px solid var(--border-color); }
+        .cal-day {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius);
+            min-height: 90px; padding: 0.5rem; display: flex; flex-direction: column; transition: all 0.2s;
+        }
+        .cal-day.interactive { cursor: pointer; }
+        .cal-day.interactive:hover { border-color: var(--brand-primary); box-shadow: var(--shadow); background-color: var(--brand-light); }
+        .cal-day.disabled { background: var(--bg-color); color: var(--status-gray); opacity: 0.8; }
+        .cal-day.selected { border: 2px solid var(--brand-primary); background-color: var(--brand-light); }
+        .cal-date { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; color: var(--text-light); }
+        .occurrence-board { display: flex; flex-direction: column; gap: 1rem; }
+        .occurrence-filters { display: grid; grid-template-columns: repeat(3, minmax(180px, 1fr)) auto; gap: 0.8rem; align-items: center; }
+        .occurrence-filter { min-height: 44px; padding: 0.65rem 2rem 0.65rem 0.85rem; border: 1px solid var(--border-color); border-radius: 9px; background: var(--card-bg); color: var(--text-main); }
+        .occurrence-view-toggle { display: inline-flex; border: 1px solid var(--border-color); border-radius: 9px; overflow: hidden; justify-self: end; }
+        .occurrence-view-toggle button { min-height: 42px; padding: 0.6rem 1rem; border: 0; background: transparent; color: var(--text-light); cursor: pointer; font-weight: 700; }
+        .occurrence-view-toggle button.active { background: var(--brand-primary); color: #fff; }
+        .occurrence-board-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(360px, 0.6fr); gap: 1rem; align-items: stretch; }
+        .occurrence-calendar-card, .occurrence-details-card { min-height: 650px; }
+        .occurrence-calendar-heading { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .occurrence-calendar-heading h3 { margin: 0; font-size: 1.3rem; }
+        .occurrence-calendar-nav { display: flex; gap: 0.5rem; align-items: center; }
+        .occurrence-calendar-nav button { width: 38px; height: 38px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-main); cursor: pointer; font-size: 1.3rem; }
+        .occurrence-count { color: var(--text-light); border: 1px solid var(--border-color); border-radius: 999px; padding: 0.45rem 0.75rem; font-size: 0.8rem; }
+        .occurrence-details-empty { height: 100%; min-height: 450px; display: grid; place-items: center; text-align: center; color: var(--text-light); padding: 2rem; }
+        .occurrence-detail-card { border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; margin-top: 0.8rem; }
+        .occurrence-detail-head { display: flex; align-items: center; gap: 0.75rem; justify-content: space-between; }
+        .occurrence-detail-person { display: flex; align-items: center; gap: 0.7rem; }
+        .occurrence-detail-avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(204,9,47,0.28); color: #fff; display: grid; place-items: center; font-size: 0.72rem; font-weight: 800; }
+        .occurrence-detail-category { color: var(--text-main); font-weight: 700; margin-top: 1rem; }
+        .occurrence-detail-desc { color: var(--text-light); font-size: 0.85rem; line-height: 1.45; margin-top: 0.35rem; }
+        .occurrence-detail-meta { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border-color); margin-top: 1rem; padding-top: 0.8rem; gap: 0.8rem; color: var(--text-light); font-size: 0.78rem; }
+        .occurrence-list-view { display: none; }
+        .occurrence-list-view.active { display: block; }
+        .occurrence-list-row { display: grid; grid-template-columns: 110px 1.2fr 1fr 2fr 100px; gap: 0.8rem; align-items: center; padding: 0.9rem 1rem; border-top: 1px solid var(--border-color); }
+        .occurrence-list-row.header { border-top: 0; color: var(--text-light); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; background: var(--bg-color); }
+        .occurrence-list-row span { color: var(--text-light); font-size: 0.82rem; }
+        .occurrence-list-row strong { color: var(--text-main); font-size: 0.85rem; }
+        .calendar-legend { display: flex; align-items: center; gap: 1.5rem; color: var(--text-light); font-size: 0.82rem; margin-top: 1.4rem; }
+        .calendar-legend span { display: inline-flex; align-items: center; gap: 0.55rem; }
+        .legend-dot { width: 13px; height: 13px; display: inline-block; border-radius: 50%; background: #ff2758; }
+        .legend-selected { width: 24px; height: 24px; display: inline-block; border: 2px solid #ff2758; border-radius: 5px; background: rgba(204,9,47,0.14); }
+        .cal-day { min-height: 112px; }
+        .cal-day.selected { border: 2px solid #ff2758; background: rgba(204,9,47,0.16); box-shadow: 0 0 0 1px rgba(255,39,88,0.18), 0 8px 20px rgba(204,9,47,0.14); }
+        .cal-day.selected .cal-date { width: 34px; height: 34px; display: grid; place-items: center; margin-bottom: 0.25rem; border-radius: 50%; background: #ff2758; color: #fff; }
+        .cal-day .status-badge { background: rgba(204,9,47,0.28) !important; color: #fff !important; border-radius: 999px; text-transform: none; font-weight: 700; }
+        .cal-day .status-badge::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 0.4rem; border-radius: 50%; background: #ff2758; vertical-align: 1px; }
+        @media (max-width: 1050px) { .occurrence-board-grid { grid-template-columns: 1fr; } .occurrence-filters { grid-template-columns: repeat(2, 1fr); } .occurrence-view-toggle { justify-self: stretch; } }
+        @media (max-width: 650px) { .occurrence-filters { grid-template-columns: 1fr; } .occurrence-list-row { grid-template-columns: 1fr 1fr; } .occurrence-list-row.header { display: none; } }
+
+    </style>
+
+<style id="shared-management-design">
+:root{--brand-primary:#cc0033;--brand-secondary:#a9002b;--bg-color:#f4f5f7;--card-bg:#fff;--text-main:#20242c;--text-light:#646b79;--border-color:#dfe2e8;--radius:12px;--shadow:none;--brand-light:#fff0f4}
+body.dark-mode{--bg-color:#16181c;--card-bg:#22252c;--text-main:#f2f3f5;--text-light:#aeb5c2;--border-color:#353943;--brand-light:#38202b;--status-yellow:#e7ad22}
+body{font-size:14px}button,input,select{font:inherit}button,label.topbar-import{touch-action:manipulation}button,input,select{transition:background .18s,border-color .18s,box-shadow .18s}button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid #ed235b;outline-offset:3px}
+aside{width:240px;flex:0 0 240px;background:linear-gradient(160deg,#fff,#fff8fa 65%,#f9e9ee);border-right:1px solid #eadde2;color:#65404e;box-shadow:none}
+body.dark-mode aside{background:linear-gradient(145deg,#400d20,#290e1a 58%,#390b1d);border-color:#522234;color:#e0cbd4}
+aside::before{width:560px;height:680px;left:-180px;bottom:-280px;border:1px solid #cc003326;box-shadow:0 0 0 24px #cc003305,0 0 0 56px #cc003304;animation:managementAmbient 24s ease-in-out infinite alternate}aside::after{top:55px;left:-100px;width:390px;height:80px;bottom:auto;border:1px solid #cc003326;animation:managementAmbient 19s ease-in-out infinite alternate-reverse}body.dark-mode aside::before,body.dark-mode aside::after{border-color:#d51d4e50}
+.sidebar-header{padding:30px 24px 24px;border:0;text-align:center}.sidebar-header .brand-logo{display:block;width:170px;height:40px;object-fit:contain;margin:0 auto 12px;filter:none}.dark-mode .sidebar-header .brand-logo{filter:brightness(0) invert(1)}.sidebar-header h1{font-size:13px;color:inherit;font-weight:600;margin-bottom:5px}.sidebar-header>span{font-size:11px;letter-spacing:0;text-transform:none;color:inherit;opacity:.75}
+.import-btn-container{display:none}.menu-section{padding:12px;min-height:0}.menu-title{padding:0 12px;color:inherit;opacity:.65;font-size:10px;letter-spacing:1px;font-weight:500;margin-bottom:14px}.nav-item{border:1px solid transparent;border-radius:10px;padding:13px 12px;margin-bottom:6px;font-size:13px;color:inherit}.nav-item:hover{background:#cc003309;color:#a20b35}.nav-item.active,.btn-micro.active{background:#cc003313;color:#b30838;border:1px solid #cc003322;box-shadow:inset 3px 0 #cc0033}.dark-mode .nav-item{color:#e0cbd4}.dark-mode .nav-item:hover{background:#ffffff08;color:#fff}.dark-mode .nav-item.active,.dark-mode .btn-micro.active{background:#bc164538;border:1px solid #cd365840;box-shadow:inset 3px 0 #ed235b;color:#fff}
+.analyst-list{border-color:#a87b8d30;margin-top:22px;padding-top:22px}.analyst-search{margin:0 0 12px}.analyst-search input{color:inherit;background:#ffffff40;border-color:#a87b8d40;border-radius:9px;font-size:12px}.analyst-search input::placeholder{color:inherit;opacity:.7}.analyst-search:before{color:inherit}.dark-mode .analyst-search input{background:#ffffff06}.analyst-avatar,.rank-avatar,.micro-avatar,.occurrence-detail-avatar{background:#a70e3c;color:#fff}.btn-micro{font-size:12px}.sidebar-footer{margin:0 18px;padding:16px 0;border-color:#a87b8d30}.sidebar-theme-toggle{color:inherit}.sidebar-footer .settings-button{display:flex;gap:10px;align-items:center;border:0;background:transparent;color:inherit;padding:8px 0 18px;cursor:pointer}.sidebar-theme-label{font-size:12px}body:not(.dark-mode) .theme-switch{background:#dbc3cc}
+main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;box-shadow:none;padding:25px 28px 20px;gap:20px;flex-wrap:wrap}.topbar-heading{gap:7px}.topbar h2{font-size:28px;letter-spacing:-.7px;color:var(--text-main)}.topbar-breadcrumb{font-size:11px;font-weight:400}.topbar-subtitle{font-size:13px;color:var(--text-light)}.topbar-controls{gap:10px;flex-wrap:wrap}.topbar-controls select,body.dark-mode .topbar-controls select{background:var(--card-bg);color:var(--text-main);border-color:var(--border-color);border-radius:8px;box-shadow:none;font-size:12px;min-height:40px}.topbar-import{font-size:12px;box-shadow:none;min-height:40px;display:inline-flex;align-items:center}.topbar-count{font-size:11px!important}.content-area{padding:0 28px 24px;width:100%;max-width:none;margin:0}.view{animation:none}.view:not(.active){display:none!important}
+.card{border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:none}.dashboard-grid{gap:14px;margin-bottom:18px}.macro-stats{grid-template-columns:repeat(4,minmax(0,1fr))}.stat-card{position:relative;border:1px solid var(--border-color)!important;border-radius:12px;padding:20px 16px 18px 65px;min-height:122px!important;background:var(--card-bg)!important}.stat-icon{position:absolute;top:19px;left:16px;width:34px;height:34px;background:transparent;color:var(--text-main);margin:0}.stat-title,.macro-stats .stat-title,.micro-stats .stat-title{text-transform:none;font-size:12px;line-height:1.4}.stat-subtitle{font-size:11px;line-height:1.5;margin-bottom:8px}.stat-value,.micro-stats .stat-value{font-size:30px;letter-spacing:-.6px;margin-top:6px}.stat-card.yellow .stat-value{color:#ce900c}.dark-mode .stat-card.yellow .stat-value{color:#ffc04d}.micro-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.micro-stats .stat-card{min-height:95px!important}.micro-profile{gap:18px}.micro-profile h3{font-size:20px}.micro-profile p{font-size:12px}.micro-profile-metric{padding:0 18px;min-width:120px}.micro-profile-metric strong{font-size:19px}
+.ranking-heading{padding:0 0 18px}.ranking-title h3,.justifications-title h3{font-size:17px}.ranking-title p,.justifications-title p{font-size:12px}.ranking-icon,.section-icon{color:var(--text-main);background:none}.ranking-count{font-size:11px}.ranking-table-wrap{overflow:auto}.ranking-table-wrap table{min-width:730px}.ranking-table-wrap th{background:var(--bg-color);font-size:10px;letter-spacing:.4px}.ranking-table-wrap td{font-size:12px;height:66px}.rank-person strong{font-size:12px}.ranking-footer{gap:14px;line-height:1.6}.status-badge{border-radius:6px;font-size:10px;letter-spacing:0;font-weight:600}.conversion-bar{background:var(--border-color)}
+.occurrence-filters{grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:10px}.occurrence-filter{font-size:12px;min-height:40px;background:var(--card-bg)!important}.occurrence-view-toggle button{font-size:12px;min-height:38px}.occurrence-board-grid{grid-template-columns:minmax(0,1.5fr) minmax(290px,1fr);gap:16px}.occurrence-calendar-card,.occurrence-details-card{min-height:0;margin:0}.occurrence-calendar-heading{flex-wrap:wrap;gap:10px}.occurrence-calendar-heading h3{font-size:18px}.occurrence-count{font-size:11px}.calendar-grid{grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.cal-header{font-size:10px;border:0;font-weight:500;padding:6px}.cal-day{min-height:76px;border-radius:8px;padding:7px}.cal-date{font-size:12px;margin-bottom:5px}.cal-day.selected .cal-date{height:22px;width:22px;font-size:12px}.cal-day .status-badge{font-size:10px;padding:5px 3px;color:#ae0d3b!important;background:#cc003317!important}.dark-mode .cal-day .status-badge{color:#ff98b2!important}.cal-day .status-badge:before{display:none}.calendar-legend{font-size:11px;margin-top:18px;gap:16px}.legend-dot{width:9px;height:9px}.legend-selected{width:16px;height:16px}.occurrence-details-empty{min-height:280px;font-size:13px;line-height:1.7}.occurrence-details-card{max-height:620px;overflow:auto}.occurrence-details-card h3{font-size:17px}.occurrence-detail-person{font-size:12px}.occurrence-detail-desc{overflow-wrap:anywhere}.occurrence-list-view{overflow:auto}.occurrence-list-row{min-width:700px}.micro-occ-table{overflow:auto}.micro-occ-row{grid-template-columns:100px 30px 1.1fr 2fr 85px;gap:12px;padding:14px;min-width:640px}.justifications-heading{flex-wrap:wrap}.empty-state{max-width:700px;margin:7vh auto;padding:45px 30px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:18px}.empty-state h3{font-size:23px}.empty-state p{font-size:14px;line-height:1.7}.empty-import{display:inline-block;margin-top:24px;border:0;border-radius:9px;background:var(--brand-primary);color:#fff;padding:13px 20px;cursor:pointer}
+.management-dialog{margin:auto;width:min(480px,calc(100% - 32px));padding:28px;border:1px solid var(--border-color);border-radius:18px;background:var(--card-bg);color:var(--text-main);box-shadow:0 28px 90px #0005}.management-dialog::backdrop{background:#0c0f1670;backdrop-filter:blur(8px)}.management-dialog[open]{animation:managementModal .25s cubic-bezier(.16,1,.3,1)}.management-dialog h3{font-size:22px;margin-bottom:12px}.management-dialog p{color:var(--text-light);line-height:1.7;font-size:13px;margin-bottom:24px}.management-dialog .btn-clear{color:var(--brand-primary);border:1px solid var(--border-color);padding:12px;font-size:12px;text-transform:none;letter-spacing:0;width:100%}.dialog-close{position:absolute;right:18px;top:16px;background:transparent;border:0;color:var(--text-light);font-size:24px;cursor:pointer}.mobile-nav-button{display:none}
+@keyframes managementAmbient{from{transform:rotate(-25deg) translate(0,0)}to{transform:rotate(-19deg) translate(15px,-20px)}}@keyframes managementModal{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+@media(min-width:1500px){.micro-stats{grid-template-columns:repeat(6,minmax(0,1fr))}.topbar{padding-top:30px}.cal-day{min-height:90px}}
+@media(max-width:1150px){aside{width:220px;flex-basis:220px}.topbar{padding:22px}.content-area{padding:0 22px 22px}.stat-card{padding:16px}.stat-icon{position:static;margin-bottom:8px}.occurrence-board-grid{grid-template-columns:minmax(0,1fr)}.occurrence-details-card{max-height:400px}.occurrence-filters{grid-template-columns:1fr 1fr}.occurrence-view-toggle{justify-self:start}.micro-profile{grid-template-columns:auto 1fr}.ranking-tools{display:none}}
+@media(max-width:700px){body{height:100dvh}aside{position:fixed;inset:0 auto 0 0;width:240px;transform:translateX(-100%);transition:transform .25s;z-index:100}body.menu-open aside{transform:translateX(0);box-shadow:0 0 0 100vmax #0006}.mobile-nav-button{display:block;border:1px solid var(--border-color);border-radius:8px;color:var(--text-main);background:var(--card-bg);padding:9px 12px;margin-bottom:10px}.topbar{padding:18px 16px}.topbar h2{font-size:25px}.topbar-controls{width:100%;gap:8px}.topbar-controls select{max-width:180px}.topbar-count{margin-left:0}.content-area{padding:0 16px 20px}.macro-stats,.micro-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-card{padding:14px;min-height:135px!important}.stat-value{font-size:27px}.card{padding:15px}.micro-profile-metric{padding:0 10px}.micro-profile h3{font-size:16px}.occurrence-filters{grid-template-columns:1fr}.occurrence-calendar-heading h3{font-size:16px}.calendar-grid{gap:4px}.cal-day{min-height:67px;padding:4px}.cal-day .status-badge{font-size:8px}.occurrence-count{display:none}.ranking-footer{flex-direction:column}.justifications-controls{flex-wrap:wrap}.empty-state{margin:12px auto;padding:30px 18px}.empty-state h3{font-size:20px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<style>@media(min-width:1151px){.micro-stats{grid-template-columns:repeat(6,minmax(0,1fr))}.micro-stats .stat-card{padding:16px 14px}.micro-stats .stat-icon{position:static;margin-bottom:8px;width:26px;height:26px}.micro-stats .stat-value{font-size:27px}.micro-stats .stat-title{font-size:11px}}.cal-day>div[style]{color:var(--text-light)!important}</style><style>@media(max-width:700px){.calendar-no-records{display:none}.cal-day .status-badge{overflow-wrap:anywhere;border-radius:5px}}</style></head>
+<body>
+
+    <aside>
+        <div class="sidebar-header">
+            <img class="brand-logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODQgMzgiPjxnIGZpbGw9IiNjYzAwMzMiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMCAtMTMpIj48cGF0aCBkPSJNMzkuMTYsMjQuMDNjLTEuNzksMC0zLjc1LjE2LTUuNjkuNDksMS45Ni0yLjUyLDUuMDctNC4xNCw4LjUzLTQuMTQsMi41NiwwLDUuMTEuOTYsNi44MywyLjQuMzEuMjYuNTUuMjguNzkuMDUuMjQtLjI0LjIyLS40Ny0uMDUtLjc4LTIuMjUtMi42MS01LjU0LTQuMzctOS40NC00LjMtNS4wOS4wOS05LjQxLDMuMzEtMTEuMDYsNy43OC0xLjUxLjQ3LTIuODksMS4wMy00LjExLDEuNzItLjMzLjE5LS40NS40Mi0uMzMuNzEuMTIuMjYuMzYuMzUuNjkuMjYsMS4wNS0uMzEsMi4xMy0uNTYsMy4yNS0uOC0uMTIuNTktLjE5LDEuMi0uMTksMS44My0uMSw0LjExLDIuMSw4LjAyLDUuNSwxMC4xNi4zMy4yMS42Mi4yMS44MS0uMDUuMTktLjI2LjE3LS40OS0uMTItLjc1LTIuMTUtMS45My0zLjM1LTQuOC0zLjM1LTcuNjQsMC0xLjQzLjI5LTIuODIuODQtNC4wNywxLjEyLS4wOSwyLjM0LS4xNiwzLjY4LS4xNiw4LjcsMCwxNi4wMywyLjg3LDE2LjAzLDYuNjMsMCwxLjktMi40MSwzLjgxLTUuMjgsNS4wOC0uNjkuMzEtLjc2LjUyLS42Ny44Mi4xLjI4LjQxLjM4Ljc2LjI2LDUuMDItMS42NSw4LjgyLTQuMzUsOC44Mi03LjYyLDAtNC40NC03LjE3LTcuODgtMTYuMjUtNy44OGgwWiIvPjxwYXRoIGQ9Ik00My4zMiw0Ni42M3YtOS41MmMwLS4zNi0uMzUtLjUtLjY0LS4zM2wtMi40MiwxLjM5djguOTJoMi42Yy4yNiwwLC40Ni0uMi40Ni0uNDZaIi8+PHBhdGggZD0iTTM3LjMxLDQwLjIxdjYuNThjMCwuMTYuMTMuMy4zLjNoMS44M3YtOC40NWwtMS44MywxLjA1Yy0uMTkuMTEtLjMuMjctLjMuNTJaIi8+PC9nPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1IC0xMDcpIHNjYWxlKDIuMzUpIj48cGF0aCBkPSJNMjguNjQsNTQuNzFjLS43OC0uMDItMS40Ni4wOC0yLjEzLjI0LS4xMy40NS0uMTEsMS4xLDAsMS41Ni44My0uMTksMS4yOS0uMjEsMS44MS0uMjEsMS4wMiwwLDEuNTEuNDEsMS41MSwxLjI2di4wOGMtLjMtLjAzLS42Ny0uMDYtLjkyLS4wNi0xLjY5LDAtMy4xMy42LTMuMTMsMi4yMywwLDEuODMsMS4zLDIuNDUsMy4yLDIuNDUuODksMCwxLjg2LS4xNiwyLjc1LS40M3YtNC4xMmMwLTEuOTctMS4wNy0yLjk0LTMuMDgtMi45OWgtLjAxWk0yOS44Myw2MC42M2MtLjExLjAzLS42LjA4LS44NC4wOC0uOTEsMC0xLjQtLjI3LTEuNC0uOTFzLjQ5LS44OSwxLjQtLjg5Yy4zLDAsLjY1LjAzLjg0LjA1djEuNjdaIi8+PHBhdGggZD0iTTI1LDU0LjgxYy0uOTQsMC0xLjQ4LjM3LTEuOTksMS4wMi0uMDUtLjMzLS4xMS0uNi0uMjItLjk0LS4xOS0uMDYtLjUyLS4wOC0uODEtLjA4LS4yNywwLS42Mi4wMy0uNzkuMDh2Ny4yYy4yNC4wNi42NC4wOC45OS4wOHMuNzgtLjAzLjk5LS4wOHYtMy41MWMwLTEuNC43My0yLjE1LDEuNzItMi4xNS4xNywwLC40OCwwLC42NS4wMy4xMS0uNDYuMTMtMS4xMy4wMy0xLjU5LS4xMS0uMDMtLjQtLjA2LS41Ni0uMDZoLS4wMVoiLz48cGF0aCBkPSJNMTYuNzcsNTQuNzRjLS41NywwLTEuMTMuMTMtMS40OC4zdi0zLjUzYy0uNTYuMjEtMS4xNC40OS0xLjY0Ljg5LS4yNS4yMS0uMzMuNDEtLjMzLjcydjguNzFjLjUyLjIyLDEuNTkuNDEsMi42MS40MSwyLjU4LDAsNC4wNS0xLjU3LDQuMDUtMy44NXMtMS4wNS0zLjY2LTMuMjEtMy42NmgwWk0xNi4wMyw2MC42NGMtLjIxLDAtLjUyLDAtLjc1LS4wOHYtMy45NmMuMjctLjE0LjY1LS4yMiwxLjE0LS4yMi45OSwwLDEuNTEuNjgsMS41MSwxLjk3cy0uNjIsMi4yOS0xLjkxLDIuMjloLjAxWiIvPjxwYXRoIGQ9Ik0zNy40Niw1My4xMnYxLjczYy0uMzUtLjEtLjcyLS4xMS0xLjAzLS4xMS0yLjE4LDAtMy42NiwxLjQ2LTMuNjYsMy44czEuNDUsMy43LDMuNywzLjdjMS4wMywwLDIuMDUtLjE0LDIuOTYtLjQ1di0xMC4yOWMtLjU2LjIxLTEuMTQuNDktMS42NC44OS0uMjUuMjEtLjMzLjQxLS4zMy43MmgwWk0zNy40Niw2MC41M2MtLjMzLjEtLjU3LjExLS44NC4xMS0xLjMsMC0xLjgxLS44Ni0xLjgxLTIuMSwwLTEuMzguNTEtMi4yMywxLjgtMi4yMy4zOCwwLC42Mi4wNS44Ni4xMXY0LjFoMFoiLz48cGF0aCBkPSJNNTEuNTcsNTcuODFsLS43OS0uMzNjLS40Ni0uMTktLjczLS4zNS0uNzMtLjY1LDAtLjQ2LjQxLS41Ni45NS0uNTZzMS4xLjA2LDEuODYuM2MuMS0uNTIuMS0xLjAyLDAtMS40OC0uNDgtLjI1LTEuMzctLjM4LTIuMTUtLjM4LTEuNTMsMC0yLjY5LjgzLTIuNjksMi4wNywwLDEuMTEuNDgsMS42NywxLjgxLDIuMjFsLjYyLjI1Yy41OS4yNC43Ni4zOC43Ni43NiwwLC41Ny0uNTcuNjctMS4wNS42Ny0uNzksMC0xLjQtLjE2LTIuMTYtLjQzLS4xMy40Ni0uMTMsMS4wNywwLDEuNTQuNjUuMzUsMS41NC40NiwyLjQ4LjQ2LDEuNTEsMCwyLjcyLS43OSwyLjcyLTIuMjMsMC0xLjE4LS41MS0xLjczLTEuNjQtMi4yMWgwWiIvPjxwYXRoIGQ9Ik01Ny43LDYwLjYzYy0uOTksMC0xLjY0LS43OC0xLjY0LTIuMTVzLjUyLTIuMTUsMS42NS0yLjE1Yy40OCwwLC44MS4wOCwxLjI2LjI1LjEzLS40NS4zNy0uOTUuNy0xLjM4LS42Mi0uMzItMS4yMi0uNDktMi4yMS0uNDktMi4xOCwwLTMuNDMsMS41NC0zLjQzLDMuNzdzMS4yOSwzLjc3LDMuNTEsMy43N2MuODEsMCwxLjU2LS4xNCwyLjE2LS40OC0uMjctLjM1LS41Ny0uODMtLjc1LTEuMzgtLjU2LjIyLS43OS4yNC0xLjI2LjI0aDBaIi8+PHBhdGggZD0iTTYzLjIyLDU0LjcxYy0yLjIxLDAtMy40NSwxLjUxLTMuNDUsMy43OHMxLjMsMy43NSwzLjQ1LDMuNzUsMy40Ny0xLjQ4LDMuNDctMy43NS0xLjI0LTMuNzgtMy40Ny0zLjc4Wk02My4yMiw2MC42NmMtMS4xLDAtMS40My0uODktMS40My0yLjE2cy4zMy0yLjE5LDEuNDMtMi4xOSwxLjQ1LjkyLDEuNDUsMi4xOWMwLDEuMzQtLjM3LDIuMTYtMS40NSwyLjE2WiIvPjxwYXRoIGQ9Ik00My45OCw1NC43MWMtMi4xMywwLTMuNDMsMS40My0zLjQzLDMuODJzMS4zOCwzLjcyLDMuNzUsMy43MmMuODEsMCwxLjY5LS4xNCwyLjI0LS40MS4xMS0uNDYuMTEtMS4wNywwLTEuNTMtLjczLjIxLTEuMzUuMzMtMi4wMy4zMy0xLjEsMC0xLjg2LS40MS0yLjAyLTEuNTdoNC40OGMuMDYtLjE3LjA4LS43Ni4wOC0xLDAtMi4xNS0xLjIxLTMuMzUtMy4wNy0zLjM1aDBaTTQyLjQ5LDU3LjYyYy4xNC0uODcuNjctMS40LDEuNDYtMS40Ljg5LDAsMS4yNC42LDEuMjcsMS40aC0yLjczWiIvPjwvZz48L2c+PC9zdmc+" alt="Bradesco">
+            <h1>Vis&#xE3;o da Lideran&#xE7;a</h1>
+            <span>Gest&#xE3;o de Produtividade</span>
+        </div>
+        
+        <div class="import-btn-container">
+            <label for="import-files" class="btn-import">
+                + Importar Fechamentos
+                <input type="file" id="import-files" accept=".json" multiple style="display:none;" onchange="handleFileUpload(event)">
+            </label>
+            <button class="btn-clear" onclick="clearDatabase()">Limpar Banco de Dados</button>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-title">Vis&#xE3;o Consolidada</div>
+            <button class="nav-item active" onclick="switchView('macro')" id="btn-macro">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-8M22 19V3"/></svg>
+                <span>Painel da Equipe</span>
+            </button>
+            <button class="nav-item" onclick="switchView('ocorrencias')" id="btn-ocorrencias">
+                <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6zM15 3v4h4M9 12h6M9 16h6"/></svg>
+                <span>Quadro de Ocorr&#xEA;ncias</span>
+            </button>
+            
+            <div class="analyst-list" id="analyst-menu-container" style="display: none;">
+                <div class="menu-title">Equipe (Raio-X Individual)</div>
+                <div class="analyst-search">
+                    <input id="analyst-search-input" type="search" placeholder="Buscar analista..." oninput="filterAnalysts(this.value)">
+                </div>
+                <div id="analyst-menu">
+                    <!-- Gerado via JS -->
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <button class="sidebar-theme-toggle" id="theme-toggle-sidebar" onclick="toggleTheme()" aria-label="Alternar tema">
+                <span class="sidebar-theme-label"><span style="font-size:1.35rem;">&#x263E;</span><span>Tema escuro</span></span>
+                <span class="theme-switch" aria-hidden="true"></span>
+            </button>
+        </div>
+    </aside>
+
+    <main>
+        <div class="topbar">
+            <div class="topbar-heading">
+                <div class="topbar-breadcrumb"><strong>Gest&#xE3;o</strong> <span>/</span> Vis&#xE3;o consolidada</div>
+                <h2 id="topbar-title">Painel Geral da Equipe</h2>
+                <div class="topbar-subtitle">Acompanhe os resultados e a evolu&#xE7;&#xE3;o do seu time.</div>
+            </div>
+            
+            <div class="topbar-controls">
+                <span class="control-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 21h16M6 21V5h8v16M14 9h4v12M8 8h2M8 12h2M8 16h2M16 13h1M16 17h1"/></svg></span>
+                <select id="global-area-selector" onchange="changeGlobalArea(this.value)" title="Filtrar por &#xE1;rea">
+                    <option value="TODAS">Todas as &#xE1;reas</option>
+                </select>
+                <select id="global-month-selector" style="display: none;" onchange="changeGlobalCompetencia(this.value)"></select>
+                <label for="import-files" class="topbar-import">Importar fechamentos</label>
+                <div class="topbar-count" style="font-size: 0.8rem; color: var(--text-light);">
+                    Analistas: <strong id="lbl-analyst-count" style="color: var(--text-main)">0</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            
+            <!-- ESTADO VAZIO -->
+            <div id="view-empty" class="view active">
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="#ccc" viewBox="0 0 16 16" style="margin-bottom:1rem;">
+                      <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                      <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.701 19.701 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a10.954 10.954 0 0 0 .98 1.686 5.753 5.753 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.856.856 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.716 5.716 0 0 1-.911-.95 11.642 11.642 0 0 0-1.997.406 11.311 11.311 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.793.793 0 0 1-.58.029zm1.379-1.901c-.166.076-.32.156-.459.238-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361.01.022.02.036.026.044a.27.27 0 0 0 .08-.024c.116-.063.246-.15.368-.266.36-.34.697-.84.97-1.393z"/>
+                    </svg>
+                    <h3>Nenhum fechamento importado</h3>
+                    <p>Utilize o bot&#xE3;o lateral para selecionar os arquivos JSON gerados pela sua equipe.</p>
+                </div>
+            </div>
+
+            <!-- TELA: VIS&#xC3;O MACRO DA EQUIPE -->
+            <div id="view-macro" class="view">
+                <div class="dashboard-grid macro-stats" id="macro-stats">
+                    <!-- Preenchido via JS -->
+                </div>
+
+                <div class="card ranking-card">
+                    <div class="ranking-heading">
+                        <div class="ranking-title">
+                            <span class="ranking-icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3 2.5-5 6-5s6 2 6 5M10 20c0-3 2.5-5 6-5s6 2 6 5"/></svg></span>
+                            <div><h3>Ranking da equipe</h3><p>Ordenado por volume realizado.</p></div>
+                        </div>
+                        <div class="ranking-tools"><span class="ranking-count" id="ranking-count">0 analistas</span><span class="ranking-count">↕ Maior volume</span></div>
+                    </div>
+                    <div class="ranking-table-wrap"><table>
+                        <thead>
+                            <tr>
+                                <th>Posição</th>
+                                <th>Analista</th>
+                                <th>Jornada</th>
+                                <th>Recebidos</th>
+                                <th>Realizados</th>
+                                <th>Convers&#xE3;o de Meta</th>
+                                <th>Pendências</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="macro-ranking">
+                            <!-- Preenchido via JS -->
+                        </tbody>
+                    </table></div>
+                    <div class="ranking-footer"><span id="ranking-footer-count">Mostrando 0 analistas</span><span>Selecione um analista para ver os detalhes.</span></div>
+                </div>
+                <div class="ranking-footer" style="padding: 0 0.2rem;"><span>ⓘ &nbsp; Ranking por volume absoluto; considere a jornada na comparação.</span></div>
+            </div>
+
+            <!-- TELA: QUADRO DE OCORR&#xCA;NCIAS GLOBAL (CALEND&#xC1;RIO) -->
+            <div id="view-ocorrencias" class="view">
+                <div class="occurrence-board">
+                    <div class="occurrence-filters">
+                        <select id="occ-analyst-filter" class="occurrence-filter" onchange="applyOccurrenceFilters()"><option value="TODOS">Todos os analistas</option></select>
+                        <select id="occ-type-filter" class="occurrence-filter" onchange="applyOccurrenceFilters()"><option value="TODOS">Todos os tipos</option></select>
+                        <select id="occ-impact-filter" class="occurrence-filter" onchange="applyOccurrenceFilters()">
+                            <option value="TODOS">Todos os impactos</option><option value="ALTO">Alto impacto</option><option value="MÉDIO">Médio impacto</option><option value="BAIXO">Baixo impacto</option>
+                        </select>
+                        <div class="occurrence-view-toggle"><button id="occ-calendar-mode" class="active" onclick="setOccurrenceMode('calendar')">&#x1F4C5; Calendário</button><button id="occ-list-mode" onclick="setOccurrenceMode('list')">&#x2637; Lista</button></div>
+                    </div>
+                    <div class="occurrence-board-grid">
+                        <div class="card occurrence-calendar-card">
+                            <div class="occurrence-calendar-heading">
+                                <div class="occurrence-calendar-nav"><button onclick="changeOccurrenceMonth(-1)" aria-label="Mês anterior">&#x2039;</button><h3 id="occ-month-title">Mês/Ano</h3><button onclick="changeOccurrenceMonth(1)" aria-label="Próximo mês">&#x203A;</button></div>
+                                <span class="occurrence-count" id="occurrence-total-count">0 ocorrências</span>
+                            </div>
+                            <div id="occ-calendar-grid" class="calendar-grid"></div>
+                            <div class="calendar-legend"><span><i class="legend-dot"></i> Com ocorrência</span><span><i class="legend-selected"></i> Dia selecionado</span></div>
+                        </div>
+                        <div class="card occurrence-details-card">
+                            <h3 id="occ-details-title">Detalhes do dia</h3>
+                            <div id="occ-details-list"><div class="occurrence-details-empty">Selecione um dia no calendário para consultar os registros.</div></div>
+                        </div>
+                    </div>
+                    <div id="occ-list-view" class="card occurrence-list-view">
+                        <h3 style="margin-bottom: 0.8rem;">Lista de ocorrências</h3>
+                        <div id="occ-list-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA: MICRO (ANALISTA INDIVIDUAL) -->
+            <div id="view-micro" class="view">
+                <div class="card micro-profile">
+                    <div class="micro-avatar" id="micro-initials">DF</div>
+                    <div>
+                        <h3 id="micro-name">Nome do Analista</h3>
+                        <p>Funcional: <span id="micro-func"></span> <b>&bull;</b> <span id="micro-area"></span></p>
+                    </div>
+                    <div class="micro-profile-metric"><span>Jornada registrada</span><strong><span id="micro-jornada"></span>h</strong></div>
+                    <div class="micro-profile-metric"><span>Meta diária</span><strong id="micro-meta"></strong></div>
+                </div>
+
+                <div class="dashboard-grid micro-stats" id="micro-stats">
+                    <!-- Preenchido via JS -->
+                </div>
+
+                <div class="card micro-justifications-card">
+                    <div class="justifications-heading">
+                        <div class="justifications-title">
+                            <span class="section-icon"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h5M8 13h8M8 17h5"/></svg></span>
+                            <div><h3>Justificativas registradas</h3><p>Contexto e ocorrências que impactaram o período.</p></div>
+                        </div>
+                        <div class="justifications-controls">
+                            <span id="micro-occurrence-count">0 registros</span>
+                            <select id="micro-impact-filter" onchange="filterMicroOccurrences()">
+                                <option value="TODOS">Todos os impactos</option>
+                                <option value="ALTO">Alto</option>
+                                <option value="MÉDIO">Médio</option>
+                                <option value="BAIXO">Baixo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="micro-justifications" class="occ-list">
+                        <!-- Preenchido via JS -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Ativar modo escuro" title="Alternar tema">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.7 15.2A8.7 8.7 0 0 1 8.8 3.3 8.7 8.7 0 1 0 20.7 15.2Z"/></svg>
+    </button>
+
+    <script>
+        // Banco de dados em mem\u00F3ria agrupado por compet\u00EAncia (M\u00EAs) e depois por Funcional
+        let teamData = {};
+        let currentCompetencia = "";
+        let currentArea = "TODAS";
+
+        // --- INICIALIZA\u00C7\u00C3O E BANCO DE DADOS (LOCALSTORAGE) ---
+        function initApp() {
+            applyTheme(localStorage.getItem('gestaoProdTheme') || 'light');
+            const savedData = localStorage.getItem('gestaoProdData');
+            if (savedData) {
+                try {
+                    teamData = JSON.parse(savedData);
+                    normalizeImportedData();
+                    updateUI();
+                } catch (e) {
+                    console.error("Falha ao carregar o banco de dados local.", e);
+                }
+            }
+        }
+
+        function applyTheme(theme) {
+            const isDark = theme === 'dark';
+            document.body.classList.toggle('dark-mode', isDark);
+            const buttons = [document.getElementById('theme-toggle'), document.getElementById('theme-toggle-sidebar')];
+            buttons.forEach(button => {
+                if (!button) return;
+                if (button.id === 'theme-toggle') button.innerHTML = isDark
+                    ? '<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>'
+                    : '<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.7 15.2A8.7 8.7 0 0 1 8.8 3.3 8.7 8.7 0 1 0 20.7 15.2Z"/></svg>';
+                button.title = isDark ? 'Ativar modo claro' : 'Ativar modo escuro';
+                button.setAttribute('aria-label', button.title);
+            });
+        }
+
+        function toggleTheme() {
+            const nextTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+            localStorage.setItem('gestaoProdTheme', nextTheme);
+            applyTheme(nextTheme);
+        }
+
+        function saveDatabase() {
+            localStorage.setItem('gestaoProdData', JSON.stringify(teamData));
+        }
+
+        function clearDatabase() {
+            if (confirm("ATEN\u00C7\u00C3O: Essa a\u00E7\u00E3o vai excluir TODOS os relat\u00F3rios importados armazenados neste computador. Tem certeza de que deseja limpar toda a base de dados gerencial?")) {
+                teamData = {};
+                currentCompetencia = "";
+                currentArea = "TODAS";
+                saveDatabase();
+                updateUI();
+            }
+        }
+
+        function normalizeImportedData() {
+            Object.values(teamData).forEach(competencia => {
+                Object.values(competencia).forEach(data => {
+                    if (!data.area) data.area = "CONSUMIDOR.GOV";
+                    data.area = data.area.toLocaleUpperCase('pt-BR');
+                    if (data.analista && data.analista.nome) {
+                        data.analista.nome = data.analista.nome.trim().toLocaleUpperCase('pt-BR');
+                    }
+                    if (Array.isArray(data.ocorrencias)) {
+                        data.ocorrencias.forEach(occurrence => {
+                            if (occurrence.category) occurrence.category = occurrence.category.toLocaleUpperCase('pt-BR');
+                            if (occurrence.desc) occurrence.desc = occurrence.desc.trim().toLocaleUpperCase('pt-BR');
+                        });
+                    }
+                });
+            });
+        }
+
+        function getAreaLabel(area) {
+            const labels = {
+                "CONSUMIDOR.GOV": "Consumidor.gov",
+                "PROCON": "PROCON",
+                "OUTRA": "Outra \u00E1rea"
+            };
+            return labels[area] || area || "\u00C1rea n\u00E3o informada";
+        }
+
+        // --- FUN\u00C7\u00D5ES DE DATA ---
+        function formatDateBR(dateStr) {
+            if (!dateStr) return "";
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+
+        function getMonthName(monthIndex, year) {
+            const months = ['Janeiro','Fevereiro','Mar\u00E7o','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+            return `${months[monthIndex]} de ${year}`;
+        }
+
+        // --- SISTEMA DE IMPORTA\u00C7\u00C3O ---
+        function handleFileUpload(event) {
+            const input = event.target;
+            const files = input.files;
+            
+            if (!files || files.length === 0) return;
+
+            let filesProcessed = 0;
+            let successCount = 0;
+            const totalFiles = files.length;
+
+            for (let i = 0; i < totalFiles; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        // Valida\u00E7\u00E3o e inser\u00E7\u00E3o na \u00E1rvore de compet\u00EAncias
+                        if (data.tipo_documento === "fechamento_mensal" && data.analista && data.analista.funcional && data.competencia) {
+                            if (!data.area) data.area = "CONSUMIDOR.GOV";
+                            
+                            if (!teamData[data.competencia]) {
+                                teamData[data.competencia] = {};
+                            }
+                            
+                            teamData[data.competencia][data.analista.funcional] = data;
+                            currentCompetencia = data.competencia; 
+                            
+                            successCount++;
+                        } else {
+                            console.warn("Arquivo ignorado: Formato inv\u00E1lido ou incompat\u00EDvel.", file.name);
+                        }
+                    } catch (err) {
+                        console.error("Erro ao interpretar a estrutura do arquivo", file.name, err);
+                    }
+                    
+                    filesProcessed++;
+                    
+                    if (filesProcessed === totalFiles) {
+                        input.value = ''; 
+                        finalizeImport(successCount);
+                    }
+                };
+
+                reader.onerror = function() {
+                    console.error("Falha t\u00E9cnica ao ler arquivo", file.name);
+                    filesProcessed++;
+                    if (filesProcessed === totalFiles) {
+                        input.value = ''; 
+                        finalizeImport(successCount);
+                    }
+                };
+
+                reader.readAsText(file);
+            }
+        }
+
+        function finalizeImport(successCount) {
+            if (successCount > 0) {
+                saveDatabase(); // Salva no LocalStorage assim que finaliza a importa\u00E7\u00E3o!
+                alert(`${successCount} relat\u00F3rio(s) importado(s) e gravado(s) com sucesso na base de dados.`);
+                updateUI();
+            } else {
+                alert("Nenhum relat\u00F3rio v\u00E1lido foi encontrado.");
+            }
+        }
+
+        // --- ATUALIZA\u00C7\u00C3O GLOBAL DA INTERFACE ---
+        function updateUI() {
+            const competencias = Object.keys(teamData).sort().reverse(); 
+            normalizeImportedData();
+            const areas = [...new Set(Object.values(teamData).flatMap(comp => Object.values(comp).map(data => data.area || "CONSUMIDOR.GOV")))].sort();
+            const areaSelector = document.getElementById('global-area-selector');
+            areaSelector.innerHTML = '<option value="TODAS">Todas as \u00E1reas</option>' +
+                areas.map(area => `<option value="${area}">${getAreaLabel(area)}</option>`).join('');
+            if (!areas.includes(currentArea)) currentArea = "TODAS";
+            areaSelector.value = currentArea;
+            
+            if (competencias.length === 0) {
+                document.getElementById('analyst-menu-container').style.display = 'none';
+                document.getElementById('global-month-selector').style.display = 'none';
+                switchView('empty');
+                return;
+            }
+
+            const selector = document.getElementById('global-month-selector');
+            selector.innerHTML = competencias.map(comp => {
+                const [year, month] = comp.split('-');
+                return `<option value="${comp}">${getMonthName(parseInt(month) - 1, year)}</option>`;
+            }).join('');
+            
+            if (!currentCompetencia || !teamData[currentCompetencia]) {
+                currentCompetencia = competencias[0];
+            }
+            
+            selector.value = currentCompetencia;
+            selector.style.display = 'block';
+
+            refreshDataViews();
+            
+            if (document.getElementById('view-empty').classList.contains('active')) {
+                switchView('macro');
+            }
+        }
+
+        function changeGlobalCompetencia(novaCompetencia) {
+            currentCompetencia = novaCompetencia;
+            refreshDataViews();
+        }
+
+        function changeGlobalArea(novaArea) {
+            currentArea = novaArea;
+            refreshDataViews();
+        }
+
+        function refreshDataViews() {
+            const monthData = teamData[currentCompetencia] || {};
+            const currentData = Object.fromEntries(Object.entries(monthData).filter(([, data]) => {
+                return currentArea === "TODAS" || (data.area || "CONSUMIDOR.GOV") === currentArea;
+            }));
+            const numAnalistas = Object.keys(currentData).length;
+            
+            document.getElementById('lbl-analyst-count').innerText = numAnalistas;
+            
+            if (numAnalistas > 0) {
+                document.getElementById('analyst-menu-container').style.display = 'block';
+                renderSidebar(currentData);
+                renderMacroView(currentData);
+                renderGlobalOccurrencesCalendar(currentData);
+                
+                const activeMicro = document.querySelector('.btn-micro.active');
+                if (activeMicro && document.getElementById('view-micro').classList.contains('active')) {
+                    const func = activeMicro.dataset.func;
+                    if (currentData[func]) {
+                        openMicroView(func);
+                    } else {
+                        switchView('macro');
+                        alert("O analista selecionado n\u00E3o possui dados importados para este m\u00EAs.");
+                    }
+                }
+                
+            } else {
+                document.getElementById('analyst-menu-container').style.display = 'none';
+                switchView('empty');
+            }
+        }
+
+        function renderSidebar(currentData) {
+            const menu = document.getElementById('analyst-menu');
+            menu.innerHTML = '';
+            
+            const analysts = Object.values(currentData).sort((a, b) => a.analista.nome.localeCompare(b.analista.nome));
+
+            analysts.forEach(d => {
+                const btn = document.createElement('button');
+                btn.className = 'nav-item btn-micro';
+                btn.dataset.func = d.analista.funcional; 
+                
+                const partesNome = d.analista.nome.trim().split(' ');
+                const initials = partesNome.slice(0, 2).map(part => part[0]).join('');
+                btn.innerHTML = `<span class="analyst-avatar">${initials}</span><span>${partesNome[0]}${partesNome.length > 1 ? " " + partesNome[1] : ""}</span>`;
+                
+                if (document.getElementById('view-micro').classList.contains('active') && 
+                    document.getElementById('micro-func').innerText === d.analista.funcional) {
+                    btn.classList.add('active');
+                }
+                
+                btn.onclick = () => {
+                    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    openMicroView(d.analista.funcional);
+                };
+                menu.appendChild(btn);
+            });
+            const searchInput = document.getElementById('analyst-search-input');
+            filterAnalysts(searchInput ? searchInput.value : '');
+        }
+
+        function filterAnalysts(query) {
+            const normalizedQuery = (query || '').trim().toLocaleUpperCase('pt-BR');
+            document.querySelectorAll('#analyst-menu .btn-micro').forEach(button => {
+                button.style.display = !normalizedQuery || button.innerText.toLocaleUpperCase('pt-BR').includes(normalizedQuery) ? 'flex' : 'none';
+            });
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(`view-${viewId}`).classList.add('active');
+            
+            if(viewId === 'macro' || viewId === 'ocorrencias') {
+                const btn = document.getElementById(`btn-${viewId}`);
+                if(btn) btn.classList.add('active');
+                
+                const title = viewId === 'macro' ? "Painel Geral da Equipe" : "Quadro de Ocorr\u00EAncias";
+                document.getElementById('topbar-title').innerText = title;
+                 
+            }
+           if (viewId === 'macro') replayMacroEntrance();
+        }
+
+        function replayMacroEntrance() {
+           const macroView = document.getElementById('view-macro');
+           if (!macroView) return;
+           macroView.classList.remove('charts-entering');
+           void macroView.offsetWidth;
+           macroView.classList.add('charts-entering');
+           window.setTimeout(() => macroView.classList.remove('charts-entering'), 1200);
+        }
+
+        // --- VIS\u00C3O MACRO (CONSOLIDADO DA EQUIPE NO M\u00CAS SELECIONADO) ---
+        function renderMacroView(currentData) {
+            const analysts = Object.values(currentData);
+            if(analysts.length === 0) return;
+
+            let sumRec = 0;
+            let sumComp = 0;
+            let sumConversao = 0;
+            
+            analysts.forEach(a => {
+                sumRec += a.resultados.totalRecebidos;
+                sumComp += a.resultados.totalRealizados;
+                sumConversao += a.resultados.conversaoMeta;
+            });
+
+            const avgConversao = Math.round(sumConversao / analysts.length);
+            const saldoGeral = sumRec - sumComp;
+
+            document.getElementById('macro-stats').innerHTML = `
+                <div class="stat-card">
+                    <span class="stat-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg></span>
+                    <div class="stat-title">Volume Total Recebido</div>
+                    <div class="stat-subtitle">Soma da fila distribu\u00EDda (Equipe)</div>
+                    <div class="stat-value">${sumRec}</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M4 18V8M10 18V5M16 18v-7M22 18V3"/></svg></span>
+                    <div class="stat-title">Volume Total Realizado</div>
+                    <div class="stat-subtitle">Soma das entregas efetivas (Equipe)</div>
+                    <div class="stat-value">${sumComp}</div>
+                </div>
+                <div class="stat-card ${saldoGeral > 0 ? 'yellow' : 'green'}">
+                    <span class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></span>
+                    <div class="stat-title">Saldo Pendente (Equipe)</div>
+                    <div class="stat-subtitle">O que ficou represado no per\u00EDodo</div>
+                    <div class="stat-value">${saldoGeral}</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m8 12 3 3 5-6"/></svg></span>
+                    <div class="stat-title">Convers\u00E3o M\u00E9dia da Equipe</div>
+                    <div class="stat-subtitle">M\u00E9dia de dias com meta batida</div>
+                    <div class="stat-value">${avgConversao}%</div>
+                </div>
+            `;
+
+            const ranking = [...analysts].sort((a, b) => b.resultados.totalRealizados - a.resultados.totalRealizados);
+            
+            document.getElementById('ranking-count').innerText = `${ranking.length} analistas`;
+            document.getElementById('ranking-footer-count').innerText = `Mostrando ${ranking.length} de ${ranking.length} analistas`;
+            document.getElementById('macro-ranking').innerHTML = ranking.map((a, index) => {
+                const saldo = a.resultados.totalRecebidos - a.resultados.totalRealizados;
+                const conversionColor = a.resultados.conversaoMeta >= 80 ? 'var(--status-green)' : (a.resultados.conversaoMeta >= 50 ? 'var(--status-yellow)' : 'var(--status-red)');
+                const initials = a.analista.nome.split(/\s+/).slice(0, 2).map(part => part[0]).join('');
+
+                return `
+                    <tr onclick="openMicroView('${a.analista.funcional}')">
+                        <td class="rank-position">${String(index + 1).padStart(2, '0')}</td>
+                        <td><div class="rank-person"><span class="rank-avatar">${initials}</span><strong>${a.analista.nome}</strong></div></td>
+                        <td>${a.analista.jornada}h</td>
+                        <td>${a.resultados.totalRecebidos}</td>
+                        <td><strong>${a.resultados.totalRealizados}</strong></td>
+                        <td class="conversion-cell"><strong style="color:${conversionColor}">${a.resultados.conversaoMeta}%</strong><div class="conversion-bar"><span style="width:${Math.min(a.resultados.conversaoMeta, 100)}%; background:${conversionColor}"></span></div></td>
+                        <td><span class="status-badge bg-yellow" style="color:#000 !important;">Pendente (${saldo})</span></td>
+                        <td class="row-arrow">&#x203A;</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // --- CALEND\u00C1RIO GLOBAL DE OCORR\u00CANCIAS (DO M\u00CAS SELECIONADO) ---
+        function renderGlobalOccurrencesCalendar(currentData) {
+            const [yearStr, monthStr] = currentCompetencia.split('-');
+            const year = parseInt(yearStr);
+            const month = parseInt(monthStr) - 1;
+            document.getElementById('occ-month-title').innerText = getMonthName(month, year);
+            window.occurrenceBoardData = [];
+            Object.values(currentData).forEach(a => (a.ocorrencias || []).forEach(o => {
+                window.occurrenceBoardData.push({ nomeAnalista: a.analista.nome, funcional: a.analista.funcional, area: a.area || 'CONSUMIDOR.GOV', ...o });
+            }));
+            populateOccurrenceFilters(currentData);
+            renderFilteredOccurrenceBoard();
+        }
+
+        function populateOccurrenceFilters(currentData) {
+            const analysts = Object.values(currentData).map(a => a.analista).sort((a, b) => a.nome.localeCompare(b.nome));
+            const types = [...new Set(window.occurrenceBoardData.map(o => o.category).filter(Boolean))].sort();
+            const analystSelect = document.getElementById('occ-analyst-filter');
+            const typeSelect = document.getElementById('occ-type-filter');
+            const previousAnalyst = analystSelect.value;
+            const previousType = typeSelect.value;
+            analystSelect.innerHTML = '<option value="TODOS">Todos os analistas</option>' + analysts.map(a => `<option value="${a.funcional}">${a.nome}</option>`).join('');
+            typeSelect.innerHTML = '<option value="TODOS">Todos os tipos</option>' + types.map(type => `<option value="${type}">${type}</option>`).join('');
+            analystSelect.value = analysts.some(a => a.funcional === previousAnalyst) ? previousAnalyst : 'TODOS';
+            typeSelect.value = types.includes(previousType) ? previousType : 'TODOS';
+        }
+
+        function getFilteredOccurrences() {
+            const analyst = document.getElementById('occ-analyst-filter').value;
+            const type = document.getElementById('occ-type-filter').value;
+            const impact = document.getElementById('occ-impact-filter').value;
+            return (window.occurrenceBoardData || []).filter(o =>
+                (analyst === 'TODOS' || o.funcional === analyst) &&
+                (type === 'TODOS' || o.category === type) &&
+                (impact === 'TODOS' || (o.impact || '').toLocaleUpperCase('pt-BR') === impact)
+            );
+        }
+
+        function applyOccurrenceFilters() {
+            renderFilteredOccurrenceBoard();
+        }
+
+        function setOccurrenceMode(mode) {
+            window.occurrenceViewMode = mode;
+            document.getElementById('occ-calendar-mode').classList.toggle('active', mode === 'calendar');
+            document.getElementById('occ-list-mode').classList.toggle('active', mode === 'list');
+            document.querySelector('.occurrence-board-grid').style.display = mode === 'calendar' ? 'grid' : 'none';
+            document.getElementById('occ-list-view').classList.toggle('active', mode === 'list');
+            if (mode === 'list') renderOccurrenceList(getFilteredOccurrences());
+        }
+
+        function renderFilteredOccurrenceBoard() {
+            const occurrences = getFilteredOccurrences();
+            document.getElementById('occurrence-total-count').innerText = `${occurrences.length} ocorrência${occurrences.length === 1 ? '' : 's'}`;
+            renderOccurrenceCalendar(occurrences);
+            if (window.occurrenceViewMode === 'list') renderOccurrenceList(occurrences);
+            if (window.selectedOccurrenceDate) {
+                const selected = occurrences.filter(o => o.date === window.selectedOccurrenceDate);
+                if (selected.length) showOccurrencesDetails(window.selectedOccurrenceDate, selected);
+            }
+        }
+
+        function renderOccurrenceCalendar(occurrences) {
+            const [yearStr, monthStr] = currentCompetencia.split('-');
+            const year = parseInt(yearStr);
+            const month = parseInt(monthStr) - 1;
+            const grid = document.getElementById('occ-calendar-grid');
+            grid.innerHTML = `
+                <div class="cal-header">Dom</div>
+                <div class="cal-header">Seg</div>
+                <div class="cal-header">Ter</div>
+                <div class="cal-header">Qua</div>
+                <div class="cal-header">Qui</div>
+                <div class="cal-header">Sex</div>
+                <div class="cal-header">S\u00E1b</div>
+            `;
+
+            const groupedOcc = {};
+            occurrences.forEach(o => { if (!groupedOcc[o.date]) groupedOcc[o.date] = []; groupedOcc[o.date].push(o); });
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for(let i=0; i<firstDay; i++) {
+                const div = document.createElement('div');
+                grid.appendChild(div);
+            }
+
+            for(let day=1; day<=daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const dayOfWeek = date.getDay();
+                const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                
+                const div = document.createElement('div');
+                div.className = 'cal-day';
+                div.id = `cal-day-${dStr}`;
+
+                let innerHTML = `<div class="cal-date">${day}</div>`;
+
+                if (dayOfWeek === 0 || dayOfWeek === 6) {
+                    div.classList.add('disabled');
+                } else {
+                    const occurrences = groupedOcc[dStr] || [];
+                    
+                    if (occurrences.length > 0) {
+                        div.classList.add('interactive');
+                        innerHTML += `<div class="status-badge bg-red" style="margin-top:auto;">${occurrences.length} ocorrência${occurrences.length === 1 ? '' : 's'}</div>`;
+                        div.onclick = () => showOccurrencesDetails(dStr, occurrences);
+                    } else {
+                        innerHTML += `<div class="calendar-no-records" style="text-align:center; margin: auto 0; color:var(--text-light); font-size:0.75rem;">Sem registros</div>`;
+                    }
+                }
+                if (window.selectedOccurrenceDate === dStr) div.classList.add('selected');
+                div.innerHTML = innerHTML;
+                grid.appendChild(div);
+            }
+        }
+
+        function showOccurrencesDetails(dateStr, occurrences) {
+            document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
+            const day = document.getElementById(`cal-day-${dateStr}`);
+            if (day) day.classList.add('selected');
+            window.selectedOccurrenceDate = dateStr;
+            document.getElementById('occ-details-title').innerText = formatDateBR(dateStr);
+            document.getElementById('occ-details-list').innerHTML = occurrences.map(renderOccurrenceDetail).join('');
+        }
+
+        function renderOccurrenceDetail(o) {
+            const impact = (o.impact || '').toLocaleUpperCase('pt-BR');
+            const colorClass = impact === 'ALTO' ? 'bg-red' : impact === 'MÉDIO' ? 'bg-yellow' : 'bg-blue';
+            const initials = o.nomeAnalista.split(/\s+/).slice(0, 2).map(part => part[0]).join('');
+            return `<div class="occurrence-detail-card">
+                <div class="occurrence-detail-head"><div class="occurrence-detail-person"><span class="occurrence-detail-avatar">${initials}</span><strong>${o.nomeAnalista}</strong></div><span class="status-badge ${colorClass}">${impact || 'SEM IMPACTO'}</span></div>
+                <div class="occurrence-detail-category">${o.category || 'Ocorrência'}</div><div class="occurrence-detail-desc">${o.desc || 'Sem descrição informada.'}</div>
+                <div class="occurrence-detail-meta"><span>Analista<br><strong>${o.nomeAnalista}</strong></span><span>Data do registro<br><strong>${formatDateBR(o.date)}</strong></span></div>
+            </div>`;
+        }
+
+        function renderOccurrenceList(occurrences) {
+            document.getElementById('occ-list-content').innerHTML = `<div class="occurrence-list-row header"><span>Data</span><span>Analista</span><span>Tipo</span><span>Descrição</span><span>Impacto</span></div>` +
+                occurrences.sort((a, b) => b.date.localeCompare(a.date)).map(o => {
+                    const impact = (o.impact || '').toLocaleUpperCase('pt-BR');
+                    const colorClass = impact === 'ALTO' ? 'bg-red' : impact === 'MÉDIO' ? 'bg-yellow' : 'bg-blue';
+                    return `<div class="occurrence-list-row" onclick="showOccurrencesDetails('${o.date}', getFilteredOccurrences().filter(item => item.date === '${o.date}'))"><span>${formatDateBR(o.date)}</span><strong>${o.nomeAnalista}</strong><span>${o.category || '-'}</span><span>${o.desc || '-'}</span><span class="status-badge ${colorClass}">${impact}</span></div>`;
+                }).join('') || '<div class="occurrence-details-empty">Nenhuma ocorrência encontrada com os filtros selecionados.</div>';
+        }
+
+        function changeOccurrenceMonth(direction) {
+            const competencias = Object.keys(teamData).sort();
+            const index = competencias.indexOf(currentCompetencia);
+            const next = competencias[index + direction];
+            if (next) {
+                currentCompetencia = next;
+                document.getElementById('global-month-selector').value = next;
+                refreshDataViews();
+            }
+        }
+
+        // --- VIS\u00C3O MICRO (ANALISTA INDIVIDUAL NO M\u00CAS SELECIONADO) ---
+        function openMicroView(funcional) {
+            const currentData = teamData[currentCompetencia];
+            if(!currentData) return;
+            
+            const d = currentData[funcional];
+            if(!d) return;
+
+            document.getElementById('view-macro').classList.remove('active');
+            document.getElementById('view-ocorrencias').classList.remove('active');
+            document.getElementById('view-empty').classList.remove('active');
+            document.getElementById('view-micro').classList.add('active');
+
+            document.getElementById('topbar-title').innerText = "An\u00E1lise de Desempenho Individual";
+
+            document.getElementById('micro-name').innerText = d.analista.nome;
+            document.getElementById('micro-initials').innerText = d.analista.nome.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('');
+            document.getElementById('micro-area').innerText = getAreaLabel(d.area || "CONSUMIDOR.GOV");
+            document.getElementById('micro-func').innerText = d.analista.funcional;
+            document.getElementById('micro-jornada').innerText = d.analista.jornada;
+            document.getElementById('micro-meta').innerText = d.analista.metaDiaria;
+
+            const res = d.resultados;
+            const saldo = res.totalRecebidos - res.totalRealizados;
+            
+            document.getElementById('micro-stats').innerHTML = `
+                <div class="stat-card">
+                    <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h5M8 12h8M8 16h5"/></svg></span>
+                    <div class="stat-title">Recebidos</div>
+                    <div class="stat-value">${res.totalRecebidos}</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg></span>
+                    <div class="stat-title">Realizados</div>
+                    <div class="stat-value">${res.totalRealizados}</div>
+                </div>
+                <div class="stat-card ${saldo > 0 ? 'yellow' : 'green'}">
+                    <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M8 3h8M8 21h8M9 3v5l6 4-6 4v5M15 3v5M15 16v5"/></svg></span>
+                    <div class="stat-title">Saldo Pendente</div>
+                    <div class="stat-value">${saldo}</div>
+                </div>
+                <div class="stat-card gray">
+                    <span class="stat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01"/></svg></span>
+                    <div class="stat-title">Dias Trabalhados</div>
+                    <div class="stat-value">${res.diasTrabalhados}</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M4 18V8M10 18V5M16 18v-7M22 18V3"/></svg></span>
+                    <div class="stat-title">Dias com Meta Atingida</div>
+                    <div class="stat-value">${res.diasMetaAlcancada}</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M8 7h.01M16 17h.01"/></svg></span>
+                    <div class="stat-title">Taxa de Convers\u00E3o</div>
+                    <div class="stat-value">${res.conversaoMeta}%</div>
+                </div>
+            `;
+
+            window.microOccurrences = d.ocorrencias || [];
+            document.getElementById('micro-impact-filter').value = 'TODOS';
+            renderMicroJustifications();
+        }
+
+        function getOccurrenceIcon(category) {
+            const normalized = (category || '').toLocaleUpperCase('pt-BR');
+            if (normalized.includes('REUNI') || normalized.includes('TREINAMENTO')) {
+                return '<span class="occurrence-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 14c3 0 5 2 5 5"/></svg></span>';
+            }
+            if (normalized.includes('SISTEMA') || normalized.includes('SITE') || normalized.includes('CONEX') || normalized.includes('INTERNET')) {
+                return '<span class="occurrence-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>';
+            }
+            return '<span class="occurrence-icon"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h5M8 13h8M8 17h5"/></svg></span>';
+        }
+
+        function renderMicroJustifications() {
+            const allOccurrences = window.microOccurrences || [];
+            const filter = document.getElementById('micro-impact-filter').value;
+            const occurrences = allOccurrences.filter(o => filter === 'TODOS' || (o.impact || '').toLocaleUpperCase('pt-BR') === filter).sort((a, b) => b.date.localeCompare(a.date));
+            document.getElementById('micro-occurrence-count').innerText = `${occurrences.length} registro${occurrences.length === 1 ? '' : 's'}`;
+            let justifHtml = '<div class="micro-occ-table"><div class="micro-occ-row header"><span>Data</span><span></span><span>Classifica\u00E7\u00E3o</span><span>Detalhamento</span><span>Impacto</span></div>';
+            if (occurrences.length > 0) {
+                occurrences.forEach(o => {
+                    const impact = (o.impact || '').toLocaleUpperCase('pt-BR');
+                    const colorClass = impact === 'ALTO' ? 'bg-red' : (impact === 'M\u00C9DIO' ? 'bg-yellow' : (impact === 'BAIXO' ? 'bg-blue' : 'bg-gray'));
+                    justifHtml += `<div class="micro-occ-row"><strong>${formatDateBR(o.date)}</strong>${getOccurrenceIcon(o.category)}<strong>${o.category}</strong><span>${o.desc}</span><span><span class="status-badge ${colorClass}">${o.impact}</span></span></div>`;
+                });
+            } else {
+                justifHtml += "<div class='micro-occ-row'><span style='grid-column:1 / -1; text-align:center;'>Nenhuma justificativa encontrada para este impacto.</span></div>";
+            }
+            document.getElementById('micro-justifications').innerHTML = justifHtml + '</div>';
+        }
+
+        function filterMicroOccurrences() {
+            renderMicroJustifications();
+        }
+
+        // Inicia a aplica\u00E7\u00E3o carregando os dados do navegador
+        window.onload = initApp;
+
+    </script>
+
+<script>
+let managementAnimation; replayMacroEntrance=function(){};
+function animateManagementView(){const view=document.querySelector('.view.active');if(managementAnimation)managementAnimation.cancel();if(view&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!document.body.classList.contains('motion-off'))managementAnimation=view.animate([{opacity:0,transform:'translateY(9px)'},{opacity:1,transform:'translateY(0)'}],{duration:220,easing:'cubic-bezier(.2,.7,.2,1)'});document.body.classList.remove('menu-open');document.querySelector('.mobile-nav-button')?.setAttribute('aria-expanded','false');}
+const managementSwitch=switchView;switchView=function(id){const prev=document.querySelector('.view.active')?.id;managementSwitch(id);if(prev!=='view-'+id)animateManagementView();if(id==='empty')document.getElementById('topbar-title').textContent='Painel Geral da Equipe';};
+const managementMicro=openMicroView;openMicroView=function(id){managementMicro(id);document.getElementById("topbar-title").textContent="Desempenho individual";animateManagementView();document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.func===id));};
+const managementTheme=applyTheme;applyTheme=function(theme){managementTheme(theme);document.querySelector('.sidebar-theme-label span:last-child').textContent=theme==='dark'?'Tema escuro':'Tema claro';document.getElementById('theme-toggle-sidebar').setAttribute('aria-pressed',String(theme==='dark'));};
+const managementLoad=window.onload;window.onload=function(){
+ const settings=document.createElement('dialog');settings.className='management-dialog';settings.id='management-settings';settings.setAttribute('aria-labelledby','management-settings-title');settings.innerHTML='<button class="dialog-close" aria-label="Fechar configurações" onclick="document.getElementById(&quot;management-settings&quot;).close()">×</button><h3 id="management-settings-title">Configurações</h3><p>Gerencie os fechamentos armazenados neste navegador. A limpeza remove todos os relatórios importados.</p>';settings.append(document.querySelector('.btn-clear'));document.body.append(settings);
+ const trigger=document.createElement('button');trigger.className='settings-button';trigger.innerHTML='⚙ <span>Configurações</span>';trigger.onclick=()=>settings.showModal();document.querySelector('.sidebar-footer').prepend(trigger);
+ const empty=document.querySelector('.empty-state');const action=document.createElement('button');action.className='empty-import';action.textContent='Importar primeiros fechamentos';action.onclick=()=>document.getElementById('import-files').click();empty.append(action);empty.querySelector('p').textContent='Selecione os arquivos JSON exportados pelos analistas para acompanhar os resultados da equipe.';
+ const mobile=document.createElement('button');mobile.className='mobile-nav-button';mobile.textContent='☰ Menu';mobile.setAttribute('aria-expanded','false');mobile.onclick=()=>{const open=document.body.classList.toggle('menu-open');mobile.setAttribute('aria-expanded',String(open));};document.querySelector('.topbar-heading').prepend(mobile);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.body.classList.remove('menu-open');mobile.setAttribute('aria-expanded','false');}});document.querySelector('main').addEventListener('click',e=>{if(!e.target.closest('.mobile-nav-button')){document.body.classList.remove('menu-open');mobile.setAttribute('aria-expanded','false');}});
+ document.querySelectorAll('label[for="import-files"]').forEach(label=>{label.tabIndex=0;label.setAttribute('role','button');label.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();document.getElementById('import-files').click();}});});
+ managementLoad();
+};
+</script>
+
+<style>.stat-value,.metric-cell strong{font-variant-numeric:tabular-nums}.chart-container.chart-entering .bar{animation:none!important}</style>
+<script>
+// Shared entrance motion, isolated from stored values and calculation logic.
+(()=>{
+ const preference=matchMedia('(prefers-reduced-motion: reduce)');let pending=0,frame=0,animations=[],numbers=[];
+ function stop(){cancelAnimationFrame(frame);animations.forEach(a=>a.cancel());animations=[];numbers.forEach(n=>{if(n.el.isConnected)n.el.textContent=n.text});numbers=[];}
+ function play(){pending=0;stop();const view=document.querySelector('.view.active');if(!view||preference.matches||document.body.classList.contains("motion-off"))return;
+ const cards=[...view.querySelectorAll('.stat-card,.metric-cell')];cards.forEach((el,i)=>animations.push(el.animate([{opacity:0,transform:'translateY(16px) scale(.98)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:520,delay:Math.min(i*55,330),easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'})));
+ view.querySelectorAll('.bar,.conversion-bar span').forEach((el,i)=>{const horizontal=el.matches('.conversion-bar span');el.style.transformOrigin=horizontal?'left center':'center bottom';animations.push(el.animate([{transform:horizontal?'scaleX(0)':'scaleY(0)'},{transform:horizontal?'scaleX(1)':'scaleY(1)'}],{duration:850,delay:100+Math.min(i*60,360),easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'}));});
+ view.querySelectorAll('.stat-value,.metric-cell strong').forEach((el,i)=>{const text=el.textContent.trim();if(!/^-?[\d.,]+%?$/.test(text))return;const raw=text.replace('%','');const comma=raw.includes(',');const parts=raw.split(comma?',':'.');const decimals=parts.length===2?parts[1].length:0;const value=Number(comma?raw.replace(/\./g,'').replace(',','.'):raw);if(!Number.isFinite(value))return;numbers.push({el,text,value,decimals,comma,suffix:text.endsWith('%')?'%':'',delay:Math.min(i*45,270)});});
+ const start=performance.now();function tick(now){let unfinished=false;for(const n of numbers){const t=Math.max(0,Math.min(1,(now-start-n.delay)/850));if(t<1)unfinished=true;let value=(n.value*(1-Math.pow(1-t,3))).toFixed(n.decimals);if(n.comma)value=value.replace('.',',');n.el.textContent=t===1?n.text:value+n.suffix;}if(unfinished)frame=requestAnimationFrame(tick);else numbers=[];}frame=requestAnimationFrame(tick);
+ }
+ function schedule(){if(pending)cancelAnimationFrame(pending);pending=requestAnimationFrame(play);}
+ window.addEventListener('load',()=>{const observer=new MutationObserver(records=>{if(records.some(r=>(r.type==='attributes'&&r.target.matches('.view'))||(r.type==='childList'&&[...r.addedNodes].some(n=>n.nodeType===1&&(n.matches('.stat-card,.metric-cell,.chart-bar-group,.conversion-bar')||n.querySelector('.stat-card,.metric-cell,.chart-bar-group,.conversion-bar'))))))schedule();});document.querySelectorAll('.view').forEach(v=>observer.observe(v,{childList:true,subtree:true,attributes:true,attributeFilter:['class']}));schedule();});preference.addEventListener('change',()=>{if(preference.matches){cancelAnimationFrame(pending);pending=0;stop();}});window.addEventListener('beforeprint',stop);
+})();
+</script>
+
+<style>
+.product-dialog{margin:auto;width:min(620px,calc(100% - 28px));max-height:85dvh;overflow:auto;padding:28px;border:1px solid var(--border-color);border-radius:18px;background:var(--card-bg);color:var(--text-main);box-shadow:0 28px 90px #0005}.product-dialog::backdrop{background:#10131b80;backdrop-filter:blur(8px)}.product-dialog[open]{animation:productIn .22s ease}.product-dialog h2{font-size:22px;margin-bottom:15px}.product-dialog p{line-height:1.7;color:var(--text-light);white-space:pre-line}.product-dialog footer{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.product-dialog button,.product-toolbar button,.action-summary button{padding:10px 14px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg);color:var(--text-main);cursor:pointer}.product-dialog .primary{background:var(--brand-primary);color:white;border-color:var(--brand-primary)}.product-dialog li{padding:10px 0;border-bottom:1px solid var(--border-color);list-style:none;font-size:13px;overflow-wrap:anywhere}.product-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:400;padding:14px 20px;border-radius:12px;background:var(--card-bg);color:var(--text-main);border:1px solid var(--border-color);box-shadow:0 8px 35px #0003;max-width:90vw}.product-toast button{margin-left:16px;color:var(--brand-primary);background:transparent;border:0;cursor:pointer}.product-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}.product-toolbar input,.product-toolbar select{min-height:38px;padding:8px 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg);color:var(--text-main);max-width:100%}.product-toolbar input{flex:1;min-width:160px}.product-toolbar button{font-size:12px}.action-summary{padding:14px 18px;margin-bottom:16px;border:1px solid var(--border-color);border-radius:12px;background:var(--card-bg);display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-size:13px}.action-summary p{flex:1;margin:0;color:var(--text-light);line-height:1.6}.metric-help{border:1px solid var(--border-color);background:transparent;color:var(--text-light);border-radius:50%;width:18px;height:18px;padding:0!important;min-height:0!important;font-size:11px;margin-left:5px;cursor:pointer}.product-comparison{font-size:12px;color:var(--text-light);line-height:1.6;padding:0 2px;margin-bottom:14px}.future-day{opacity:.55}.missing-day{border-style:dashed!important}.calendar-preview{font-size:12px;padding:12px;margin:12px 0;border-radius:8px;background:var(--bg-color);line-height:1.7}.compact .card{padding:12px!important}.compact .stat-card{padding-top:10px!important;padding-bottom:10px!important;min-height:78px!important}.compact td{padding-top:8px!important;padding-bottom:8px!important}.compact .cal-day{min-height:58px!important}.print-heading{display:none}body.motion-off *,body.motion-off *::before,body.motion-off *::after{animation:none!important;transition:none!important}
+@keyframes productIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){.product-dialog[open]{animation:none}}
+@media print{@page{size:A4 landscape;margin:12mm}body,body.dark-mode{display:block!important;height:auto!important;overflow:visible!important;background:white!important;color:#111!important;--card-bg:#fff;--bg-color:#fff;--text-main:#111;--text-light:#444;--border-color:#ccc}aside,.sidebar,.topbar-controls,.product-toolbar,.action-summary,button,dialog,.product-toast,.setup-overlay,.mobile-nav-button,.no-print{display:none!important}main,.content-area{display:block!important;width:100%!important;margin:0!important;padding:0!important;overflow:visible!important;height:auto!important}.view:not(.active){display:none!important}.view.active{display:block!important}.print-heading{display:block;margin-bottom:15px;font-size:14px}.card,.stat-card,tr,.occurrence-detail-card{break-inside:avoid;box-shadow:none!important}.ranking-table-wrap,.micro-occ-table,.occurrence-details-card{overflow:visible!important;max-height:none!important}.card{margin-bottom:12px}.bar{transform:none!important}.product-comparison{color:#444}.profile-edit{display:none!important}}
+</style>
+<script>
+const productStorePrefix=typeof teamData!=='undefined'?'leadershipUX':'analystUX';
+function productDialog(title,message,choices=[['Entendi',true]]){return new Promise(resolve=>{const d=document.createElement('dialog');d.className='product-dialog';const h=document.createElement('h2');h.textContent=title;h.id='product-title-'+Date.now();d.setAttribute('aria-labelledby',h.id);d.append(h);if(typeof message==='string'){const p=document.createElement('p');p.textContent=message;d.append(p)}else d.append(message);const footer=document.createElement('footer');choices.forEach(([label,value],i)=>{const b=document.createElement('button');b.textContent=label;if(i===choices.length-1)b.className='primary';b.onclick=()=>{d.close();resolve(value);d.remove()};footer.append(b)});d.append(footer);d.addEventListener('cancel',()=>{resolve(false);setTimeout(()=>d.remove(),0)});document.body.append(d);d.showModal()})}
+function productToast(message,undo){const t=document.createElement('div');t.className='product-toast';t.setAttribute('role','status');t.textContent=message;if(undo){const b=document.createElement('button');b.textContent='Desfazer';b.onclick=()=>{undo();t.remove()};t.append(b)}document.body.append(t);setTimeout(()=>t.remove(),undo?15000:5000)}
+window.alert=message=>{productDialog('Aviso',String(message));};
+function productPrevious(comp){const [y,m]=comp.split('-').map(Number);const date=new Date(y,m-2,1);return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')}
+function productCompare(current,previous,exists){if(!exists)return 'Sem dados do mês anterior para comparar.';if(!previous)return 'Mês anterior: 0 realizados. Variação percentual indisponível.';const pct=(current-previous)/previous*100;return `${pct>=0?'+':''}${pct.toFixed(1).replace('.',',')}% no volume realizado em relação ao mês anterior. Totais dos registros disponíveis; períodos e equipes podem ter coberturas diferentes.`}
+function productHelp(){document.querySelectorAll('.stat-title,.metric-cell>span').forEach(el=>{if(el.querySelector('.metric-help'))return;const text=el.textContent.toLowerCase();let explanation='';if(text.includes('convers'))explanation='Percentual de dias trabalhados com meta atingida. Na gestão, o consolidado é a média dos percentuais dos analistas.';else if(text.includes('proje'))explanation='Média de protocolos realizados por dia trabalhado × dias úteis do mês. É uma estimativa, não uma garantia de resultado.';else if(text.includes('ajustada'))explanation='Meta mensal restante dividida pelos dias úteis restantes, arredondada para cima. Usa os parâmetros atuais do perfil.';else if(text.includes('horária')||text.includes('hora'))explanation='A média horária divide a produção pela jornada registrada × dias trabalhados. A meta horária divide a meta diária pela jornada.';else if(text.includes('saldo'))explanation='Protocolos recebidos menos protocolos realizados no período selecionado.';if(explanation){const b=document.createElement('button');b.className='metric-help';b.textContent='?';b.setAttribute('aria-label','Entender '+el.textContent);b.onclick=()=>productDialog('Como este indicador é calculado',explanation);el.append(b)}})}
+function productPreferences(){document.body.classList.toggle('compact',localStorage.getItem(productStorePrefix+'Density')==='compact');document.body.classList.toggle('motion-off',localStorage.getItem(productStorePrefix+'Motion')==='off');const host=document.querySelector('#management-settings,#settings-dialog');if(host){const group=document.createElement('div');group.className='product-toolbar';group.style.marginTop='20px';[['Densidade compacta','Density','compact'],['Reduzir movimentos','Motion','off']].forEach(([label,key,value])=>{const b=document.createElement('button');const update=()=>{b.textContent=label+': '+(localStorage.getItem(productStorePrefix+key)===value?'ativada':'desativada')};update();b.onclick=()=>{localStorage.setItem(productStorePrefix+key,localStorage.getItem(productStorePrefix+key)===value?'':value);document.body.classList.toggle(key==='Density'?'compact':'motion-off',localStorage.getItem(productStorePrefix+key)===value);if(key==='Motion')document.getAnimations().forEach(a=>a.finish());update()};group.append(b)});host.append(group)}const print=document.createElement('div');print.className='print-heading';document.querySelector('main').prepend(print);window.addEventListener('beforeprint',()=>{print.textContent=document.title+' • '+new Date().toLocaleDateString('pt-BR');});}
+window.addEventListener('load',()=>{productPreferences();productHelp()});
+</script>
+
+<script>
+const restoredManagementArea=localStorage.getItem('managementArea'),restoredManagementMonth=localStorage.getItem('managementMonth');
+let managementSort=localStorage.getItem('managementSort')||'volume', managementQuery=localStorage.getItem('managementQuery')||'';
+function hourly(d){const hours=Number(d.resultados.horasTrabalhadas??(Number(d.analista.jornada)*Number(d.resultados.diasTrabalhados)));return hours>0?Number(d.resultados.totalRealizados)/hours:null}
+const uxMacro=renderMacroView;renderMacroView=function(data){uxMacro(data);productHelp();const values=Object.values(data);const rows=[...document.querySelectorAll('#macro-ranking tr')];const score=d=>managementSort==='hour'?hourly(d):managementSort==='goal'?Number(d.resultados.conversaoMeta):Number(d.resultados.totalRealizados);const original=[...values].sort((a,b)=>b.resultados.totalRealizados-a.resultados.totalRealizados);const paired=rows.map((row,i)=>({row,d:original[i]})).sort((a,b)=>(score(b.d)??-1)-(score(a.d)??-1));paired.forEach(({row,d},i)=>{row.querySelector('.rank-position').textContent=String(i+1).padStart(2,'0');if(managementSort==='hour'){row.children[4].textContent=hourly(d)===null?'Sem base':hourly(d).toFixed(1).replace('.',',')+' /h'}row.hidden=!d.analista.nome.toLowerCase().includes(managementQuery.toLowerCase())&&!d.analista.funcional.includes(managementQuery);row.tabIndex=0;row.onkeydown=e=>{if(e.key==='Enter')row.click()};document.getElementById('macro-ranking').append(row)});document.querySelector('.ranking-title p').textContent=managementSort==='hour'?'Realizados ÷ (jornada × dias trabalhados).':managementSort==='goal'?'Percentual de dias com meta atingida.':'Ordenado por volume realizado.';document.querySelectorAll('.ranking-table-wrap th')[4].textContent=managementSort==='hour'?'Produção/hora':'Realizados';const visible=paired.filter(x=>!x.row.hidden).length;document.getElementById('ranking-footer-count').textContent=`Mostrando ${visible} de ${values.length} analistas`;let box=document.getElementById('management-insight');if(!box){box=document.createElement('div');box.id='management-insight';box.className='action-summary';document.getElementById('view-macro').prepend(box)}box.replaceChildren();const p=document.createElement('p');const pending=values.reduce((a,d)=>a+d.resultados.totalRecebidos-d.resultados.totalRealizados,0);const count=values.reduce((a,d)=>a+(d.ocorrencias||[]).length,0);p.textContent=`${pending} protocolos pendentes • ${count} ocorrências no período`;const b=document.createElement('button');b.textContent='Ver ocorrências';b.onclick=()=>switchView('ocorrencias');box.append(p,b);let comparison=document.getElementById('management-comparison');if(!comparison){comparison=document.createElement('p');comparison.id='management-comparison';comparison.className='product-comparison';box.after(comparison)}const previous=Object.values(teamData[productPrevious(currentCompetencia)]||{}).filter(d=>currentArea==='TODAS'||d.area===currentArea);comparison.textContent=productCompare(values.reduce((a,d)=>a+Number(d.resultados.totalRealizados),0),previous.reduce((a,d)=>a+Number(d.resultados.totalRealizados),0),previous.length>0);};
+handleFileUpload=async function(event){const files=[...event.target.files];if(!files.length)return;const candidates=[],seen=new Set(),list=document.createElement('ul');for(const file of files){const li=document.createElement('li');try{const d=JSON.parse(await file.text());const r=d.resultados;const required=['totalRecebidos','totalRealizados','diasTrabalhados','diasMetaAlcancada','conversaoMeta'];if(d.tipo_documento!=='fechamento_mensal'||!/^\d{4}-(0[1-9]|1[0-2])$/.test(d.competencia)||!/^\d{7}$/.test(String(d.analista?.funcional))||typeof d.analista.nome!=='string'||!r||required.some(k=>!Number.isFinite(Number(r[k]))||Number(r[k])<0)||!Array.isArray(d.ocorrencias))throw Error();const key=d.competencia+'/'+d.analista.funcional;if(seen.has(key)){li.textContent=file.name+' • Duplicado neste lote; ignorado.'}else{seen.add(key);candidates.push(d);li.textContent=`${d.analista.nome} • ${d.competencia} • ${teamData[d.competencia]?.[d.analista.funcional]?'Substituir fechamento existente':'Novo fechamento'}`}}catch{li.textContent=file.name+' • Inválido ou incompatível; não será importado.'}list.append(li)}const accepted=await productDialog(`Conferir importação • ${candidates.length} válido(s)`,list,candidates.length?[['Cancelar',false],['Importar',true]]:[['Fechar',false]]);event.target.value='';if(!accepted)return;for(const d of candidates){if(!teamData[d.competencia])teamData[d.competencia]={};teamData[d.competencia][d.analista.funcional]=d;currentCompetencia=d.competencia}normalizeImportedData();saveDatabase();updateUI();productToast(`${candidates.length} fechamento(s) importado(s).`);};
+clearDatabase=async function(){if(!await productDialog('Limpar fechamentos?','Todos os relatórios importados neste navegador serão removidos.',[['Cancelar',false],['Limpar dados',true]]))return;const snapshot=structuredClone(teamData);teamData={};currentCompetencia='';currentArea='TODAS';saveDatabase();updateUI();document.getElementById('management-settings').close();productToast('Base de fechamentos limpa.',()=>{teamData=snapshot;saveDatabase();updateUI()});};
+const uxRefresh=refreshDataViews;refreshDataViews=function(){uxRefresh();localStorage.setItem('managementArea',currentArea);localStorage.setItem('managementMonth',currentCompetencia)};
+const uxOccurrenceFilters=applyOccurrenceFilters;applyOccurrenceFilters=function(){uxOccurrenceFilters();localStorage.setItem('managementOccurrenceFilters',JSON.stringify(['occ-analyst-filter','occ-type-filter','occ-impact-filter'].map(id=>document.getElementById(id).value)))};
+window.addEventListener('load',()=>{const bar=document.createElement('div');bar.className='product-toolbar';bar.innerHTML='<input aria-label="Buscar analista ou funcional" placeholder="Buscar analista ou funcional…"><select aria-label="Critério do ranking"><option value="volume">Volume realizado</option><option value="hour">Protocolos por hora</option><option value="goal">Cumprimento de meta</option></select><button type="button">Limpar filtros</button><button type="button">Imprimir / PDF</button>';document.querySelector('.ranking-heading').after(bar);bar.querySelector('input').value=managementQuery;bar.querySelector('input').oninput=e=>{managementQuery=e.target.value;localStorage.setItem('managementQuery',managementQuery);refreshDataViews()};bar.querySelector('select').value=managementSort;bar.querySelector('select').onchange=e=>{managementSort=e.target.value;localStorage.setItem('managementSort',managementSort);refreshDataViews()};bar.querySelectorAll('button')[0].onclick=()=>{managementQuery='';bar.querySelector('input').value='';localStorage.removeItem('managementQuery');currentArea='TODAS';document.getElementById('global-area-selector').value='TODAS';refreshDataViews()};bar.querySelectorAll('button')[1].onclick=()=>window.print();const print=document.createElement('button');print.textContent='Imprimir / PDF';print.className='settings-button';print.onclick=()=>window.print();document.querySelector('.sidebar-footer').prepend(print);const area=restoredManagementArea,month=restoredManagementMonth;if(month&&teamData[month])currentCompetencia=month;if(area&&[...document.getElementById('global-area-selector').options].some(o=>o.value===area))currentArea=area;if(Object.keys(teamData).length)updateUI();try{const saved=JSON.parse(localStorage.getItem('managementOccurrenceFilters'));if(saved){['occ-analyst-filter','occ-type-filter','occ-impact-filter'].forEach((id,i)=>{const el=document.getElementById(id);if([...el.options].some(o=>o.value===saved[i]))el.value=saved[i]});applyOccurrenceFilters()}}catch{}const reset=document.createElement('button');reset.textContent='Limpar filtros';reset.className='empty-import';reset.style.margin='0';reset.onclick=()=>{['occ-analyst-filter','occ-type-filter','occ-impact-filter'].forEach(id=>document.getElementById(id).value='TODOS');applyOccurrenceFilters()};document.querySelector('.occurrence-filters').append(reset);});
+</script>
+
+<script>
+window.addEventListener('load',()=>{const search=document.createElement('input');search.placeholder='Buscar data, analista ou ocorrência…';search.setAttribute('aria-label','Buscar ocorrências');search.className='occurrence-filter';search.value=localStorage.getItem('leadershipOccurrenceSearch')||'';document.querySelector('.occurrence-filters').prepend(search);const base=getFilteredOccurrences;getFilteredOccurrences=function(){const q=search.value.trim().toLowerCase();return base().filter(o=>[o.date,o.nomeAnalista,o.category,o.desc].join(' ').toLowerCase().includes(q))};search.oninput=()=>{localStorage.setItem('leadershipOccurrenceSearch',search.value);renderFilteredOccurrenceBoard()};const reset=[...document.querySelectorAll('.occurrence-filters button')].find(b=>b.textContent==='Limpar filtros');const old=reset.onclick;reset.onclick=()=>{search.value='';localStorage.removeItem('leadershipOccurrenceSearch');old()};const badge=document.querySelector('.ranking-tools .ranking-count:last-child');if(badge)badge.remove();});
+</script>
+<style>@media(min-width:1151px) and (max-height:820px){#view-macro .action-summary{padding:9px 14px;margin-bottom:9px}#view-macro .product-comparison{margin-bottom:10px}#view-macro .stat-card{min-height:110px!important;padding-top:14px;padding-bottom:12px}#view-macro .ranking-table-wrap td{height:51px}#view-macro .ranking-heading{padding-bottom:12px}#view-macro .ranking-card{padding:16px}.product-toolbar{margin-bottom:10px}}</style>
+
+<script>
+window.addEventListener('beforeprint',()=>{const heading=document.querySelector('.print-heading');if(!heading)return;heading.textContent='Visão da Liderança • '+currentCompetencia+' • '+getAreaLabel(currentArea)+' • Emitido em '+new Date().toLocaleDateString('pt-BR');});
+</script>
+
+<script>
+function evolutionChart(records,mode){const wrap=document.createElement('div');if(!records?.length){wrap.textContent='Sem registros diários disponíveis. Importe um fechamento gerado pela versão atual da aplicação do analista.';return wrap}const sorted=[...records].filter(e=>!e.isHoliday).sort((a,b)=>a.date.localeCompare(b.date));if(!sorted.length){wrap.textContent='Sem dias trabalhados neste período.';return wrap}let cumulative=0;const values=sorted.map(e=>mode==='balance'?(cumulative+=Number(e.received)-Number(e.completed)):Number(e.completed));const goals=sorted.map(e=>Number(e.metaDiaria)||0);const max=Math.max(1,...values,...(mode==='production'?goals:[]));const min=Math.min(0,...values);const x=i=>40+i*520/Math.max(1,values.length-1),y=v=>150-(v-min)/(max-min)*125;const ns='http://www.w3.org/2000/svg';const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 590 190');svg.setAttribute('role','img');svg.setAttribute('aria-label',mode==='balance'?'Saldo acumulado dos registros disponíveis':'Produção diária e meta vigente');svg.style.cssText='width:100%;height:100%;min-height:110px;max-height:280px';const line=(vals,color,dash)=>{const el=document.createElementNS(ns,'polyline');el.setAttribute('points',vals.map((v,i)=>x(i)+','+y(v)).join(' '));el.setAttribute('fill','none');el.setAttribute('stroke',color);el.setAttribute('stroke-width','2.5');if(dash)el.setAttribute('stroke-dasharray','6 4');svg.append(el)};for(let i=0;i<=4;i++){const val=min+(max-min)*i/4;const l=document.createElementNS(ns,'line');Object.entries({x1:40,x2:560,y1:y(val),y2:y(val),stroke:'var(--border-color)'}).forEach(([k,v])=>l.setAttribute(k,v));svg.append(l);const t=document.createElementNS(ns,'text');t.setAttribute('x',2);t.setAttribute('y',y(val)+4);t.setAttribute('fill','var(--text-light)');t.setAttribute('font-size',10);t.textContent=Math.round(val);svg.append(t)}line(values,'#e71951');if(mode==='production')line(goals,'#c78f17',true);values.forEach((v,i)=>{const dot=document.createElementNS(ns,'circle');Object.entries({cx:x(i),cy:y(v),r:3,fill:'#e71951'}).forEach(([k,v])=>dot.setAttribute(k,v));const title=document.createElementNS(ns,'title');title.textContent=sorted[i].date+': '+v+(mode==='production'?' • Meta '+goals[i]:'');dot.append(title);svg.append(dot);if(i===0||i===values.length-1||i%Math.max(1,Math.ceil(values.length/7))===0){const t=document.createElementNS(ns,'text');t.setAttribute('x',x(i));t.setAttribute('y',171);t.setAttribute('text-anchor','middle');t.setAttribute('fill','var(--text-light)');t.setAttribute('font-size',10);t.textContent=sorted[i].date.slice(8)+'/'+sorted[i].date.slice(5,7);svg.append(t)}});wrap.append(svg);const legend=document.createElement('p');legend.className='evolution-legend';legend.textContent=mode==='production'?'Linha rosa: realizados • Linha tracejada: meta vigente':'Linha rosa: saldo acumulado (recebidos − realizados), a partir de zero.';wrap.append(legend);return wrap}
+function openQuickGuide(){const management=typeof teamData!=='undefined';productDialog('Guia rápido',management?'1. Importe os fechamentos JSON e confira a prévia antes de confirmar.\n\n2. Escolha área e mês. Compare por volume, protocolos/hora ou cumprimento da meta.\n\n3. Clique nos indicadores ou em um analista para consultar os dados que compõem os resultados.\n\n4. Consulte ocorrências no calendário ou na lista. A evolução diária exige um fechamento da versão atual.\n\n5. Use Imprimir / PDF para compartilhar a visão atual. Os dados ficam neste navegador.':'1. No Controle Diário, selecione uma data e registre recebidos, realizados ou ausência.\n\n2. Registre no Diário de Ocorrências os eventos que afetaram a produção.\n\n3. No painel, alterne Volume, Produção/meta e Saldo acumulado. Clique nos indicadores para consultar os registros.\n\n4. Em Perfil e metas, informe a data de vigência das alterações. Datas anteriores continuam usando os parâmetros anteriores. Dados anteriores à atualização usam a configuração que estava salva.\n\n5. Em Fechamento Mensal, revise e exporte o arquivo JSON para a liderança. Salve também um backup completo nas Configurações.\n\nStatus: Parcial = recebidos abaixo da meta; Atingida = recebidos e realizados atingiram a meta; Não atingida = recebidos atingiram a meta, mas realizados não.');}
+window.addEventListener('load',()=>{const b=document.createElement('button');b.textContent='Guia rápido';b.className='guide-trigger';b.onclick=openQuickGuide;document.querySelector('.sidebar-footer,.sidebar-bottom').prepend(b)});
+</script>
+<style>.guide-trigger{background:transparent;border:0;color:inherit;padding:8px 0;font-size:12px;cursor:pointer}.evolution-modes{display:flex;gap:6px;margin:4px 0 8px;flex-wrap:wrap}.evolution-modes button{font-size:11px;padding:5px 9px;min-height:26px;border:1px solid var(--border-color);border-radius:7px;background:var(--card-bg);color:var(--text-light);cursor:pointer}.evolution-modes button.active{color:var(--brand-primary);border-color:var(--brand-primary)}.evolution-legend{font-size:10px;color:var(--text-light);margin-top:3px}.line-evolution{height:100%;min-height:0}.line-evolution>div{height:100%}</style>
+
+<script>
+const detailedMacro=renderMacroView;renderMacroView=function(data){detailedMacro(data);document.querySelectorAll('#macro-stats .stat-card').forEach(card=>{card.tabIndex=0;card.setAttribute('role','button');card.onclick=e=>{if(e.target.closest('.metric-help'))return;const list=document.createElement('ul');Object.values(data).forEach(d=>{const li=document.createElement('li');li.textContent=`${d.analista.nome} • ${d.resultados.totalRecebidos} recebidos • ${d.resultados.totalRealizados} realizados • Saldo ${d.resultados.totalRecebidos-d.resultados.totalRealizados} • Conversão ${d.resultados.conversaoMeta}%`;list.append(li)});productDialog('Composição do indicador • '+currentCompetencia,list)};card.onkeydown=e=>{if(e.target===card&&e.key==='Enter')card.click()}})};
+const detailedMicro=openMicroView;openMicroView=function(id){detailedMicro(id);const data=teamData[currentCompetencia]?.[id];if(!data)return;document.querySelectorAll('#micro-stats .stat-card').forEach(card=>{card.tabIndex=0;card.setAttribute('role','button');card.onclick=()=>{const list=document.createElement('ul');(data.registrosDiarios||[]).forEach(d=>{const li=document.createElement('li');li.textContent=`${d.date} • ${d.isHoliday?'Ausência':`${d.received} recebidos / ${d.completed} realizados • Meta ${d.metaDiaria} • ${d.jornada}h`}`;list.append(li)});if(!list.children.length)list.textContent='Este fechamento contém somente totais. Exporte novamente na versão atual para incluir registros diários.';productDialog('Registros do período',list)};card.onkeydown=e=>{if(e.key==='Enter')card.click()}});let button=document.getElementById('micro-evolution');if(!button){button=document.createElement('button');button.id='micro-evolution';button.className='empty-import';button.style.margin='0 0 14px';button.textContent='Ver evolução diária';document.getElementById('micro-stats').after(button)}button.onclick=()=>{const wrap=document.createElement('div');const modes=document.createElement('div');modes.className='evolution-modes';const plot=document.createElement('div');plot.style.height='260px';[['production','Produção / meta'],['balance','Saldo acumulado']].forEach(([mode,label])=>{const b=document.createElement('button');b.textContent=label;b.onclick=()=>plot.replaceChildren(evolutionChart(data.registrosDiarios,mode));modes.append(b)});plot.append(evolutionChart(data.registrosDiarios,'production'));wrap.append(modes,plot);productDialog('Evolução diária • '+data.analista.nome,wrap)};};
+</script>
+
+<script>
+// Motion follows each new chart instance, without changing values or chart geometry.
+const motionEvolutionChart=evolutionChart;
+evolutionChart=function(records,mode){
+ const wrap=motionEvolutionChart(records,mode);
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches||document.body.classList.contains('motion-off'))return wrap;
+ requestAnimationFrame(()=>{
+  if(!wrap.isConnected)return;
+  const paths=[...wrap.querySelectorAll('polyline')];
+  paths.forEach((line,i)=>{
+   // A clipping reveal preserves the goal line's dashed appearance.
+   line.animate([{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)'}],{duration:950,delay:i*100,easing:'cubic-bezier(.22,.61,.36,1)',fill:'backwards'});
+  });
+  const dots=[...wrap.querySelectorAll('circle')];dots.forEach((dot,i)=>dot.animate([{opacity:0},{opacity:1}],{duration:280,delay:150+i/Math.max(1,dots.length-1)*700,easing:'ease-out',fill:'backwards'}));
+  wrap.querySelector('.evolution-legend')?.animate([{opacity:0},{opacity:1}],{duration:350,delay:200,fill:'backwards'});
+ });
+ return wrap;
+};
+</script>
+</body>
+</html>
