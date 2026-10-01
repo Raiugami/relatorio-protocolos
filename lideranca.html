@@ -296,11 +296,10 @@
         .section-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: rgba(204,9,47,0.12); color: #ff3b68; }
         .section-icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
         .justifications-controls { display: flex; align-items: center; gap: 1rem; color: var(--text-light); font-size: 0.85rem; }
-        #micro-impact-filter { min-height: 40px; padding: 0.5rem 2rem 0.5rem 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-main); }
         .occurrence-icon { width: 30px; height: 30px; display: inline-grid; place-items: center; color: #ff3b68; }
         .occurrence-icon svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
         .micro-occ-table { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
-        .micro-occ-row { display: grid; grid-template-columns: 160px 36px 1.2fr 2fr 110px; gap: 1rem; align-items: center; padding: 1rem 1.2rem; border-top: 1px solid var(--border-color); }
+        .micro-occ-row { display: grid; grid-template-columns: 120px 36px 1.2fr 2fr 120px 160px; gap: 1rem; align-items: center; padding: 1rem 1.2rem; border-top: 1px solid var(--border-color); }
         .micro-occ-row:first-child { border-top: 0; }
         .micro-occ-row.header { color: var(--text-light); background: var(--bg-color); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
         .micro-occ-row strong { color: var(--text-main); font-size: 0.85rem; }
@@ -396,10 +395,10 @@
         .occurrence-detail-avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(204,9,47,0.28); color: #fff; display: grid; place-items: center; font-size: 0.72rem; font-weight: 800; }
         .occurrence-detail-category { color: var(--text-main); font-weight: 700; margin-top: 1rem; }
         .occurrence-detail-desc { color: var(--text-light); font-size: 0.85rem; line-height: 1.45; margin-top: 0.35rem; }
-        .occurrence-detail-meta { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border-color); margin-top: 1rem; padding-top: 0.8rem; gap: 0.8rem; color: var(--text-light); font-size: 0.78rem; }
+        .occurrence-detail-meta { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border-top: 1px solid var(--border-color); margin-top: 1rem; padding-top: 0.8rem; gap: 0.8rem; color: var(--text-light); font-size: 0.78rem; }
         .occurrence-list-view { display: none; }
         .occurrence-list-view.active { display: block; }
-        .occurrence-list-row { display: grid; grid-template-columns: 110px 1.2fr 1fr 2fr 100px; gap: 0.8rem; align-items: center; padding: 0.9rem 1rem; border-top: 1px solid var(--border-color); }
+        .occurrence-list-row { display: grid; grid-template-columns: 110px 1.2fr 1fr 2fr 120px 160px; gap: 0.8rem; align-items: center; padding: 0.9rem 1rem; border-top: 1px solid var(--border-color); }
         .occurrence-list-row.header { border-top: 0; color: var(--text-light); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; background: var(--bg-color); }
         .occurrence-list-row span { color: var(--text-light); font-size: 0.82rem; }
         .occurrence-list-row strong { color: var(--text-main); font-size: 0.85rem; }
@@ -430,7 +429,7 @@ aside::before{width:560px;height:680px;left:-180px;bottom:-280px;border:1px soli
 main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;box-shadow:none;padding:25px 28px 20px;gap:20px;flex-wrap:wrap}.topbar-heading{gap:7px}.topbar h2{font-size:28px;letter-spacing:-.7px;color:var(--text-main)}.topbar-breadcrumb{font-size:11px;font-weight:400}.topbar-subtitle{font-size:13px;color:var(--text-light)}.topbar-controls{gap:10px;flex-wrap:wrap}.topbar-controls select,body.dark-mode .topbar-controls select{background:var(--card-bg);color:var(--text-main);border-color:var(--border-color);border-radius:8px;box-shadow:none;font-size:12px;min-height:40px}.topbar-import{font-size:12px;box-shadow:none;min-height:40px;display:inline-flex;align-items:center}.topbar-count{font-size:11px!important}.content-area{padding:0 28px 24px;width:100%;max-width:none;margin:0}.view{animation:none}.view:not(.active){display:none!important}
 .card{border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:none}.dashboard-grid{gap:14px;margin-bottom:18px}.macro-stats{grid-template-columns:repeat(4,minmax(0,1fr))}.stat-card{position:relative;border:1px solid var(--border-color)!important;border-radius:12px;padding:20px 16px 18px 65px;min-height:122px!important;background:var(--card-bg)!important}.stat-icon{position:absolute;top:19px;left:16px;width:34px;height:34px;background:transparent;color:var(--text-main);margin:0}.stat-title,.macro-stats .stat-title,.micro-stats .stat-title{text-transform:none;font-size:12px;line-height:1.4}.stat-subtitle{font-size:11px;line-height:1.5;margin-bottom:8px}.stat-value,.micro-stats .stat-value{font-size:30px;letter-spacing:-.6px;margin-top:6px}.stat-card.yellow .stat-value{color:#ce900c}.dark-mode .stat-card.yellow .stat-value{color:#ffc04d}.micro-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.micro-stats .stat-card{min-height:95px!important}.micro-profile{gap:18px}.micro-profile h3{font-size:20px}.micro-profile p{font-size:12px}.micro-profile-metric{padding:0 18px;min-width:120px}.micro-profile-metric strong{font-size:19px}
 .ranking-heading{padding:0 0 18px}.ranking-title h3,.justifications-title h3{font-size:17px}.ranking-title p,.justifications-title p{font-size:12px}.ranking-icon,.section-icon{color:var(--text-main);background:none}.ranking-count{font-size:11px}.ranking-table-wrap{overflow:auto}.ranking-table-wrap table{min-width:730px}.ranking-table-wrap th{background:var(--bg-color);font-size:10px;letter-spacing:.4px}.ranking-table-wrap td{font-size:12px;height:66px}.rank-person strong{font-size:12px}.ranking-footer{gap:14px;line-height:1.6}.status-badge{border-radius:6px;font-size:10px;letter-spacing:0;font-weight:600}.conversion-bar{background:var(--border-color)}
-.occurrence-filters{grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:10px}.occurrence-filter{font-size:12px;min-height:40px;background:var(--card-bg)!important}.occurrence-view-toggle button{font-size:12px;min-height:38px}.occurrence-board-grid{grid-template-columns:minmax(0,1.5fr) minmax(290px,1fr);gap:16px}.occurrence-calendar-card,.occurrence-details-card{min-height:0;margin:0}.occurrence-calendar-heading{flex-wrap:wrap;gap:10px}.occurrence-calendar-heading h3{font-size:18px}.occurrence-count{font-size:11px}.calendar-grid{grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.cal-header{font-size:10px;border:0;font-weight:500;padding:6px}.cal-day{min-height:76px;border-radius:8px;padding:7px}.cal-date{font-size:12px;margin-bottom:5px}.cal-day.selected .cal-date{height:22px;width:22px;font-size:12px}.cal-day .status-badge{font-size:10px;padding:5px 3px;color:#ae0d3b!important;background:#cc003317!important}.dark-mode .cal-day .status-badge{color:#ff98b2!important}.cal-day .status-badge:before{display:none}.calendar-legend{font-size:11px;margin-top:18px;gap:16px}.legend-dot{width:9px;height:9px}.legend-selected{width:16px;height:16px}.occurrence-details-empty{min-height:280px;font-size:13px;line-height:1.7}.occurrence-details-card{max-height:620px;overflow:auto}.occurrence-details-card h3{font-size:17px}.occurrence-detail-person{font-size:12px}.occurrence-detail-desc{overflow-wrap:anywhere}.occurrence-list-view{overflow:auto}.occurrence-list-row{min-width:700px}.micro-occ-table{overflow:auto}.micro-occ-row{grid-template-columns:100px 30px 1.1fr 2fr 85px;gap:12px;padding:14px;min-width:640px}.justifications-heading{flex-wrap:wrap}.empty-state{max-width:700px;margin:7vh auto;padding:45px 30px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:18px}.empty-state h3{font-size:23px}.empty-state p{font-size:14px;line-height:1.7}.empty-import{display:inline-block;margin-top:24px;border:0;border-radius:9px;background:var(--brand-primary);color:#fff;padding:13px 20px;cursor:pointer}
+.occurrence-filters{grid-template-columns:repeat(2,minmax(0,1fr)) auto;gap:10px}.occurrence-filter{font-size:12px;min-height:40px;background:var(--card-bg)!important}.occurrence-view-toggle button{font-size:12px;min-height:38px}.occurrence-board-grid{grid-template-columns:minmax(0,1.5fr) minmax(290px,1fr);gap:16px}.occurrence-calendar-card,.occurrence-details-card{min-height:0;margin:0}.occurrence-calendar-heading{flex-wrap:wrap;gap:10px}.occurrence-calendar-heading h3{font-size:18px}.occurrence-count{font-size:11px}.calendar-grid{grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.cal-header{font-size:10px;border:0;font-weight:500;padding:6px}.cal-day{min-height:76px;border-radius:8px;padding:7px}.cal-date{font-size:12px;margin-bottom:5px}.cal-day.selected .cal-date{height:22px;width:22px;font-size:12px}.cal-day .status-badge{font-size:10px;padding:5px 3px;color:#ae0d3b!important;background:#cc003317!important}.dark-mode .cal-day .status-badge{color:#ff98b2!important}.cal-day .status-badge:before{display:none}.calendar-legend{font-size:11px;margin-top:18px;gap:16px}.legend-dot{width:9px;height:9px}.legend-selected{width:16px;height:16px}.occurrence-details-empty{min-height:280px;font-size:13px;line-height:1.7}.occurrence-details-card{max-height:620px;overflow:auto}.occurrence-details-card h3{font-size:17px}.occurrence-detail-person{font-size:12px}.occurrence-detail-desc{overflow-wrap:anywhere}.occurrence-list-view{overflow:auto}.occurrence-list-row{min-width:900px}.micro-occ-table{overflow:auto}.micro-occ-row{grid-template-columns:100px 30px 1.1fr 2fr 110px 150px;gap:12px;padding:14px;min-width:900px}.justifications-heading{flex-wrap:wrap}.empty-state{max-width:700px;margin:7vh auto;padding:45px 30px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:18px}.empty-state h3{font-size:23px}.empty-state p{font-size:14px;line-height:1.7}.empty-import{display:inline-block;margin-top:24px;border:0;border-radius:9px;background:var(--brand-primary);color:#fff;padding:13px 20px;cursor:pointer}
 .management-dialog{margin:auto;width:min(480px,calc(100% - 32px));padding:28px;border:1px solid var(--border-color);border-radius:18px;background:var(--card-bg);color:var(--text-main);box-shadow:0 28px 90px #0005}.management-dialog::backdrop{background:#0c0f1670;backdrop-filter:blur(8px)}.management-dialog[open]{animation:managementModal .25s cubic-bezier(.16,1,.3,1)}.management-dialog h3{font-size:22px;margin-bottom:12px}.management-dialog p{color:var(--text-light);line-height:1.7;font-size:13px;margin-bottom:24px}.management-dialog .btn-clear{color:var(--brand-primary);border:1px solid var(--border-color);padding:12px;font-size:12px;text-transform:none;letter-spacing:0;width:100%}.dialog-close{position:absolute;right:18px;top:16px;background:transparent;border:0;color:var(--text-light);font-size:24px;cursor:pointer}.mobile-nav-button{display:none}
 @keyframes managementAmbient{from{transform:rotate(-25deg) translate(0,0)}to{transform:rotate(-19deg) translate(15px,-20px)}}@keyframes managementModal{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
 @media(min-width:1500px){.micro-stats{grid-template-columns:repeat(6,minmax(0,1fr))}.topbar{padding-top:30px}.cal-day{min-height:90px}}
@@ -526,6 +525,8 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
                     <!-- Preenchido via JS -->
                 </div>
 
+
+
                 <div class="card ranking-card">
                     <div class="ranking-heading">
                         <div class="ranking-title">
@@ -539,7 +540,7 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
                             <tr>
                                 <th>Posição</th>
                                 <th>Analista</th>
-                                <th>Jornada</th>
+                                <th>Horas trabalhadas</th>
                                 <th>Recebidos</th>
                                 <th>Realizados</th>
                                 <th>Convers&#xE3;o de Meta</th>
@@ -560,11 +561,8 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
             <div id="view-ocorrencias" class="view">
                 <div class="occurrence-board">
                     <div class="occurrence-filters">
-                        <select id="occ-analyst-filter" class="occurrence-filter" onchange="applyOccurrenceFilters()"><option value="TODOS">Todos os analistas</option></select>
-                        <select id="occ-type-filter" class="occurrence-filter" onchange="applyOccurrenceFilters()"><option value="TODOS">Todos os tipos</option></select>
-                        <select id="occ-impact-filter" class="occurrence-filter" onchange="applyOccurrenceFilters()">
-                            <option value="TODOS">Todos os impactos</option><option value="ALTO">Alto impacto</option><option value="MÉDIO">Médio impacto</option><option value="BAIXO">Baixo impacto</option>
-                        </select>
+                        <select id="occ-analyst-filter" class="occurrence-filter" aria-label="Filtrar por analista" onchange="applyOccurrenceFilters()"><option value="TODOS">Todos os analistas</option></select>
+                        <select id="occ-type-filter" class="occurrence-filter" aria-label="Filtrar por tipo de ocorrência" onchange="applyOccurrenceFilters()"><option value="TODOS">Todos os tipos</option></select>
                         <div class="occurrence-view-toggle"><button id="occ-calendar-mode" class="active" onclick="setOccurrenceMode('calendar')">&#x1F4C5; Calendário</button><button id="occ-list-mode" onclick="setOccurrenceMode('list')">&#x2637; Lista</button></div>
                     </div>
                     <div class="occurrence-board-grid">
@@ -594,9 +592,9 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
                     <div class="micro-avatar" id="micro-initials">DF</div>
                     <div>
                         <h3 id="micro-name">Nome do Analista</h3>
-                        <p>Funcional: <span id="micro-func"></span> <b>&bull;</b> <span id="micro-area"></span></p>
+                        <p>Funcional: <span id="micro-func"></span> <b>&bull;</b> <span id="micro-area"></span> <b>&bull;</b> Escala configurada: <span id="micro-scale">—</span></p>
                     </div>
-                    <div class="micro-profile-metric"><span>Jornada registrada</span><strong><span id="micro-jornada"></span>h</strong></div>
+                    <div class="micro-profile-metric"><span>Média efetiva por dia</span><strong><span id="micro-jornada"></span>h</strong></div>
                     <div class="micro-profile-metric"><span>Meta diária</span><strong id="micro-meta"></strong></div>
                 </div>
 
@@ -608,22 +606,26 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
                     <div class="justifications-heading">
                         <div class="justifications-title">
                             <span class="section-icon"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h5M8 13h8M8 17h5"/></svg></span>
-                            <div><h3>Justificativas registradas</h3><p>Contexto e ocorrências que impactaram o período.</p></div>
+                            <div><h3>Ocorrências registradas</h3><p>Períodos e detalhes dos eventos informados.</p></div>
                         </div>
                         <div class="justifications-controls">
                             <span id="micro-occurrence-count">0 registros</span>
-                            <select id="micro-impact-filter" onchange="filterMicroOccurrences()">
-                                <option value="TODOS">Todos os impactos</option>
-                                <option value="ALTO">Alto</option>
-                                <option value="MÉDIO">Médio</option>
-                                <option value="BAIXO">Baixo</option>
-                            </select>
                         </div>
                     </div>
                     <div id="micro-justifications" class="occ-list">
                         <!-- Preenchido via JS -->
                     </div>
                 </div>
+                <section id="micro-overtime-history" class="card overtime-history" aria-labelledby="micro-overtime-title">
+                    <div class="justifications-heading">
+                        <div class="justifications-title">
+                            <span class="section-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+                            <div><h3 id="micro-overtime-title">Horas extras realizadas</h3><p>Dias em que a carga diária foi ultrapassada ou houve trabalho no fim de semana.</p></div>
+                        </div>
+                        <div class="justifications-controls"><span id="micro-overtime-count">0 dias</span></div>
+                    </div>
+                    <div id="micro-overtime-content" class="overtime-history-content"></div>
+                </section>
             </div>
 
         </div>
@@ -692,6 +694,7 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
                 Object.values(competencia).forEach(data => {
                     if (!data.area) data.area = "CONSUMIDOR.GOV";
                     data.area = data.area.toLocaleUpperCase('pt-BR');
+                    if (data.area === 'PROCON') data.area = 'PROCON CADASTRO';
                     if (data.analista && data.analista.nome) {
                         data.analista.nome = data.analista.nome.trim().toLocaleUpperCase('pt-BR');
                     }
@@ -707,11 +710,39 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
 
         function getAreaLabel(area) {
             const labels = {
-                "CONSUMIDOR.GOV": "Consumidor.gov",
-                "PROCON": "PROCON",
+                "CONSUMIDOR.GOV": "Consumidor.gov (legado)",
+                "PROCON": "PROCON CADASTRO",
+                "PROCON CADASTRO": "PROCON CADASTRO",
+                "PROCON MINUTA": "PROCON MINUTA",
+                "PROCON AUDIÊNCIA": "PROCON AUDIÊNCIA",
                 "OUTRA": "Outra \u00E1rea"
             };
             return labels[area] || area || "\u00C1rea n\u00E3o informada";
+        }
+
+        function isProconCadastroData(data) {
+            const area = String(data?.area || '').trim().toLocaleUpperCase('pt-BR');
+            return area === 'PROCON' || area === 'PROCON CADASTRO';
+        }
+
+        function configuredScheduleHours(data) {
+            const direct = Number(data?.analista?.jornadaConfigurada);
+            if (Number.isFinite(direct) && direct > 0) return direct;
+
+            const [year, month] = String(data?.competencia || '').split('-').map(Number);
+            if (year && month) {
+                const lastDay = new Date(year, month, 0).getDate();
+                const periodEnd = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+                const history = Array.isArray(data?.analista?.parametrosPorVigencia) ? data.analista.parametrosPorVigencia : [];
+                const policy = [...history].filter(item => item?.from && item.from <= periodEnd).sort((a, b) => a.from.localeCompare(b.from)).at(-1);
+                const configured = Number(policy?.workHours);
+                if (Number.isFinite(configured) && configured > 0) return configured;
+            }
+
+            const recorded = (Array.isArray(data?.registrosDiarios) ? data.registrosDiarios : [])
+                .map(day => Number(day?.jornada ?? day?.metaJornada))
+                .find(hours => Number.isFinite(hours) && hours > 0);
+            return recorded ?? null;
         }
 
         // --- FUN\u00C7\u00D5ES DE DATA ---
@@ -849,6 +880,8 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
             const currentData = Object.fromEntries(Object.entries(monthData).filter(([, data]) => {
                 return currentArea === "TODAS" || (data.area || "CONSUMIDOR.GOV") === currentArea;
             }));
+            const microViewWasActive = document.getElementById('view-micro').classList.contains('active');
+            const selectedFunctional = document.getElementById('micro-func').innerText.trim();
             const numAnalistas = Object.keys(currentData).length;
             
             document.getElementById('lbl-analyst-count').innerText = numAnalistas;
@@ -859,14 +892,11 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
                 renderMacroView(currentData);
                 renderGlobalOccurrencesCalendar(currentData);
                 
-                const activeMicro = document.querySelector('.btn-micro.active');
-                if (activeMicro && document.getElementById('view-micro').classList.contains('active')) {
-                    const func = activeMicro.dataset.func;
-                    if (currentData[func]) {
-                        openMicroView(func);
+                if (microViewWasActive) {
+                    if (currentData[selectedFunctional]) {
+                        openMicroView(selectedFunctional);
                     } else {
                         switchView('macro');
-                        alert("O analista selecionado n\u00E3o possui dados importados para este m\u00EAs.");
                     }
                 }
                 
@@ -948,61 +978,70 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
             let sumRec = 0;
             let sumComp = 0;
             let sumConversao = 0;
+            const privateCount = analysts.filter(a => a.resultados.contagemProconPrivada).length;
+            const sharedAnalysts = analysts.filter(a => !a.resultados.contagemProconPrivada);
+            const proconOnly = analysts.every(isProconCadastroData);
+            const balanceAnalysts = analysts.filter(a => !isProconCadastroData(a));
             
             analysts.forEach(a => {
-                sumRec += a.resultados.totalRecebidos;
-                sumComp += a.resultados.totalRealizados;
-                sumConversao += a.resultados.conversaoMeta;
+                if (!isProconCadastroData(a)) sumRec += Number(a.resultados.totalRecebidos) || 0;
+            });
+            sharedAnalysts.forEach(a => {
+                sumComp += Number(a.resultados.totalRealizados) || 0;
+                sumConversao += Number(a.resultados.conversaoMeta) || 0;
             });
 
-            const avgConversao = Math.round(sumConversao / analysts.length);
-            const saldoGeral = sumRec - sumComp;
+            const avgConversao = sharedAnalysts.length ? Math.round(sumConversao / sharedAnalysts.length) : null;
+            const balancePrivateCount = balanceAnalysts.filter(a => a.resultados.contagemProconPrivada).length;
+            const saldoGeral = !balanceAnalysts.length || balancePrivateCount ? null : balanceAnalysts.reduce((sum, a) => sum + (Number(a.resultados.totalRecebidos) || 0) - (Number(a.resultados.totalRealizados) || 0), 0);
 
             document.getElementById('macro-stats').innerHTML = `
                 <div class="stat-card">
                     <span class="stat-icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg></span>
                     <div class="stat-title">Volume Total Recebido</div>
-                    <div class="stat-subtitle">Soma da fila distribu\u00EDda (Equipe)</div>
-                    <div class="stat-value">${sumRec}</div>
+                    <div class="stat-subtitle">${proconOnly ? 'Não se aplica ao PROCON Cadastro' : 'Soma da fila distribuída (Equipe)'}</div>
+                    <div class="stat-value">${proconOnly ? 'Não se aplica' : sumRec}</div>
                 </div>
                 <div class="stat-card">
                     <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M4 18V8M10 18V5M16 18v-7M22 18V3"/></svg></span>
                     <div class="stat-title">Volume Total Realizado</div>
-                    <div class="stat-subtitle">Soma das entregas efetivas (Equipe)</div>
-                    <div class="stat-value">${sumComp}</div>
+                    <div class="stat-subtitle">${privateCount ? 'Não inclui cadastros mantidos no app do analista' : 'Soma das entregas efetivas (Equipe)'}</div>
+                    <div class="stat-value">${sharedAnalysts.length ? `${sumComp}${privateCount ? ' compartilhados' : ''}` : 'Não compartilhado'}</div>
                 </div>
-                <div class="stat-card ${saldoGeral > 0 ? 'yellow' : 'green'}">
+                <div class="stat-card ${proconOnly ? 'gray' : saldoGeral === null || saldoGeral > 0 ? 'yellow' : 'green'}">
                     <span class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></span>
                     <div class="stat-title">Saldo Pendente (Equipe)</div>
-                    <div class="stat-subtitle">O que ficou represado no per\u00EDodo</div>
-                    <div class="stat-value">${saldoGeral}</div>
+                    <div class="stat-subtitle">${proconOnly ? 'O fluxo não registra protocolos recebidos' : 'O que ficou represado no período'}</div>
+                    <div class="stat-value">${proconOnly ? 'Não se aplica' : saldoGeral === null ? 'Parcial' : saldoGeral}</div>
                 </div>
                 <div class="stat-card">
                     <span class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m8 12 3 3 5-6"/></svg></span>
                     <div class="stat-title">Convers\u00E3o M\u00E9dia da Equipe</div>
                     <div class="stat-subtitle">M\u00E9dia de dias com meta batida</div>
-                    <div class="stat-value">${avgConversao}%</div>
+                    <div class="stat-value">${avgConversao === null ? '—' : `${avgConversao}%`}</div>
                 </div>
             `;
 
-            const ranking = [...analysts].sort((a, b) => b.resultados.totalRealizados - a.resultados.totalRealizados);
+            const ranking = [...analysts].sort((a, b) => (Number(b.resultados.totalRealizados) || 0) - (Number(a.resultados.totalRealizados) || 0));
             
             document.getElementById('ranking-count').innerText = `${ranking.length} analistas`;
             document.getElementById('ranking-footer-count').innerText = `Mostrando ${ranking.length} de ${ranking.length} analistas`;
             document.getElementById('macro-ranking').innerHTML = ranking.map((a, index) => {
-                const saldo = a.resultados.totalRecebidos - a.resultados.totalRealizados;
-                const conversionColor = a.resultados.conversaoMeta >= 80 ? 'var(--status-green)' : (a.resultados.conversaoMeta >= 50 ? 'var(--status-yellow)' : 'var(--status-red)');
+                const privateProduction = Boolean(a.resultados.contagemProconPrivada);
+                const proconAnalyst = isProconCadastroData(a);
+                const saldo = privateProduction || proconAnalyst ? null : a.resultados.totalRecebidos - a.resultados.totalRealizados;
+                const conversionColor = privateProduction ? 'var(--text-light)' : a.resultados.conversaoMeta >= 80 ? 'var(--status-green)' : (a.resultados.conversaoMeta >= 50 ? 'var(--status-yellow)' : 'var(--status-red)');
                 const initials = a.analista.nome.split(/\s+/).slice(0, 2).map(part => part[0]).join('');
 
                 return `
                     <tr onclick="openMicroView('${a.analista.funcional}')">
                         <td class="rank-position">${String(index + 1).padStart(2, '0')}</td>
                         <td><div class="rank-person"><span class="rank-avatar">${initials}</span><strong>${a.analista.nome}</strong></div></td>
-                        <td>${a.analista.jornada}h</td>
-                        <td>${a.resultados.totalRecebidos}</td>
-                        <td><strong>${a.resultados.totalRealizados}</strong></td>
-                        <td class="conversion-cell"><strong style="color:${conversionColor}">${a.resultados.conversaoMeta}%</strong><div class="conversion-bar"><span style="width:${Math.min(a.resultados.conversaoMeta, 100)}%; background:${conversionColor}"></span></div></td>
-                        <td><span class="status-badge bg-yellow" style="color:#000 !important;">Pendente (${saldo})</span></td>
+                        <td>${formatOvertimeHours(effectiveHoursForAnalyst(a))}</td>
+                        <td>${proconAnalyst ? 'Não se aplica' : a.resultados.totalRecebidos}</td>
+                        <td><strong>${privateProduction ? 'Não compartilhado' : a.resultados.totalRealizados}</strong></td>
+                        <td class="conversion-cell"><strong style="color:${conversionColor}">${privateProduction ? '—' : `${a.resultados.conversaoMeta}%`}</strong><div class="conversion-bar"><span style="width:${privateProduction ? 0 : Math.min(a.resultados.conversaoMeta, 100)}%; background:${conversionColor}"></span></div></td>
+                        <td>${privateProduction ? '<span class="status-badge bg-gray">Não compartilhado</span>' : proconAnalyst ? '<span class="status-badge bg-gray">Não se aplica</span>' : `<span class="status-badge bg-yellow" style="color:#000 !important;">Pendente (${saldo})</span>`}</td>
                         <td class="row-arrow">&#x203A;</td>
                     </tr>
                 `;
@@ -1039,11 +1078,9 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
         function getFilteredOccurrences() {
             const analyst = document.getElementById('occ-analyst-filter').value;
             const type = document.getElementById('occ-type-filter').value;
-            const impact = document.getElementById('occ-impact-filter').value;
             return (window.occurrenceBoardData || []).filter(o =>
                 (analyst === 'TODOS' || o.funcional === analyst) &&
-                (type === 'TODOS' || o.category === type) &&
-                (impact === 'TODOS' || (o.impact || '').toLocaleUpperCase('pt-BR') === impact)
+                (type === 'TODOS' || o.category === type)
             );
         }
 
@@ -1077,13 +1114,13 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
             const month = parseInt(monthStr) - 1;
             const grid = document.getElementById('occ-calendar-grid');
             grid.innerHTML = `
-                <div class="cal-header">Dom</div>
+                <div class="cal-header weekend-header" title="Fim de semana">Dom</div>
                 <div class="cal-header">Seg</div>
                 <div class="cal-header">Ter</div>
                 <div class="cal-header">Qua</div>
                 <div class="cal-header">Qui</div>
                 <div class="cal-header">Sex</div>
-                <div class="cal-header">S\u00E1b</div>
+                <div class="cal-header weekend-header" title="Fim de semana">S\u00E1b</div>
             `;
 
             const groupedOcc = {};
@@ -1091,10 +1128,18 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
 
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const calendarWeeks = Math.ceil((firstDay + daysInMonth) / 7);
+            grid.style.setProperty('--calendar-week-count', calendarWeeks);
+            const appendEmptyDay = weekday => {
+                const div = document.createElement('div');
+                div.className = 'cal-empty-day';
+                div.setAttribute('aria-hidden', 'true');
+                if (weekday === 0 || weekday === 6) div.classList.add('weekend');
+                grid.appendChild(div);
+            };
 
             for(let i=0; i<firstDay; i++) {
-                const div = document.createElement('div');
-                grid.appendChild(div);
+                appendEmptyDay(i);
             }
 
             for(let day=1; day<=daysInMonth; day++) {
@@ -1104,27 +1149,24 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
                 
                 const div = document.createElement('div');
                 div.className = 'cal-day';
+                if (dayOfWeek === 0 || dayOfWeek === 6) { div.classList.add('weekend'); div.title = 'Fim de semana'; }
                 div.id = `cal-day-${dStr}`;
 
                 let innerHTML = `<div class="cal-date">${day}</div>`;
 
-                if (dayOfWeek === 0 || dayOfWeek === 6) {
-                    div.classList.add('disabled');
+                const dailyOccurrences = groupedOcc[dStr] || [];
+                if (dailyOccurrences.length > 0) {
+                    div.classList.add('interactive');
+                    innerHTML += `<div class="status-badge bg-red" style="margin-top:auto;">${dailyOccurrences.length} ocorrência${dailyOccurrences.length === 1 ? '' : 's'}</div>`;
+                    div.onclick = () => showOccurrencesDetails(dStr, dailyOccurrences);
                 } else {
-                    const occurrences = groupedOcc[dStr] || [];
-                    
-                    if (occurrences.length > 0) {
-                        div.classList.add('interactive');
-                        innerHTML += `<div class="status-badge bg-red" style="margin-top:auto;">${occurrences.length} ocorrência${occurrences.length === 1 ? '' : 's'}</div>`;
-                        div.onclick = () => showOccurrencesDetails(dStr, occurrences);
-                    } else {
-                        innerHTML += `<div class="calendar-no-records" style="text-align:center; margin: auto 0; color:var(--text-light); font-size:0.75rem;">Sem registros</div>`;
-                    }
+                    innerHTML += `<div class="calendar-no-records" style="text-align:center; margin: auto 0; color:var(--text-light); font-size:0.75rem;">Sem registros</div>`;
                 }
                 if (window.selectedOccurrenceDate === dStr) div.classList.add('selected');
                 div.innerHTML = innerHTML;
                 grid.appendChild(div);
             }
+            for(let i=firstDay+daysInMonth; i<calendarWeeks*7; i++) appendEmptyDay(i % 7);
         }
 
         function showOccurrencesDetails(dateStr, occurrences) {
@@ -1137,22 +1179,22 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
         }
 
         function renderOccurrenceDetail(o) {
-            const impact = (o.impact || '').toLocaleUpperCase('pt-BR');
-            const colorClass = impact === 'ALTO' ? 'bg-red' : impact === 'MÉDIO' ? 'bg-yellow' : 'bg-blue';
             const initials = o.nomeAnalista.split(/\s+/).slice(0, 2).map(part => part[0]).join('');
+            const period = o.timeStart && o.timeEnd ? `${o.timeStart}–${o.timeEnd}` : 'Período não informado';
+            const registered = o.createdAt && Number.isFinite(Date.parse(o.createdAt)) ? new Date(o.createdAt).toLocaleString('pt-BR') : 'Data não registrada';
             return `<div class="occurrence-detail-card">
-                <div class="occurrence-detail-head"><div class="occurrence-detail-person"><span class="occurrence-detail-avatar">${initials}</span><strong>${o.nomeAnalista}</strong></div><span class="status-badge ${colorClass}">${impact || 'SEM IMPACTO'}</span></div>
+                <div class="occurrence-detail-head"><div class="occurrence-detail-person"><span class="occurrence-detail-avatar">${initials}</span><strong>${o.nomeAnalista}</strong></div></div>
                 <div class="occurrence-detail-category">${o.category || 'Ocorrência'}</div><div class="occurrence-detail-desc">${o.desc || 'Sem descrição informada.'}</div>
-                <div class="occurrence-detail-meta"><span>Analista<br><strong>${o.nomeAnalista}</strong></span><span>Data do registro<br><strong>${formatDateBR(o.date)}</strong></span></div>
+                <div class="occurrence-detail-meta"><span>Data da ocorrência<br><strong>${formatDateBR(o.date)}</strong></span><span>Período<br><strong>${period}</strong></span><span>Registrada em<br><strong>${registered}</strong></span></div>
             </div>`;
         }
 
         function renderOccurrenceList(occurrences) {
-            document.getElementById('occ-list-content').innerHTML = `<div class="occurrence-list-row header"><span>Data</span><span>Analista</span><span>Tipo</span><span>Descrição</span><span>Impacto</span></div>` +
+            document.getElementById('occ-list-content').innerHTML = `<div class="occurrence-list-row header"><span>Data</span><span>Analista</span><span>Tipo</span><span>Descrição</span><span>Período</span><span>Registrada em</span></div>` +
                 occurrences.sort((a, b) => b.date.localeCompare(a.date)).map(o => {
-                    const impact = (o.impact || '').toLocaleUpperCase('pt-BR');
-                    const colorClass = impact === 'ALTO' ? 'bg-red' : impact === 'MÉDIO' ? 'bg-yellow' : 'bg-blue';
-                    return `<div class="occurrence-list-row" onclick="showOccurrencesDetails('${o.date}', getFilteredOccurrences().filter(item => item.date === '${o.date}'))"><span>${formatDateBR(o.date)}</span><strong>${o.nomeAnalista}</strong><span>${o.category || '-'}</span><span>${o.desc || '-'}</span><span class="status-badge ${colorClass}">${impact}</span></div>`;
+                    const period = o.timeStart && o.timeEnd ? `${o.timeStart}–${o.timeEnd}` : 'Não informado';
+                    const registered = o.createdAt && Number.isFinite(Date.parse(o.createdAt)) ? new Date(o.createdAt).toLocaleString('pt-BR') : 'Não registrado';
+                    return `<div class="occurrence-list-row" onclick="showOccurrencesDetails('${o.date}', getFilteredOccurrences().filter(item => item.date === '${o.date}'))"><span>${formatDateBR(o.date)}</span><strong>${o.nomeAnalista}</strong><span>${o.category || '-'}</span><span>${o.desc || '-'}</span><span>${period}</span><span>${registered}</span></div>`;
                 }).join('') || '<div class="occurrence-details-empty">Nenhuma ocorrência encontrada com os filtros selecionados.</div>';
         }
 
@@ -1186,27 +1228,31 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
             document.getElementById('micro-initials').innerText = d.analista.nome.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('');
             document.getElementById('micro-area').innerText = getAreaLabel(d.area || "CONSUMIDOR.GOV");
             document.getElementById('micro-func').innerText = d.analista.funcional;
+            const configuredHours = configuredScheduleHours(d);
+            document.getElementById('micro-scale').innerText = configuredHours === null ? 'Não informada' : `${configuredHours}h/dia`;
             document.getElementById('micro-jornada').innerText = d.analista.jornada;
             document.getElementById('micro-meta').innerText = d.analista.metaDiaria;
 
             const res = d.resultados;
-            const saldo = res.totalRecebidos - res.totalRealizados;
+            const proconAnalyst = isProconCadastroData(d);
+            const privateProconCount = Boolean(res.contagemProconPrivada);
+            const saldo = privateProconCount || proconAnalyst ? null : res.totalRecebidos - res.totalRealizados;
             
             document.getElementById('micro-stats').innerHTML = `
                 <div class="stat-card">
                     <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h5M8 12h8M8 16h5"/></svg></span>
-                    <div class="stat-title">Recebidos</div>
-                    <div class="stat-value">${res.totalRecebidos}</div>
+                    <div class="stat-title">${proconAnalyst ? 'Protocolos recebidos' : 'Recebidos'}</div>
+                    <div class="stat-value">${proconAnalyst ? 'Não se aplica' : res.totalRecebidos}</div>
                 </div>
                 <div class="stat-card">
                     <span class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg></span>
                     <div class="stat-title">Realizados</div>
-                    <div class="stat-value">${res.totalRealizados}</div>
+                    <div class="stat-value">${privateProconCount ? 'Não compartilhado' : res.totalRealizados}</div>
                 </div>
-                <div class="stat-card ${saldo > 0 ? 'yellow' : 'green'}">
+                <div class="stat-card ${privateProconCount ? 'gray' : saldo > 0 ? 'yellow' : 'green'}">
                     <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M8 3h8M8 21h8M9 3v5l6 4-6 4v5M15 3v5M15 16v5"/></svg></span>
                     <div class="stat-title">Saldo Pendente</div>
-                    <div class="stat-value">${saldo}</div>
+                    <div class="stat-value">${privateProconCount ? 'Não compartilhado' : proconAnalyst ? 'Não se aplica' : saldo}</div>
                 </div>
                 <div class="stat-card gray">
                     <span class="stat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01"/></svg></span>
@@ -1216,17 +1262,16 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
                 <div class="stat-card">
                     <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M4 18V8M10 18V5M16 18v-7M22 18V3"/></svg></span>
                     <div class="stat-title">Dias com Meta Atingida</div>
-                    <div class="stat-value">${res.diasMetaAlcancada}</div>
+                    <div class="stat-value">${privateProconCount ? 'Não compartilhado' : res.diasMetaAlcancada}</div>
                 </div>
                 <div class="stat-card">
                     <span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M8 7h.01M16 17h.01"/></svg></span>
                     <div class="stat-title">Taxa de Convers\u00E3o</div>
-                    <div class="stat-value">${res.conversaoMeta}%</div>
+                    <div class="stat-value">${privateProconCount ? 'Não compartilhado' : `${res.conversaoMeta}%`}</div>
                 </div>
             `;
 
             window.microOccurrences = d.ocorrencias || [];
-            document.getElementById('micro-impact-filter').value = 'TODOS';
             renderMicroJustifications();
         }
 
@@ -1235,7 +1280,7 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
             if (normalized.includes('REUNI') || normalized.includes('TREINAMENTO')) {
                 return '<span class="occurrence-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 14c3 0 5 2 5 5"/></svg></span>';
             }
-            if (normalized.includes('SISTEMA') || normalized.includes('SITE') || normalized.includes('CONEX') || normalized.includes('INTERNET')) {
+            if (normalized.includes('SISTEMA') || normalized.includes('INSTABIL') || normalized.includes('SITE') || normalized.includes('CONEX') || normalized.includes('INTERNET')) {
                 return '<span class="occurrence-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>';
             }
             return '<span class="occurrence-icon"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h5M8 13h8M8 17h5"/></svg></span>';
@@ -1243,18 +1288,17 @@ main{min-width:0}.topbar,body.dark-mode .topbar{background:transparent;border:0;
 
         function renderMicroJustifications() {
             const allOccurrences = window.microOccurrences || [];
-            const filter = document.getElementById('micro-impact-filter').value;
-            const occurrences = allOccurrences.filter(o => filter === 'TODOS' || (o.impact || '').toLocaleUpperCase('pt-BR') === filter).sort((a, b) => b.date.localeCompare(a.date));
+            const occurrences = [...allOccurrences].sort((a, b) => b.date.localeCompare(a.date));
             document.getElementById('micro-occurrence-count').innerText = `${occurrences.length} registro${occurrences.length === 1 ? '' : 's'}`;
-            let justifHtml = '<div class="micro-occ-table"><div class="micro-occ-row header"><span>Data</span><span></span><span>Classifica\u00E7\u00E3o</span><span>Detalhamento</span><span>Impacto</span></div>';
+            let justifHtml = '<div class="micro-occ-table"><div class="micro-occ-row header"><span>Data</span><span></span><span>Classificação</span><span>Detalhamento</span><span>Período</span><span>Registrada em</span></div>';
             if (occurrences.length > 0) {
                 occurrences.forEach(o => {
-                    const impact = (o.impact || '').toLocaleUpperCase('pt-BR');
-                    const colorClass = impact === 'ALTO' ? 'bg-red' : (impact === 'M\u00C9DIO' ? 'bg-yellow' : (impact === 'BAIXO' ? 'bg-blue' : 'bg-gray'));
-                    justifHtml += `<div class="micro-occ-row"><strong>${formatDateBR(o.date)}</strong>${getOccurrenceIcon(o.category)}<strong>${o.category}</strong><span>${o.desc}</span><span><span class="status-badge ${colorClass}">${o.impact}</span></span></div>`;
+                    const period = o.timeStart && o.timeEnd ? `${o.timeStart}–${o.timeEnd}` : 'Não informado';
+                    const registered = o.createdAt && Number.isFinite(Date.parse(o.createdAt)) ? new Date(o.createdAt).toLocaleString('pt-BR') : 'Não registrado';
+                    justifHtml += `<div class="micro-occ-row"><strong>${formatDateBR(o.date)}</strong>${getOccurrenceIcon(o.category)}<strong>${o.category}</strong><span>${o.desc}</span><span>${period}</span><span>${registered}</span></div>`;
                 });
             } else {
-                justifHtml += "<div class='micro-occ-row'><span style='grid-column:1 / -1; text-align:center;'>Nenhuma justificativa encontrada para este impacto.</span></div>";
+                justifHtml += "<div class='micro-occ-row'><span style='grid-column:1 / -1; text-align:center;'>Nenhuma ocorrência registrada nesta competência.</span></div>";
             }
             document.getElementById('micro-justifications').innerHTML = justifHtml + '</div>';
         }
@@ -1322,17 +1366,50 @@ window.addEventListener('load',()=>{productPreferences();productHelp()});
 <script>
 const restoredManagementArea=localStorage.getItem('managementArea'),restoredManagementMonth=localStorage.getItem('managementMonth');
 let managementSort=localStorage.getItem('managementSort')||'volume', managementQuery=localStorage.getItem('managementQuery')||'';
-function hourly(d){const hours=Number(d.resultados.horasTrabalhadas??(Number(d.analista.jornada)*Number(d.resultados.diasTrabalhados)));return hours>0?Number(d.resultados.totalRealizados)/hours:null}
-const uxMacro=renderMacroView;renderMacroView=function(data){uxMacro(data);productHelp();const values=Object.values(data);const rows=[...document.querySelectorAll('#macro-ranking tr')];const score=d=>managementSort==='hour'?hourly(d):managementSort==='goal'?Number(d.resultados.conversaoMeta):Number(d.resultados.totalRealizados);const original=[...values].sort((a,b)=>b.resultados.totalRealizados-a.resultados.totalRealizados);const paired=rows.map((row,i)=>({row,d:original[i]})).sort((a,b)=>(score(b.d)??-1)-(score(a.d)??-1));paired.forEach(({row,d},i)=>{row.querySelector('.rank-position').textContent=String(i+1).padStart(2,'0');if(managementSort==='hour'){row.children[4].textContent=hourly(d)===null?'Sem base':hourly(d).toFixed(1).replace('.',',')+' /h'}row.hidden=!d.analista.nome.toLowerCase().includes(managementQuery.toLowerCase())&&!d.analista.funcional.includes(managementQuery);row.tabIndex=0;row.onkeydown=e=>{if(e.key==='Enter')row.click()};document.getElementById('macro-ranking').append(row)});document.querySelector('.ranking-title p').textContent=managementSort==='hour'?'Realizados ÷ (jornada × dias trabalhados).':managementSort==='goal'?'Percentual de dias com meta atingida.':'Ordenado por volume realizado.';document.querySelectorAll('.ranking-table-wrap th')[4].textContent=managementSort==='hour'?'Produção/hora':'Realizados';const visible=paired.filter(x=>!x.row.hidden).length;document.getElementById('ranking-footer-count').textContent=`Mostrando ${visible} de ${values.length} analistas`;let box=document.getElementById('management-insight');if(!box){box=document.createElement('div');box.id='management-insight';box.className='action-summary';document.getElementById('view-macro').prepend(box)}box.replaceChildren();const p=document.createElement('p');const pending=values.reduce((a,d)=>a+d.resultados.totalRecebidos-d.resultados.totalRealizados,0);const count=values.reduce((a,d)=>a+(d.ocorrencias||[]).length,0);p.textContent=`${pending} protocolos pendentes • ${count} ocorrências no período`;const b=document.createElement('button');b.textContent='Ver ocorrências';b.onclick=()=>switchView('ocorrencias');box.append(p,b);let comparison=document.getElementById('management-comparison');if(!comparison){comparison=document.createElement('p');comparison.id='management-comparison';comparison.className='product-comparison';box.after(comparison)}const previous=Object.values(teamData[productPrevious(currentCompetencia)]||{}).filter(d=>currentArea==='TODAS'||d.area===currentArea);comparison.textContent=productCompare(values.reduce((a,d)=>a+Number(d.resultados.totalRealizados),0),previous.reduce((a,d)=>a+Number(d.resultados.totalRealizados),0),previous.length>0);};
+function hourly(d){if(d.resultados.contagemProconPrivada)return null;const hours=Number(d.resultados.horasTrabalhadas??(Number(d.analista.jornada)*Number(d.resultados.diasTrabalhados)));return hours>0?Number(d.resultados.totalRealizados)/hours:null}
+const uxMacro=renderMacroView;
+renderMacroView=function(data){
+ uxMacro(data);productHelp();
+ const values=Object.values(data),shared=values.filter(d=>!d.resultados.contagemProconPrivada),rows=[...document.querySelectorAll('#macro-ranking tr')];
+ const overtimeValue=d=>{const summary=overtimeSummary(d);return summary.available?summary.total:null};
+ const score=d=>{
+  if(d.resultados.contagemProconPrivada)return -Infinity;
+  if(managementSort==='hour')return hourly(d)??-Infinity;
+  if(managementSort==='goal')return Number(d.resultados.conversaoMeta);
+  if(managementSort==='overtime')return overtimeValue(d)??-Infinity;
+  return Number(d.resultados.totalRealizados)||0;
+ };
+ const original=[...values].sort((a,b)=>(Number(b.resultados.totalRealizados)||0)-(Number(a.resultados.totalRealizados)||0));
+ const paired=rows.map((row,i)=>({row,d:original[i]})).sort((a,b)=>score(b.d)-score(a.d));
+ paired.forEach(({row,d},i)=>{
+  row.querySelector('.rank-position').textContent=String(i+1).padStart(2,'0');
+  if(managementSort==='hour')row.children[4].textContent=d.resultados.contagemProconPrivada?'Não compartilhado':hourly(d)===null?'Sem base':hourly(d).toFixed(1).replace('.',',')+' /h';
+  if(managementSort==='overtime'){const extra=overtimeValue(d);row.children[2].textContent=extra===null?'Sem dados':formatOvertimeHours(extra)}
+  row.hidden=!d.analista.nome.toLowerCase().includes(managementQuery.toLowerCase())&&!d.analista.funcional.includes(managementQuery);
+  row.tabIndex=0;row.onkeydown=e=>{if(e.key==='Enter')row.click()};document.getElementById('macro-ranking').append(row)
+ });
+ const overtimeKnown=values.map(overtimeSummary).filter(item=>item.available),overtimeTotal=overtimeKnown.reduce((sum,item)=>sum+item.total,0);
+ const overtimeLabel=overtimeKnown.length?formatOvertimeHours(overtimeTotal)+' extras na equipe'+(overtimeKnown.length<values.length?' (total parcial)':''):'Sem dados de horas extras';
+ document.querySelector('.ranking-title p').textContent=managementSort==='overtime'?'Ordenado por horas extras realizadas • '+overtimeLabel:managementSort==='hour'?'Realizados ÷ (jornada × dias trabalhados).':managementSort==='goal'?'Percentual de dias com meta atingida.':'Ordenado por volume realizado.';
+ const headers=document.querySelectorAll('.ranking-table-wrap th');headers[2].textContent=managementSort==='overtime'?'Horas extras realizadas':'Horas trabalhadas';headers[4].textContent=managementSort==='hour'?'Produção/hora':'Realizados';
+ const visible=paired.filter(x=>!x.row.hidden).length;document.getElementById('ranking-footer-count').textContent='Mostrando '+visible+' de '+values.length+' analistas';
+ let box=document.getElementById('management-insight');if(!box){box=document.createElement('div');box.id='management-insight';box.className='action-summary leadership-occurrence-status';document.getElementById('view-macro').prepend(box)}
+ box.replaceChildren();const p=document.createElement('p'),pending=shared.reduce((a,d)=>a+Number(d.resultados.totalRecebidos)-Number(d.resultados.totalRealizados),0),privateCount=values.length-shared.length,count=values.reduce((a,d)=>a+(d.ocorrencias||[]).length,0);
+ p.textContent=pending+' protocolos pendentes • '+count+' ocorrências no período'+(privateCount?' • Produção não compartilhada de '+privateCount+' analista(s)':'');
+ const b=document.createElement('button');b.className='secondary';b.textContent='Ver ocorrências';b.onclick=()=>switchView('ocorrencias');box.append(p,b);
+ let comparison=document.getElementById('management-comparison');if(!comparison){comparison=document.createElement('p');comparison.id='management-comparison';comparison.className='product-comparison';box.after(comparison)}
+ const previous=Object.values(teamData[productPrevious(currentCompetencia)]||{}).filter(d=>(currentArea==='TODAS'||d.area===currentArea)&&!d.resultados.contagemProconPrivada);
+ comparison.textContent=shared.length?productCompare(shared.reduce((a,d)=>a+Number(d.resultados.totalRealizados),0),previous.reduce((a,d)=>a+Number(d.resultados.totalRealizados),0),previous.length>0):'Produção do PROCON CADASTRO não compartilhada.';
+};
 handleFileUpload=async function(event){const files=[...event.target.files];if(!files.length)return;const candidates=[],seen=new Set(),list=document.createElement('ul');for(const file of files){const li=document.createElement('li');try{const d=JSON.parse(await file.text());const r=d.resultados;const required=['totalRecebidos','totalRealizados','diasTrabalhados','diasMetaAlcancada','conversaoMeta'];if(d.tipo_documento!=='fechamento_mensal'||!/^\d{4}-(0[1-9]|1[0-2])$/.test(d.competencia)||!/^\d{7}$/.test(String(d.analista?.funcional))||typeof d.analista.nome!=='string'||!r||required.some(k=>!Number.isFinite(Number(r[k]))||Number(r[k])<0)||!Array.isArray(d.ocorrencias))throw Error();const key=d.competencia+'/'+d.analista.funcional;if(seen.has(key)){li.textContent=file.name+' • Duplicado neste lote; ignorado.'}else{seen.add(key);candidates.push(d);li.textContent=`${d.analista.nome} • ${d.competencia} • ${teamData[d.competencia]?.[d.analista.funcional]?'Substituir fechamento existente':'Novo fechamento'}`}}catch{li.textContent=file.name+' • Inválido ou incompatível; não será importado.'}list.append(li)}const accepted=await productDialog(`Conferir importação • ${candidates.length} válido(s)`,list,candidates.length?[['Cancelar',false],['Importar',true]]:[['Fechar',false]]);event.target.value='';if(!accepted)return;for(const d of candidates){if(!teamData[d.competencia])teamData[d.competencia]={};teamData[d.competencia][d.analista.funcional]=d;currentCompetencia=d.competencia}normalizeImportedData();saveDatabase();updateUI();productToast(`${candidates.length} fechamento(s) importado(s).`);};
 clearDatabase=async function(){if(!await productDialog('Limpar fechamentos?','Todos os relatórios importados neste navegador serão removidos.',[['Cancelar',false],['Limpar dados',true]]))return;const snapshot=structuredClone(teamData);teamData={};currentCompetencia='';currentArea='TODAS';saveDatabase();updateUI();document.getElementById('management-settings').close();productToast('Base de fechamentos limpa.',()=>{teamData=snapshot;saveDatabase();updateUI()});};
 const uxRefresh=refreshDataViews;refreshDataViews=function(){uxRefresh();localStorage.setItem('managementArea',currentArea);localStorage.setItem('managementMonth',currentCompetencia)};
-const uxOccurrenceFilters=applyOccurrenceFilters;applyOccurrenceFilters=function(){uxOccurrenceFilters();localStorage.setItem('managementOccurrenceFilters',JSON.stringify(['occ-analyst-filter','occ-type-filter','occ-impact-filter'].map(id=>document.getElementById(id).value)))};
-window.addEventListener('load',()=>{const bar=document.createElement('div');bar.className='product-toolbar';bar.innerHTML='<input aria-label="Buscar analista ou funcional" placeholder="Buscar analista ou funcional…"><select aria-label="Critério do ranking"><option value="volume">Volume realizado</option><option value="hour">Protocolos por hora</option><option value="goal">Cumprimento de meta</option></select><button type="button">Limpar filtros</button><button type="button">Imprimir / PDF</button>';document.querySelector('.ranking-heading').after(bar);bar.querySelector('input').value=managementQuery;bar.querySelector('input').oninput=e=>{managementQuery=e.target.value;localStorage.setItem('managementQuery',managementQuery);refreshDataViews()};bar.querySelector('select').value=managementSort;bar.querySelector('select').onchange=e=>{managementSort=e.target.value;localStorage.setItem('managementSort',managementSort);refreshDataViews()};bar.querySelectorAll('button')[0].onclick=()=>{managementQuery='';bar.querySelector('input').value='';localStorage.removeItem('managementQuery');currentArea='TODAS';document.getElementById('global-area-selector').value='TODAS';refreshDataViews()};bar.querySelectorAll('button')[1].onclick=()=>window.print();const print=document.createElement('button');print.textContent='Imprimir / PDF';print.className='settings-button';print.onclick=()=>window.print();document.querySelector('.sidebar-footer').prepend(print);const area=restoredManagementArea,month=restoredManagementMonth;if(month&&teamData[month])currentCompetencia=month;if(area&&[...document.getElementById('global-area-selector').options].some(o=>o.value===area))currentArea=area;if(Object.keys(teamData).length)updateUI();try{const saved=JSON.parse(localStorage.getItem('managementOccurrenceFilters'));if(saved){['occ-analyst-filter','occ-type-filter','occ-impact-filter'].forEach((id,i)=>{const el=document.getElementById(id);if([...el.options].some(o=>o.value===saved[i]))el.value=saved[i]});applyOccurrenceFilters()}}catch{}const reset=document.createElement('button');reset.textContent='Limpar filtros';reset.className='empty-import';reset.style.margin='0';reset.onclick=()=>{['occ-analyst-filter','occ-type-filter','occ-impact-filter'].forEach(id=>document.getElementById(id).value='TODOS');applyOccurrenceFilters()};document.querySelector('.occurrence-filters').append(reset);});
+const uxOccurrenceFilters=applyOccurrenceFilters;applyOccurrenceFilters=function(){uxOccurrenceFilters();localStorage.setItem('managementOccurrenceFilters',JSON.stringify(['occ-analyst-filter','occ-type-filter'].map(id=>document.getElementById(id).value)))};
+window.addEventListener('load',()=>{const bar=document.createElement('div');bar.className='product-toolbar';bar.innerHTML='<input aria-label="Buscar analista ou funcional" placeholder="Buscar analista ou funcional…"><select aria-label="Critério do ranking"><option value="volume">Volume realizado</option><option value="hour">Protocolos por hora</option><option value="goal">Cumprimento de meta</option><option value="overtime">Horas extras</option></select><button type="button">Limpar filtros</button><button type="button">Imprimir / PDF</button>';document.querySelector('.ranking-heading').after(bar);bar.querySelector('input').value=managementQuery;bar.querySelector('input').oninput=e=>{managementQuery=e.target.value;localStorage.setItem('managementQuery',managementQuery);refreshDataViews()};bar.querySelector('select').value=managementSort;bar.querySelector('select').onchange=e=>{managementSort=e.target.value;localStorage.setItem('managementSort',managementSort);refreshDataViews()};bar.querySelectorAll('button')[0].onclick=()=>{managementQuery='';bar.querySelector('input').value='';localStorage.removeItem('managementQuery');currentArea='TODAS';document.getElementById('global-area-selector').value='TODAS';refreshDataViews()};bar.querySelectorAll('button')[1].onclick=()=>window.print();const print=document.createElement('button');print.textContent='Imprimir / PDF';print.className='settings-button';print.onclick=()=>window.print();document.querySelector('.sidebar-footer').prepend(print);const area=restoredManagementArea,month=restoredManagementMonth;if(month&&teamData[month])currentCompetencia=month;if(area&&[...document.getElementById('global-area-selector').options].some(o=>o.value===area))currentArea=area;if(Object.keys(teamData).length)updateUI();try{const saved=JSON.parse(localStorage.getItem('managementOccurrenceFilters'));if(saved){['occ-analyst-filter','occ-type-filter'].forEach((id,i)=>{const el=document.getElementById(id);if([...el.options].some(o=>o.value===saved[i]))el.value=saved[i]});applyOccurrenceFilters()}}catch{}const reset=document.createElement('button');reset.textContent='Limpar filtros';reset.className='occurrence-clear-button';reset.type='button';reset.onclick=()=>{['occ-analyst-filter','occ-type-filter'].forEach(id=>document.getElementById(id).value='TODOS');applyOccurrenceFilters()};document.querySelector('.occurrence-filters').append(reset);});
 </script>
 
 <script>
-window.addEventListener('load',()=>{const search=document.createElement('input');search.placeholder='Buscar data, analista ou ocorrência…';search.setAttribute('aria-label','Buscar ocorrências');search.className='occurrence-filter';search.value=localStorage.getItem('leadershipOccurrenceSearch')||'';document.querySelector('.occurrence-filters').prepend(search);const base=getFilteredOccurrences;getFilteredOccurrences=function(){const q=search.value.trim().toLowerCase();return base().filter(o=>[o.date,o.nomeAnalista,o.category,o.desc].join(' ').toLowerCase().includes(q))};search.oninput=()=>{localStorage.setItem('leadershipOccurrenceSearch',search.value);renderFilteredOccurrenceBoard()};const reset=[...document.querySelectorAll('.occurrence-filters button')].find(b=>b.textContent==='Limpar filtros');const old=reset.onclick;reset.onclick=()=>{search.value='';localStorage.removeItem('leadershipOccurrenceSearch');old()};const badge=document.querySelector('.ranking-tools .ranking-count:last-child');if(badge)badge.remove();});
+window.addEventListener('load',()=>{const search=document.createElement('input');search.placeholder='Buscar data, analista ou ocorrência…';search.setAttribute('aria-label','Buscar ocorrências');search.className='occurrence-search-input';search.value=localStorage.getItem('leadershipOccurrenceSearch')||'';const wrapper=document.createElement('div');wrapper.className='occurrence-search';wrapper.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>';wrapper.append(search);document.querySelector('.occurrence-filters').prepend(wrapper);const base=getFilteredOccurrences;getFilteredOccurrences=function(){const q=search.value.trim().toLowerCase();return base().filter(o=>[o.date,o.nomeAnalista,o.category,o.desc].join(' ').toLowerCase().includes(q))};search.oninput=()=>{localStorage.setItem('leadershipOccurrenceSearch',search.value);renderFilteredOccurrenceBoard()};const reset=[...document.querySelectorAll('.occurrence-filters button')].find(b=>b.textContent==='Limpar filtros');const old=reset.onclick;reset.onclick=()=>{search.value='';localStorage.removeItem('leadershipOccurrenceSearch');old()};const badge=document.querySelector('.ranking-tools .ranking-count:last-child');if(badge)badge.remove();});
 </script>
 <style>@media(min-width:1151px) and (max-height:820px){#view-macro .action-summary{padding:9px 14px;margin-bottom:9px}#view-macro .product-comparison{margin-bottom:10px}#view-macro .stat-card{min-height:110px!important;padding-top:14px;padding-bottom:12px}#view-macro .ranking-table-wrap td{height:51px}#view-macro .ranking-heading{padding-bottom:12px}#view-macro .ranking-card{padding:16px}.product-toolbar{margin-bottom:10px}}</style>
 
@@ -1349,7 +1426,7 @@ window.addEventListener('load',()=>{const b=document.createElement('button');b.t
 
 <script>
 const detailedMacro=renderMacroView;renderMacroView=function(data){detailedMacro(data);document.querySelectorAll('#macro-stats .stat-card').forEach(card=>{card.tabIndex=0;card.setAttribute('role','button');card.onclick=e=>{if(e.target.closest('.metric-help'))return;const list=document.createElement('ul');Object.values(data).forEach(d=>{const li=document.createElement('li');li.textContent=`${d.analista.nome} • ${d.resultados.totalRecebidos} recebidos • ${d.resultados.totalRealizados} realizados • Saldo ${d.resultados.totalRecebidos-d.resultados.totalRealizados} • Conversão ${d.resultados.conversaoMeta}%`;list.append(li)});productDialog('Composição do indicador • '+currentCompetencia,list)};card.onkeydown=e=>{if(e.target===card&&e.key==='Enter')card.click()}})};
-const detailedMicro=openMicroView;openMicroView=function(id){detailedMicro(id);const data=teamData[currentCompetencia]?.[id];if(!data)return;document.querySelectorAll('#micro-stats .stat-card').forEach(card=>{card.tabIndex=0;card.setAttribute('role','button');card.onclick=()=>{const list=document.createElement('ul');(data.registrosDiarios||[]).forEach(d=>{const li=document.createElement('li');li.textContent=`${d.date} • ${d.isHoliday?'Ausência':`${d.received} recebidos / ${d.completed} realizados • Meta ${d.metaDiaria} • ${d.jornada}h`}`;list.append(li)});if(!list.children.length)list.textContent='Este fechamento contém somente totais. Exporte novamente na versão atual para incluir registros diários.';productDialog('Registros do período',list)};card.onkeydown=e=>{if(e.key==='Enter')card.click()}});let button=document.getElementById('micro-evolution');if(!button){button=document.createElement('button');button.id='micro-evolution';button.className='empty-import';button.style.margin='0 0 14px';button.textContent='Ver evolução diária';document.getElementById('micro-stats').after(button)}button.onclick=()=>{const wrap=document.createElement('div');const modes=document.createElement('div');modes.className='evolution-modes';const plot=document.createElement('div');plot.style.height='260px';[['production','Produção / meta'],['balance','Saldo acumulado']].forEach(([mode,label])=>{const b=document.createElement('button');b.textContent=label;b.onclick=()=>plot.replaceChildren(evolutionChart(data.registrosDiarios,mode));modes.append(b)});plot.append(evolutionChart(data.registrosDiarios,'production'));wrap.append(modes,plot);productDialog('Evolução diária • '+data.analista.nome,wrap)};};
+const detailedMicro=openMicroView;openMicroView=function(id){detailedMicro(id);const data=teamData[currentCompetencia]?.[id];if(!data)return;document.querySelectorAll('#micro-stats .stat-card').forEach(card=>{card.tabIndex=0;card.setAttribute('role','button');card.onclick=()=>{const list=document.createElement('ul');(data.registrosDiarios||[]).forEach(d=>{const li=document.createElement('li');const minuta=String(data.area||'').toLocaleUpperCase('pt-BR')==='PROCON MINUTA';li.textContent=`${d.date} • ${d.isHoliday?'Ausência':minuta?`Fila ${d.fila||0} / Minutas ${d.minutasElaboradas||0} / Fechamentos ${d.fechamentos||0} = ${d.completed||0} atendimentos • Meta ${d.metaDiaria} • ${d.jornada}h`:`${d.received} recebidos / ${d.completed} realizados • Meta ${d.metaDiaria} • ${d.jornada}h`}`;list.append(li)});if(!list.children.length)list.textContent='Este fechamento contém somente totais. Exporte novamente na versão atual para incluir registros diários.';productDialog('Registros do período',list)};card.onkeydown=e=>{if(e.key==='Enter')card.click()}});let button=document.getElementById('micro-evolution');if(!button){button=document.createElement('button');button.id='micro-evolution';button.className='empty-import';button.style.margin='0 0 14px';button.textContent='Ver evolução diária';document.getElementById('micro-stats').after(button)}button.onclick=()=>{const wrap=document.createElement('div');const modes=document.createElement('div');modes.className='evolution-modes';const plot=document.createElement('div');plot.style.height='260px';[['production','Produção / meta'],['balance','Saldo acumulado']].forEach(([mode,label])=>{const b=document.createElement('button');b.textContent=label;b.onclick=()=>plot.replaceChildren(evolutionChart(data.registrosDiarios,mode));modes.append(b)});plot.append(evolutionChart(data.registrosDiarios,'production'));wrap.append(modes,plot);productDialog('Evolução diária • '+data.analista.nome,wrap)};};
 </script>
 
 <script>
@@ -1371,5 +1448,306 @@ evolutionChart=function(records,mode){
  return wrap;
 };
 </script>
+<script>
+const privateAwareMacro=renderMacroView;
+renderMacroView=function(data){
+ privateAwareMacro(data);
+ if(!Object.values(data).some(d=>d.resultados.contagemProconPrivada))return;
+ document.querySelectorAll('#macro-stats .stat-card').forEach(card=>{
+  const show=()=>{const list=document.createElement('ul');Object.values(data).forEach(d=>{const li=document.createElement('li');li.textContent=d.resultados.contagemProconPrivada?`${d.analista.nome} • Produção do Leitor Procon não compartilhada`: `${d.analista.nome} • ${d.resultados.totalRecebidos} recebidos • ${d.resultados.totalRealizados} realizados • Saldo ${d.resultados.totalRecebidos-d.resultados.totalRealizados} • Conversão ${d.resultados.conversaoMeta}%`;list.append(li)});productDialog('Composição do indicador • '+currentCompetencia,list)};
+  card.onclick=e=>{if(!e.target.closest('.metric-help'))show()};card.onkeydown=e=>{if(e.target===card&&e.key==='Enter')show()};
+ });
+};
+const privateAwareMicro=openMicroView;
+openMicroView=function(id){
+ privateAwareMicro(id);
+ const data=teamData[currentCompetencia]?.[id];if(!data?.resultados?.contagemProconPrivada)return;
+ document.querySelectorAll('#micro-stats .stat-card').forEach(card=>{
+  const show=()=>{const list=document.createElement('ul');(data.registrosDiarios||[]).forEach(day=>{const li=document.createElement('li');li.textContent=day.isHoliday?`${day.date} • Ausência`:`${day.date} • Produção não compartilhada • ${day.horasTrabalhadas??day.jornada??'—'}h`;list.append(li)});if(!list.children.length)list.textContent='A produção do Leitor Procon não é compartilhada com a aplicação de gestão.';productDialog('Registros do período',list)};
+  card.onclick=show;card.onkeydown=e=>{if(e.target===card&&e.key==='Enter')show()};
+ });
+};
+</script>
+<script>
+function productHelp(){
+ const selected=Object.values(teamData[currentCompetencia]||{}).filter(data=>currentArea==='TODAS'||data.area===currentArea),proconOnly=selected.length>0&&selected.every(isProconCadastroData);
+ const explain=(raw)=>{const t=raw.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  if(t.includes('recebido'))return proconOnly?'O Leitor Procon não registra protocolos recebidos; este indicador não se aplica ao PROCON Cadastro.':'Soma dos protocolos recebidos nos fechamentos importados. O PROCON Cadastro não utiliza controle de protocolos recebidos.';
+  if(t.includes('realizado'))return 'Soma dos protocolos realizados nos fechamentos importados.';
+  if(t.includes('media diaria'))return 'Protocolos realizados divididos pelos dias com produção registrados no período. A cobertura dos fechamentos pode variar entre pessoas.';
+  if(t.includes('media horaria')||t.includes('protocolos por hora'))return 'Protocolos realizados divididos pelas horas trabalhadas disponíveis nos fechamentos.';
+  if(t.includes('saldo')||t.includes('pendente'))return proconOnly?'O saldo não se aplica porque o fluxo do PROCON Cadastro não registra protocolos recebidos.':'Protocolos recebidos menos protocolos realizados nos setores com controle de entrada.';
+  if(t.includes('convers')||t.includes('meta'))return 'Percentual de dias trabalhados em que a meta diária foi atingida, conforme os fechamentos importados.';
+  if(t.includes('dias trabalhados'))return 'Quantidade de dias trabalhados informados no fechamento mensal importado.';
+  return 'Este indicador resume os dados disponíveis nos fechamentos importados para a competência e os filtros selecionados.';
+ };
+ document.querySelectorAll('.stat-title,.metric-cell>span').forEach(el=>{if(el.querySelector('.metric-help'))return;const title=el.textContent.trim(),b=document.createElement('button');b.type='button';b.className='metric-help';b.textContent='?';b.setAttribute('aria-label','Entender o indicador: '+title);b.title='Como este indicador é calculado';b.onclick=e=>{e.stopPropagation();productDialog('Como este indicador é calculado',explain(title))};el.append(b)});
+}
+const accessibilityPreferencesBase=productPreferences;
+const productFontBaselines=new WeakMap();
+let productFontScale=1;
+function productFontElements(root=document.body){
+ if(!(root instanceof HTMLElement))return [];
+ return [root,...root.querySelectorAll('*')].filter(element=>element instanceof HTMLElement&&element.tagName!=='SCRIPT'&&element.tagName!=='STYLE');
+}
+function applyProductFontScale(value,root=document.body){
+ productFontScale=Math.max(.85,Math.min(1.25,Number(value)||1));
+ const elements=productFontElements(root);
+ elements.forEach(element=>{
+  if(productFontBaselines.has(element))return;
+  const current=parseFloat(getComputedStyle(element).fontSize)||16,parent=element.parentElement,parentBase=parent&&productFontBaselines.get(parent),parentCurrent=parent?parseFloat(getComputedStyle(parent).fontSize):NaN;
+  const inheritsParent=Boolean(parentBase)&&Number.isFinite(parentCurrent)&&Math.abs(current-parentCurrent)<.1;
+  productFontBaselines.set(element,{size:inheritsParent?parentBase.size:current,inline:element.style.getPropertyValue('font-size'),priority:element.style.getPropertyPriority('font-size')});
+ });
+ elements.forEach(element=>{
+  const baseline=productFontBaselines.get(element);
+  if(productFontScale===1){if(baseline.inline)element.style.setProperty('font-size',baseline.inline,baseline.priority);else element.style.removeProperty('font-size')}
+  else element.style.setProperty('font-size',`${baseline.size*productFontScale}px`);
+ });
+}
+productPreferences=function(){
+ accessibilityPreferencesBase();
+ const key=productStorePrefix+'FontScale',stored=Number(localStorage.getItem(key)),initial=Number.isFinite(stored)&&stored>=.85&&stored<=1.25?stored:1;
+ const apply=value=>{const scale=Math.max(.85,Math.min(1.25,Number(value)||1));document.body.style.removeProperty('zoom');applyProductFontScale(scale);localStorage.setItem(key,String(scale));const range=document.getElementById('font-scale-range'),output=document.getElementById('font-scale-value');if(range){range.value=String(Math.round(scale*100));range.style.setProperty('--range-progress',`${Math.max(0,Math.min(100,((scale-.85)/.4)*100))}%`)}if(output)output.textContent=Math.round(scale*100)+'%'};
+ if(!window.productFontObserver){window.productFontObserver=new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node instanceof HTMLElement)applyProductFontScale(productFontScale,node)})));window.productFontObserver.observe(document.body,{childList:true,subtree:true})}
+ apply(initial);
+ const host=document.querySelector('#management-settings,#settings-dialog');
+ if(host&&!host.querySelector('.accessibility-font-control')){const box=document.createElement('section');box.className='accessibility-font-control';box.setAttribute('aria-labelledby','font-scale-title');box.innerHTML='<strong id="font-scale-title">Tamanho da fonte</strong><p>Ajuste o tamanho tipográfico da aplicação entre 85% e 125%.</p><div><label for="font-scale-range">Tamanho: <output id="font-scale-value">100%</output></label><input id="font-scale-range" type="range" min="85" max="125" step="5" value="100" aria-describedby="font-scale-title"><button type="button" class="secondary" id="font-scale-reset">Restaurar 100%</button></div>';host.append(box);const range=box.querySelector('#font-scale-range');range.oninput=()=>apply(Number(range.value)/100);box.querySelector('#font-scale-reset').onclick=()=>apply(1);apply(initial)}
+};
+const openMicroWithHelp=openMicroView;
+openMicroView=function(id){openMicroWithHelp.apply(this,arguments);productHelp()};
+function guideSection(title,paragraphs){const details=document.createElement('details');details.className='guide-section';const summary=document.createElement('summary');summary.textContent=title;details.append(summary);const content=document.createElement('div');content.className='guide-section-content';paragraphs.forEach(text=>{const p=document.createElement('p');p.textContent=text;content.append(p)});details.append(content);return details}
+function openQuickGuide(){
+ const content=document.createElement('div');content.className='quick-guide-content';
+ const sections=[
+  ['Importação dos fechamentos','Use “Importar fechamentos” para selecionar os JSON exportados pelos analistas. A prévia mostra quem será incluído, a competência e se um fechamento existente será substituído. Arquivos inválidos e duplicados no mesmo lote são identificados antes da confirmação.','Para atualizar um fechamento, importe o arquivo novo com a mesma competência e funcional; ele substitui a versão anterior para aquele analista. A base importada fica neste navegador.'],
+  ['Painel de indicadores','Escolha competência e setor nos filtros. Os cards “?” explicam a composição de cada indicador; clicar nos cards abre detalhes dos arquivos carregados. O painel “Horas extras realizadas” soma as horas extras da equipe e compara a distribuição por analista.','O consolidado considera como extras o excedente diário em dias úteis e todas as horas lançadas em fins de semana. Fechamentos sem informações de jornada aparecem identificados como indisponíveis e não entram silenciosamente no total.','Os fechamentos do PROCON Cadastro compartilham totais agregados de protocolos realizados, dias com meta atingida e conversão. Dados por cliente, documentos e quantidade de protocolos por dia não são exportados. Diferenças entre meses também podem refletir mudanças na quantidade de fechamentos disponíveis.'],
+  ['Ranking e análise individual','Pesquise pelo nome ou funcional e ordene por volume realizado, protocolos por hora ou cumprimento de meta. A coluna “Horas trabalhadas” mostra a soma efetiva informada no fechamento. Clique em uma linha para abrir o Raio-X.','A seção “Horas Extras Realizadas” do Raio-X lista os dias e as horas acima da jornada prevista. Fechamentos antigos podem não conter o detalhamento diário necessário; importe um fechamento recente para consultar essa informação. Para PROCON Cadastro, os dados de clientes e a produção diária continuam fora do arquivo.'],
+  ['Ocorrências','Use filtros de competência, analista e classificação. No calendário, selecione uma data para ver os detalhes; em Lista, consulte e filtre os registros em sequência.','Cada ocorrência pode trazer classificação, período e horário de registro. A gestão recebe apenas os dados incluídos nos fechamentos importados. Para visualizar uma correção ou nova ocorrência, importe a versão atualizada do fechamento.'],
+  ['Configurações e solução de problemas','A base da liderança é independente dos dados locais dos analistas e não atualiza sozinha. Se o painel estiver incompleto, confirme os arquivos, a competência, o setor e se o novo fechamento foi importado.','Use “Limpar fechamentos” somente quando quiser remover a base armazenada neste navegador e recomeçar a importação. Para manter uma cópia da base, use a exportação/importação de dados disponível no navegador ou guarde os arquivos de fechamento originais.','O controle “Tamanho da fonte” permite ajustar a tipografia entre 85% e 125%, sem aplicar zoom à página. “Restaurar 100%” volta ao tamanho padrão.']
+ ];
+ sections.forEach(([title,...paragraphs],index)=>{const section=guideSection(title,paragraphs);section.open=index===0;content.append(section)});
+ productDialog('Guia rápido da gestão',content);
+}
+</script>
+<style>
+.accessibility-font-control{border-top:1px solid var(--border-color);margin-top:18px;padding-top:16px}.accessibility-font-control>strong{display:block;margin-bottom:4px}.accessibility-font-control>p{color:var(--text-light);font-size:12px;margin:0 0 10px}.accessibility-font-control>div{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center}.accessibility-font-control label{margin:0}.accessibility-font-control input{grid-column:1/-1;width:100%;accent-color:var(--brand-primary)}.accessibility-font-control button{grid-column:1/-1;justify-self:start;min-height:34px}.quick-guide-content{display:grid;gap:9px}.guide-section{border:1px solid var(--border-color);border-radius:9px;background:var(--bg-color);padding:0 13px}.guide-section summary{cursor:pointer;padding:12px 0;font-weight:650;color:var(--text-main)}.guide-section-content{padding:0 0 10px}.guide-section-content p{margin:0 0 10px;font-size:13px;line-height:1.65}.guide-section-content p:last-child{margin-bottom:0}@media(max-width:700px){.accessibility-font-control>div{grid-template-columns:1fr}}
+</style>
+<style>
+.accessibility-font-control #font-scale-reset{color:var(--text-main);background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;padding:8px 12px;cursor:pointer}
+.accessibility-font-control #font-scale-reset:hover{color:var(--brand-primary);background:var(--bg-color);border-color:var(--brand-primary)}
+.accessibility-font-control input[type="range"]{color-scheme:light}
+body.dark-mode .accessibility-font-control input[type="range"]{color-scheme:dark}
+.accessibility-font-control input[type="range"]{-webkit-appearance:none;appearance:none;grid-column:1/-1;width:100%;height:24px;min-height:24px;padding:0;border:0;border-radius:0;background:transparent;cursor:pointer}
+.accessibility-font-control input[type="range"]::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:linear-gradient(to right,var(--brand-primary) var(--range-progress,37.5%),var(--border-color) var(--range-progress,37.5%))}
+.accessibility-font-control input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin-top:-5px;border:2px solid var(--card-bg);border-radius:50%;background:var(--brand-primary);box-shadow:0 0 0 1px var(--brand-primary)}
+.accessibility-font-control input[type="range"]::-moz-range-track{height:6px;border:0;border-radius:999px;background:var(--border-color)}
+.accessibility-font-control input[type="range"]::-moz-range-progress{height:6px;border-radius:999px;background:var(--brand-primary)}
+.accessibility-font-control input[type="range"]::-moz-range-thumb{width:12px;height:12px;border:2px solid var(--card-bg);border-radius:50%;background:var(--brand-primary);box-shadow:0 0 0 1px var(--brand-primary)}
+</style>
+<script>
+const aggregateMacroBase=renderMacroView;
+renderMacroView=function(data){
+ aggregateMacroBase(data);
+ const analysts=Object.values(data),sharedProcon=analysts.some(d=>isProconCadastroData(d)&&!d.resultados.contagemProconPrivada);
+ if(!sharedProcon)return;
+ const summary=document.querySelector('#management-insight p');
+ if(summary){const balanceAnalysts=analysts.filter(d=>!isProconCadastroData(d)&&!d.resultados.contagemProconPrivada),pending=balanceAnalysts.reduce((sum,d)=>sum+(Number(d.resultados.totalRecebidos)||0)-(Number(d.resultados.totalRealizados)||0),0),privateCount=analysts.filter(d=>d.resultados.contagemProconPrivada).length,occurrenceCount=analysts.reduce((sum,d)=>sum+(d.ocorrencias||[]).length,0),pendingLabel=balanceAnalysts.length?`${pending} protocolos pendentes nas áreas com controle de recebidos`:'Saldo pendente não se aplica ao PROCON Cadastro';summary.textContent=`${pendingLabel} • ${occurrenceCount} ocorrências no período${privateCount?` • Produção não compartilhada de ${privateCount} analista(s)`:''}`}
+ document.querySelectorAll('#macro-stats .stat-card').forEach(card=>{
+  const show=()=>{const list=document.createElement('ul');analysts.forEach(d=>{const r=d.resultados,li=document.createElement('li');li.textContent=r.contagemProconPrivada?`${d.analista.nome} • Produção não compartilhada neste fechamento`:isProconCadastroData(d)?`${d.analista.nome} • ${r.totalRealizados} realizados • ${r.diasMetaAlcancada} dias com meta • Conversão ${r.conversaoMeta}%`:`${d.analista.nome} • ${r.totalRecebidos} recebidos • ${r.totalRealizados} realizados • Saldo ${r.totalRecebidos-r.totalRealizados} • Conversão ${r.conversaoMeta}%`;list.append(li)});productDialog('Composição do indicador • '+currentCompetencia,list)};
+  card.onclick=e=>{if(!e.target.closest('.metric-help'))show()};card.onkeydown=e=>{if(e.target===card&&e.key==='Enter')show()};
+ });
+};
+const aggregateMicroBase=openMicroView;
+openMicroView=function(id){
+ aggregateMicroBase.apply(this,arguments);
+ const data=teamData[currentCompetencia]?.[id];
+ if(!data||!isProconCadastroData(data)||data.resultados.contagemProconPrivada)return;
+ document.querySelectorAll('#micro-stats .stat-card').forEach(card=>{const show=()=>productDialog('Totais agregados','Este fechamento compartilha os totais do período. A contagem diária, os protocolos individualizados e os dados dos clientes não são exportados.');card.onclick=show;card.onkeydown=e=>{if(e.target===card&&e.key==='Enter')show()}});
+};
+</script>
+<script>
+function hasNumericHour(value){return value!==null&&value!==undefined&&value!==''&&Number.isFinite(Number(value))}
+function hourNumber(value){return Number(value).toLocaleString('pt-BR',{minimumFractionDigits:Number(value)%1?1:0,maximumFractionDigits:2})}
+function formatOvertimeHours(value){return hasNumericHour(value)?hourNumber(Math.max(0,Number(value)))+'h':'—'}
+function effectiveHoursForAnalyst(data){
+ const results=data?.resultados||{};
+ if(hasNumericHour(results.horasTrabalhadas))return Math.max(0,Number(results.horasTrabalhadas));
+ const records=Array.isArray(data?.registrosDiarios)?data.registrosDiarios:[],daily=records.filter(day=>hasNumericHour(day.horasTrabalhadas??day.hoursWorked));
+ if(daily.length)return daily.reduce((sum,day)=>sum+Math.max(0,Number(day.horasTrabalhadas??day.hoursWorked)),0);
+ const average=Number(data?.analista?.jornada),days=Number(results.diasTrabalhados);
+ return Number.isFinite(average)&&Number.isFinite(days)?Math.max(0,average*days):null;
+}
+function overtimeForDay(data,day){
+ if(day?.isHoliday)return 0;
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(String(day?.date||'')))return null;
+ const actual=day.horasTrabalhadas??day.hoursWorked;
+ if(!hasNumericHour(actual))return null;
+ if(hasNumericHour(day.horasExtrasTrabalhadas))return Math.max(0,Number(day.horasExtrasTrabalhadas));
+ const weekday=new Date(day.date+'T12:00:00').getDay(),weekend=weekday===0||weekday===6;
+ const scheduled=day.jornada??day.metaJornada??data?.analista?.jornada;
+ if(!weekend&&!hasNumericHour(scheduled))return null;
+ return Math.max(0,Number(actual)-(weekend?0:Number(scheduled)));
+}
+function overtimeSummary(data){
+ const records=Array.isArray(data?.registrosDiarios)?data.registrosDiarios:[];
+ const daily=records.map(day=>({day,hours:overtimeForDay(data,day)})).filter(item=>item.hours!==null);
+ const aggregate=data?.resultados?.horasExtrasTrabalhadas;
+ const aggregateAvailable=hasNumericHour(aggregate);
+ return {available:aggregateAvailable||daily.length>0,total:aggregateAvailable?Math.max(0,Number(aggregate)):daily.reduce((sum,item)=>sum+item.hours,0),daily:daily.filter(item=>item.hours>0),hasDailyDetails:daily.length>0,complete:aggregateAvailable||(records.length>0&&daily.length===records.length),aggregateAvailable,detailsComplete:records.length>0&&daily.length===records.length};
+}
+function renderMicroOvertime(data){
+ const host=document.getElementById('micro-overtime-content');if(!host)return;host.replaceChildren();
+ const summary=overtimeSummary(data),count=document.getElementById('micro-overtime-count');
+ if(count)count.textContent=summary.daily.length?`${summary.daily.length} dia${summary.daily.length===1?'':'s'}`:summary.available&&summary.total>0?'Detalhamento indisponível':summary.available?'0 dias':'Sem dados';
+ const list=document.createElement('div');list.className='overtime-day-table';
+ const header=document.createElement('div');header.className='overtime-day-row header';header.innerHTML='<span>Data</span><span>Detalhamento das horas extras</span>';list.append(header);
+ if(!summary.available||!summary.daily.length){
+  const empty=document.createElement('div');empty.className='overtime-day-empty';
+  empty.textContent=!summary.available?'Este fechamento não contém detalhamento diário de horas trabalhadas. Importe um fechamento atualizado para consultar as horas extras.':summary.total>0?'O total de horas extras está disponível, mas o fechamento não contém detalhamento diário.':'Nenhuma hora extra registrada nesta competência.';
+  list.append(empty);
+ }
+ summary.daily.sort((a,b)=>a.day.date.localeCompare(b.day.date)).forEach(({day,hours})=>{
+  const item=document.createElement('div'),date=document.createElement('strong'),detail=document.createElement('span'),dayOfWeek=new Date(day.date+'T12:00:00').getDay(),actual=day.horasTrabalhadas??day.hoursWorked,scheduled=day.jornada??day.metaJornada??data.analista?.jornadaConfigurada??data.analista?.jornada;
+  item.className='overtime-day-row';detail.className='overtime-day-detail';
+  date.textContent=formatDateBR(day.date);
+  detail.textContent=(dayOfWeek===0||dayOfWeek===6)?`${formatOvertimeHours(hours)} extras • ${formatOvertimeHours(actual)} trabalhadas no fim de semana`:`${formatOvertimeHours(hours)} extras • ${formatOvertimeHours(actual)} trabalhadas de ${formatOvertimeHours(scheduled)} previstas`;
+  item.append(date,detail);list.append(item);
+ });
+ host.append(list);
+ if(summary.available&&!summary.detailsComplete){const note=document.createElement('p');note.className='overtime-history-message';note.textContent=summary.aggregateAvailable?'O total do período está completo, mas alguns dias não têm detalhamento de jornada neste fechamento.':'Detalhamento diário incompleto; o total calculado considera somente os dias disponíveis.';host.append(note)}
+ if(summary.available){const total=document.createElement('p');total.className='overtime-history-total';total.textContent=`${summary.complete?'Total':'Total parcial'} de horas extras: ${formatOvertimeHours(summary.total)}`;host.append(total)}
+}
+const overtimeMicroBase=openMicroView;
+openMicroView=function(id){
+ overtimeMicroBase.apply(this,arguments);
+ const data=teamData[currentCompetencia]?.[id];if(!data)return;
+ const hours=effectiveHoursForAnalyst(data),days=Number(data.resultados?.diasTrabalhados)||0,average=hours!==null&&days>0?hours/days:null,jornada=document.getElementById('micro-jornada'),host=document.getElementById('micro-stats');
+ if(jornada)jornada.textContent=average===null?'—':hourNumber(average);
+ if(host){host.querySelectorAll('[data-effective-hours-card]').forEach(card=>card.remove());
+  const makeCard=(title,value,subtitle)=>{const card=document.createElement('div');card.className='stat-card effective-hours-card';card.dataset.effectiveHoursCard='true';const label=document.createElement('div');label.className='stat-title';label.textContent=title;const amount=document.createElement('div');amount.className='stat-value';amount.textContent=value;const note=document.createElement('div');note.className='stat-subtitle';note.textContent=subtitle;card.append(label,amount,note);return card};
+  host.append(makeCard('Horas efetivamente trabalhadas',formatOvertimeHours(hours),'Soma das horas registradas no período.'),makeCard('Horas extras realizadas',formatOvertimeHours(overtimeSummary(data).total),overtimeSummary(data).available?'Acima da jornada prevista e em fins de semana.':'Detalhamento diário indisponível.'));
+ }
+ renderMicroOvertime(data);
+};
+</script>
+<style>
+.overtime-history{padding:20px}
+.overtime-history .justifications-heading{margin-bottom:14px}
+.overtime-history .section-icon{flex:0 0 44px}
+.overtime-history-content{color:var(--text-main)}
+.overtime-day-table{width:100%;border:1px solid var(--border-color);border-radius:8px;overflow:hidden}
+.overtime-day-row{display:grid;grid-template-columns:minmax(140px,180px) minmax(0,1fr);gap:1rem;align-items:center;padding:1rem 1.2rem;border-top:1px solid var(--border-color)}
+.overtime-day-row.header{border-top:0;background:var(--bg-color);color:var(--text-light);font-size:.75rem;font-weight:700;text-transform:uppercase}
+.overtime-day-row strong{color:var(--text-main);font-size:.85rem}
+.overtime-day-detail{color:var(--text-light);font-size:.85rem;text-align:left}
+.overtime-day-empty{padding:24px;text-align:center;color:var(--text-light);font-size:.85rem;border-top:1px solid var(--border-color)}
+.overtime-history-message{margin:10px 0 0;color:var(--text-light);font-size:12px}
+.overtime-history-total{text-align:right;font-weight:700;color:var(--brand-primary);margin:12px 0 0}
+.effective-hours-card{cursor:default!important}
+@media(max-width:700px){.overtime-history .justifications-heading{align-items:flex-start}.overtime-day-row{grid-template-columns:1fr;gap:5px;padding:12px}.overtime-day-row.header{display:none}.overtime-day-detail{text-align:left}}
+</style>
+<script>
+function isProconMinutaData(data){return String(data?.area||'').trim().toLocaleUpperCase('pt-BR')==='PROCON MINUTA'}
+function minutaAggregate(data,resultKey,dailyKey){const result=data?.resultados||{};if(result[resultKey]!==undefined&&Number.isFinite(Number(result[resultKey])))return Math.max(0,Number(result[resultKey]));return(Array.isArray(data?.registrosDiarios)?data.registrosDiarios:[]).reduce((sum,day)=>sum+Math.max(0,Number(day[dailyKey])||0),0)}
+function managementMetricCard(title,value,subtitle,detail){
+ const card=document.createElement('div');card.className='stat-card';card.tabIndex=0;card.setAttribute('role','button');
+ const iconByMetric=[
+  [/recebid/i,'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>'],
+  [/atendimento|realizado|volume total/i,'<path d="M4 18V8M10 18V5M16 18v-7M22 18V3"/>'],
+  [/fila/i,'<path d="M3 6h18v12H3zM3 9h5l2 3h4l2-3h5"/>'],
+  [/elabora|minuta/i,'<path d="M5 3h10l4 4v14H5zM15 3v5h5M8 13h8M8 17h5"/>'],
+  [/fechamento/i,'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>'],
+  [/convers/i,'<path d="M3 18V6M3 18h18M6 14l4-4 4 2 6-7M16 5h4v4"/>']
+ ];
+ const iconPath=iconByMetric.find(([pattern])=>pattern.test(title))?.[1]||'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>';
+ const icon=document.createElement('span');icon.className='stat-icon';icon.setAttribute('aria-hidden','true');icon.innerHTML='<svg viewBox="0 0 24 24">'+iconPath+'</svg>';
+ const heading=document.createElement('div');heading.className='stat-title';heading.textContent=title;const note=document.createElement('div');note.className='stat-subtitle';note.textContent=subtitle;const amount=document.createElement('div');amount.className='stat-value';amount.textContent=value;
+ card.append(icon,heading,note,amount);const show=()=>productDialog(title,detail);card.onclick=show;card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show()}};return card
+}
+function finalizeSectorMacro(data){
+ const analysts=Object.values(data||{}),host=document.getElementById('macro-stats'),body=document.getElementById('macro-ranking');if(!analysts.length||!host)return;
+ const shared=analysts.filter(d=>!d.resultados?.contagemProconPrivada),sumRealized=shared.reduce((sum,d)=>sum+(Number(d.resultados?.totalRealizados)||0),0),avgConversion=shared.length?Math.round(shared.reduce((sum,d)=>sum+(Number(d.resultados?.conversaoMeta)||0),0)/shared.length):null;
+ const consolidated=currentArea==='TODAS',cadastro=currentArea==='PROCON CADASTRO'||analysts.every(isProconCadastroData),minuta=currentArea==='PROCON MINUTA'||analysts.every(isProconMinutaData);
+ host.classList.toggle('shared-metrics',consolidated||cadastro);host.replaceChildren();
+ if(minuta){const received=analysts.reduce((sum,d)=>sum+(Number(d.resultados?.totalRecebidos)||0),0),fila=analysts.reduce((sum,d)=>sum+minutaAggregate(d,'totalFila','fila'),0),minutas=analysts.reduce((sum,d)=>sum+minutaAggregate(d,'totalMinutasElaboradas','minutasElaboradas'),0),fechamentos=analysts.reduce((sum,d)=>sum+minutaAggregate(d,'totalFechamentos','fechamentos'),0);host.append(managementMetricCard('Protocolos Recebidos',String(received),'Volume recebido no período.',analysts.map(d=>`${d.analista.nome}: ${Number(d.resultados?.totalRecebidos)||0} recebidos`).join('\n')),managementMetricCard('Atendimentos realizados',String(sumRealized),'Soma diária de Fila, elaboração de minuta e fechamentos.',analysts.map(d=>`${d.analista.nome}: ${d.resultados.totalRealizados} atendimentos`).join('\n')),managementMetricCard('Fila',String(fila),'Protocolos tratados na etapa de fila.',analysts.map(d=>`${d.analista.nome}: ${minutaAggregate(d,'totalFila','fila')} na fila`).join('\n')),managementMetricCard('Elaboração de minuta',String(minutas),'Minutas elaboradas pela equipe.',analysts.map(d=>`${d.analista.nome}: ${minutaAggregate(d,'totalMinutasElaboradas','minutasElaboradas')} minutas`).join('\n')),managementMetricCard('Fechamentos',String(fechamentos),'Protocolos concluídos na etapa de fechamento.',analysts.map(d=>`${d.analista.nome}: ${minutaAggregate(d,'totalFechamentos','fechamentos')} fechamentos`).join('\n')),managementMetricCard('Conversão média da equipe',avgConversion===null?'—':`${avgConversion}%`,'Média de dias com meta atingida.',shared.map(d=>`${d.analista.nome}: ${d.resultados.conversaoMeta}%`).join('\n')))}
+ else{host.append(managementMetricCard('Volume total realizado',String(sumRealized),'Soma das entregas efetivas da equipe.',shared.map(d=>`${d.analista.nome}: ${d.resultados.totalRealizados} realizados`).join('\n')),managementMetricCard('Conversão média da equipe',avgConversion===null?'—':`${avgConversion}%`,'Média dos percentuais de dias com meta atingida.',shared.map(d=>`${d.analista.nome}: ${d.resultados.conversaoMeta}%`).join('\n')))}
+ if(consolidated||cadastro||minuta){const summary=document.querySelector('#management-insight p');if(summary){const occurrences=analysts.reduce((sum,d)=>sum+(d.ocorrencias||[]).length,0),privateCount=analysts.length-shared.length;summary.textContent=`${occurrences} ocorrências no período${privateCount?` • Produção não compartilhada de ${privateCount} analista(s)`:''}`}}
+ if(!body)return;const headers=[...document.querySelectorAll('.ranking-table-wrap thead th')],hideReceive=consolidated||cadastro,hideBalance=consolidated||cadastro||minuta;headers[3].hidden=hideReceive;headers[6].hidden=hideBalance;headers[3].textContent='Recebidos';headers[4].textContent=minuta?'Atendimentos':'Realizados';
+ [...body.rows].forEach(row=>{row.cells[3].hidden=hideReceive;row.cells[6].hidden=hideBalance});
+ const insight=document.getElementById('management-insight');if(insight&&minuta){const paragraph=insight.querySelector('p');if(paragraph)paragraph.textContent=`${analysts.reduce((sum,d)=>sum+(d.ocorrencias||[]).length,0)} ocorrências no período`}
+}
+const sectorMacroBase=renderMacroView;renderMacroView=function(data){sectorMacroBase.apply(this,arguments);finalizeSectorMacro(data)};
+const sectorMicroBase=openMicroView;openMicroView=function(id){sectorMicroBase.apply(this,arguments);const data=teamData[currentCompetencia]?.[id],host=document.getElementById('micro-stats');if(!data||!host)return;const area=String(data.area||'').toLocaleUpperCase('pt-BR');if(area==='PROCON CADASTRO'){host.querySelectorAll('.stat-card').forEach(card=>{const title=card.querySelector('.stat-title')?.textContent.toLocaleLowerCase('pt-BR')||'';if(title.includes('recebido')||title.includes('saldo pendente'))card.remove()})}if(area==='PROCON MINUTA'){const retained=[...host.querySelectorAll('[data-effective-hours-card]')];host.replaceChildren();const stages=[['Protocolos Recebidos',Number(data.resultados?.totalRecebidos)||0],['Fila',minutaAggregate(data,'totalFila','fila')],['Elaboração de minuta',minutaAggregate(data,'totalMinutasElaboradas','minutasElaboradas')],['Fechamentos',minutaAggregate(data,'totalFechamentos','fechamentos')],['Atendimentos realizados',Number(data.resultados?.totalRealizados)||0],['Dias trabalhados',Number(data.resultados?.diasTrabalhados)||0],['Dias com meta atingida',Number(data.resultados?.diasMetaAlcancada)||0],['Conversão de meta',`${Number(data.resultados?.conversaoMeta)||0}%`]];stages.forEach(([title,value])=>{const card=document.createElement('div');card.className='stat-card';const label=document.createElement('div');label.className='stat-title';label.textContent=title;const amount=document.createElement('div');amount.className='stat-value';amount.textContent=String(value);card.append(label,amount);host.append(card)});retained.forEach(card=>host.append(card))}};
+</script>
+<style>
+.macro-stats.shared-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.ranking-table-wrap th[hidden],.ranking-table-wrap td[hidden]{display:none!important}@media(max-width:700px){.macro-stats.shared-metrics{grid-template-columns:1fr}}
+</style>
+<script>
+function cadastroHoursEvolution(data){
+ const wrap=document.createElement('div'),records=Array.isArray(data?.registrosDiarios)?data.registrosDiarios:[];
+ const hoursOf=day=>day.horasTrabalhadas??day.hoursWorked??day.hourWorked;
+ const days=records.filter(day=>!day.isHoliday&&/^\d{4}-\d{2}-\d{2}$/.test(String(day.date||''))&&hasNumericHour(hoursOf(day))).sort((a,b)=>a.date.localeCompare(b.date));
+ const note=document.createElement('p');note.className='evolution-data-note';note.textContent='No PROCON Cadastro, esta evolução mostra horas trabalhadas e escala prevista. A produção de protocolos é compartilhada somente como total do período.';wrap.append(note);
+ if(!days.length){const empty=document.createElement('p');empty.className='evolution-data-empty';empty.textContent='Este fechamento não contém detalhamento diário de horas. Importe um fechamento atualizado para consultar a evolução da jornada.';wrap.append(empty);return wrap}
+ const actual=days.map(day=>Math.max(0,Number(hoursOf(day))));
+ const expected=days.map(day=>{const dow=new Date(day.date+'T12:00:00').getDay();if(dow===0||dow===6)return 0;const value=day.jornada??day.metaJornada??data.analista?.jornadaConfigurada??data.analista?.jornada;return hasNumericHour(value)?Math.max(0,Number(value)):null});
+ const max=Math.max(1,...actual,...expected.filter(Number.isFinite)),x=i=>40+i*520/Math.max(1,days.length-1),y=value=>150-value/max*125,ns='http://www.w3.org/2000/svg';
+ const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 590 190');svg.setAttribute('role','img');svg.setAttribute('aria-label','Horas efetivamente trabalhadas por dia comparadas à escala configurada');svg.style.cssText='width:100%;height:100%;min-height:110px;max-height:280px';
+ for(let i=0;i<=4;i++){const value=max*i/4,line=document.createElementNS(ns,'line');Object.entries({x1:40,x2:560,y1:y(value),y2:y(value),stroke:'var(--border-color)'}).forEach(([key,val])=>line.setAttribute(key,val));svg.append(line);const label=document.createElementNS(ns,'text');label.setAttribute('x','2');label.setAttribute('y',y(value)+4);label.setAttribute('fill','var(--text-light)');label.setAttribute('font-size','10');label.textContent=hourNumber(value);svg.append(label)}
+ const addLine=(values,color,dashed=false)=>{const line=document.createElementNS(ns,'polyline');line.setAttribute('points',values.map((value,index)=>`${x(index)},${y(value)}`).join(' '));line.setAttribute('fill','none');line.setAttribute('stroke',color);line.setAttribute('stroke-width','2.5');if(dashed)line.setAttribute('stroke-dasharray','6 4');svg.append(line)};
+ addLine(actual,'#e71951');if(expected.every(value=>value!==null))addLine(expected,'#c78f17',true);
+ actual.forEach((value,index)=>{const day=days[index],dot=document.createElementNS(ns,'circle');Object.entries({cx:x(index),cy:y(value),r:3,fill:'#e71951'}).forEach(([key,val])=>dot.setAttribute(key,val));const title=document.createElementNS(ns,'title');title.textContent=`${day.date}: ${hourNumber(value)}h trabalhadas${expected[index]===null?'':` • Escala ${hourNumber(expected[index])}h`}`;dot.append(title);svg.append(dot);if(index===0||index===actual.length-1||index%Math.max(1,Math.ceil(actual.length/7))===0){const label=document.createElementNS(ns,'text');label.setAttribute('x',x(index));label.setAttribute('y','171');label.setAttribute('text-anchor','middle');label.setAttribute('fill','var(--text-light)');label.setAttribute('font-size','10');label.textContent=day.date.slice(8)+'/'+day.date.slice(5,7);svg.append(label)}});
+ wrap.append(svg);const legend=document.createElement('p');legend.className='evolution-legend';legend.textContent=expected.every(value=>value!==null)?'Linha rosa: horas trabalhadas • Linha tracejada: escala prevista':'Linha rosa: horas trabalhadas';wrap.append(legend);return wrap
+}
+const evolveProfileBase=openMicroView;
+openMicroView=function(id){
+ evolveProfileBase.apply(this,arguments);
+ const data=teamData[currentCompetencia]?.[id],profile=document.querySelector('.micro-profile');if(!data||!profile)return;
+ let button=document.getElementById('micro-evolution');
+ if(!button){button=document.createElement('button');button.id='micro-evolution';button.className='empty-import';button.textContent='Ver evolução diária';button.type='button'}
+ button.classList.add('micro-evolution-button');button.style.margin='0';button.setAttribute('aria-label',isProconCadastroData(data)?'Ver evolução diária de horas trabalhadas e escala':'Ver evolução diária da produção');
+ profile.insertBefore(button,profile.querySelector('.micro-profile-metric'));
+ if(isProconCadastroData(data))button.onclick=()=>productDialog('Evolução diária • '+data.analista.nome,cadastroHoursEvolution(data));
+};
+</script>
+<style>
+.micro-profile{grid-template-columns:auto minmax(0,1fr) auto auto auto}
+.micro-profile .micro-evolution-button{align-self:center;justify-self:center;margin:0!important;padding:10px 16px;white-space:nowrap}
+.evolution-data-note,.evolution-data-empty{font-size:12px;line-height:1.6;color:var(--text-light)}
+#management-insight.leadership-occurrence-status{display:flex;align-items:center;justify-content:center;gap:12px;min-height:42px;margin:-5px 0 12px;padding:6px 14px;border:1px solid var(--brand-primary);border-radius:9px;background:rgba(204,0,51,.06);color:var(--text-main)}
+#management-insight.leadership-occurrence-status p{display:flex;align-items:center;gap:9px;flex:0 1 auto;margin:0;color:var(--text-main);text-align:center}
+#management-insight.leadership-occurrence-status p::before{content:'!';display:grid;place-items:center;flex:0 0 20px;width:20px;height:20px;border-radius:50%;background:rgba(204,0,51,.12);color:var(--brand-primary);font-weight:800}
+#management-insight.leadership-occurrence-status button{min-height:30px;padding:4px 10px;font-size:11px}
+body.dark-mode #management-insight.leadership-occurrence-status{background:rgba(204,0,51,.12)}
+.occurrence-filters{grid-template-columns:minmax(260px,2fr) minmax(180px,1.08fr) minmax(170px,1fr) auto auto;gap:10px;align-items:center}
+.occurrence-search{position:relative;min-width:0}
+.occurrence-search svg{position:absolute;left:13px;top:50%;width:16px;height:16px;transform:translateY(-50%);fill:none;stroke:var(--text-light);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.occurrence-search-input,.occurrence-filters .occurrence-filter{box-sizing:border-box;width:100%;min-width:0;height:40px;min-height:40px;margin:0;padding:0 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg)!important;color:var(--text-main);font:inherit;font-size:12px}
+.occurrence-search-input{padding-left:38px}
+.occurrence-search-input::placeholder{color:var(--text-light);opacity:.8}
+.occurrence-search-input:focus,.occurrence-filters .occurrence-filter:focus{outline:2px solid var(--brand-primary);outline-offset:1px}
+.occurrence-view-toggle{justify-self:start;white-space:nowrap}
+.occurrence-view-toggle button{height:40px;min-height:40px;padding:0 12px}
+.occurrence-clear-button{height:40px;min-height:40px;padding:0 15px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg);color:var(--text-main);font:inherit;font-size:12px;font-weight:600;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s}
+.occurrence-clear-button:hover{background:var(--bg-color);border-color:var(--text-light)}
+.occurrence-clear-button:focus-visible{outline:2px solid var(--brand-primary);outline-offset:2px}
+:root{--calendar-weekend:#f6f7f9;--calendar-empty:#fafbfc}
+body.dark-mode{--calendar-weekend:#292c33;--calendar-empty:#26292f}
+.occurrence-board-grid{grid-template-columns:minmax(0,1.65fr) minmax(290px,1fr)}
+.occurrence-calendar-card{display:flex;flex-direction:column}
+#occ-calendar-grid{flex:1 1 auto;grid-template-rows:32px repeat(var(--calendar-week-count,5),minmax(76px,1fr));align-content:stretch;min-height:0}
+.cal-day.weekend{background:var(--calendar-weekend);border-color:var(--border-color)}
+.cal-day.weekend.selected{background:rgba(204,9,47,0.16);border-color:#ff2758}
+.cal-empty-day{border:1px solid var(--border-color);border-radius:9px;background:var(--calendar-empty);opacity:.72}
+.cal-empty-day.weekend{background:var(--calendar-weekend);opacity:.82}
+.cal-header.weekend-header{border-radius:6px;background:var(--calendar-weekend);color:var(--text-main)}
+@media(max-width:1150px){.occurrence-board-grid{grid-template-columns:minmax(0,1fr)}.occurrence-filters{grid-template-columns:minmax(220px,2fr) minmax(160px,1fr) minmax(150px,1fr)}.occurrence-view-toggle{grid-column:1;grid-row:2}.occurrence-clear-button{grid-column:2;grid-row:2;justify-self:start}.occurrence-filters .occurrence-filter{justify-self:stretch}}
+@media(max-width:700px){.occurrence-filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.occurrence-search{grid-column:1/-1}.occurrence-filters .occurrence-filter{grid-column:1/-1}.occurrence-view-toggle{grid-column:1;grid-row:auto}.occurrence-clear-button{grid-column:2;grid-row:auto;justify-self:end}.occurrence-view-toggle button{padding:0 10px}}
+@media(max-width:700px){#occ-calendar-grid{grid-template-rows:30px repeat(var(--calendar-week-count,5),minmax(64px,1fr))}}
+@media(max-width:700px){#management-insight.leadership-occurrence-status{flex-wrap:wrap}#management-insight.leadership-occurrence-status p{flex-basis:100%;justify-content:center}}
+@media(max-width:1150px){.micro-profile{grid-template-columns:auto minmax(0,1fr) auto}.micro-profile .micro-evolution-button{grid-column:3;grid-row:1}.micro-profile .micro-profile-metric{grid-row:2}}
+@media(max-width:700px){.micro-profile{grid-template-columns:auto minmax(0,1fr)}.micro-profile .micro-evolution-button{grid-column:1/-1;grid-row:2;justify-self:start}.micro-profile .micro-profile-metric{grid-row:3;min-width:0;padding:0 10px}}
+</style>
 </body>
 </html>

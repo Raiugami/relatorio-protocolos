@@ -141,6 +141,8 @@
         button.secondary:hover { background-color: var(--bg-color); border-color: var(--text-light); }
         button.danger { background-color: white; color: var(--status-red); border: 1px solid var(--status-red); }
         button.danger:hover { background-color: var(--status-red); color: white; }
+        body.dark-mode #view-logbook button.danger { background-color: var(--card-bg); color: var(--status-red); border-color: var(--status-red); }
+        body.dark-mode #view-logbook button.danger:hover { background-color: var(--status-red); color: white; }
         button.success { background-color: var(--status-green); border-color: var(--status-green); color: white; }
         button.success:hover { background-color: #176a43; }
 
@@ -611,9 +613,9 @@ body.dark-mode .sidebar-bottom{border-color:#ffffff18}body.dark-mode .settings-t
 @media(prefers-reduced-motion:reduce){.setup-overlay.profile-edit,.profile-edit .setup-modal{animation:none!important}}
 </style>
 <style>
-#dash-chart.line-evolution>div{width:100%;flex:1}#dash-chart.line-evolution~.chart-legend{display:none}.sidebar-bottom .guide-trigger{background:transparent!important;color:inherit;border:0!important;box-shadow:none;padding:7px 10px;min-height:30px;text-align:left}.sidebar-bottom .guide-trigger:hover{color:var(--brand-primary)}#view-dashboard .pending-alert{padding-left:46px!important}
+.sidebar-bottom .guide-trigger{background:transparent!important;color:inherit;border:0!important;box-shadow:none;padding:7px 10px;min-height:30px;text-align:left}.sidebar-bottom .guide-trigger:hover{color:var(--brand-primary)}#view-dashboard .pending-alert{padding-left:46px!important}
 @media(min-width:1100px) and (min-height:700px) and (max-height:810px){#view-dashboard>.flex-row>.card{height:240px;min-height:0;overflow:visible}#view-dashboard .chart-container{flex:1;height:100px;min-height:75px}#view-dashboard .chart-legend{margin-top:4px;font-size:10px}#view-dashboard .metrics-strip{padding:5px 0}#view-dashboard .metric-cell{padding-top:4px;padding-bottom:4px}#view-dashboard #dash-7days-list .recent-item{min-height:42px;padding:7px}#view-dashboard .recent-heading{margin-bottom:5px}#view-dashboard>.card:last-child{padding:8px 12px}}
-</style><style>@media(min-width:1100px) and (min-height:700px){#view-dashboard>.flex-row>.card{height:230px;min-height:0}#view-dashboard #dash-chart.line-evolution{height:105px;flex:1;min-height:75px}#view-dashboard #dash-chart.line-evolution>div{height:100%;min-height:0}#view-dashboard #dash-chart.line-evolution svg{min-height:0;max-height:120px}#view-dashboard>.card:last-child{margin-bottom:0}}</style><style>
+</style><style>@media(min-width:1100px) and (min-height:700px){#view-dashboard>.flex-row>.card{height:230px;min-height:0}#view-dashboard>.card:last-child{margin-bottom:0}}</style><style>
 /* The middle row absorbs available viewport height; its contents stay in flow. */
 @media screen and (min-width:1100px) and (min-height:700px){
 main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-direction:column}
@@ -621,13 +623,11 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
 #view-dashboard.active> :not(.flex-row){flex-shrink:0}
 #view-dashboard.active>.flex-row{flex:1;min-height:235px;align-items:stretch}
 #view-dashboard.active>.flex-row>.card{height:auto!important;min-height:0;display:flex;flex-direction:column;box-sizing:border-box}
-#view-dashboard.active #dash-chart,#view-dashboard.active #dash-chart.line-evolution{flex:1 1 0;height:auto!important;min-height:65px;padding-top:20px}
-#view-dashboard.active #dash-chart.line-evolution{padding:0;display:block;position:relative}
-#view-dashboard.active #dash-chart.line-evolution>div{position:absolute;inset:0;width:100%;height:100%}
-#view-dashboard.active #dash-chart.line-evolution svg{height:100%;max-height:none!important;min-height:0}
-#view-dashboard .chart-legend,#view-dashboard #evolution-legend{flex:0 0 auto;margin:8px 0 0!important;line-height:16px;min-height:16px;padding:0}
+#view-dashboard.active #dash-chart{flex:1 1 0;height:auto!important;min-height:65px;padding-top:20px}
+
+#view-dashboard .chart-legend{flex:0 0 auto;margin:8px 0 0!important;line-height:16px;min-height:16px;padding:0}
 #view-dashboard .chart-legend span span{font-size:14px!important}
-#view-dashboard #evolution-legend:empty{display:none}
+
 #view-dashboard .dashboard-profile-card>*{flex-shrink:0}
 #view-dashboard .dashboard-profile-card .profile-edit-button{margin-top:auto;min-height:30px;flex-shrink:0}
 #view-dashboard .dashboard-profile-card .profile-summary-grid{padding:4px 0 8px;gap:3px}
@@ -661,9 +661,11 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             <div class="form-group">
                 <label for="setup-area">&#xC1;rea de atua&#xE7;&#xE3;o</label>
                 <select id="setup-area" required>
-                    <option value="CONSUMIDOR.GOV">Consumidor.gov</option>
-                    <option value="PROCON">PROCON</option>
+                    <option value="PROCON CADASTRO">PROCON CADASTRO</option>
+                    <option value="PROCON MINUTA">PROCON MINUTA</option>
+                    <option value="PROCON AUDIÊNCIA">PROCON AUDIÊNCIA</option>
                     <option value="OUTRA">Outra &#xE1;rea</option>
+                    <option value="CONSUMIDOR.GOV" hidden>Consumidor.gov (perfil legado)</option>
                 </select>
             </div>
             <div class="setup-section-title">Sua rotina</div>
@@ -782,11 +784,10 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             <div class="flex-row">
                 <div class="card" style="flex: 2;">
                     <h3>Comparativo de Volume Mensal</h3>
-                    <span class="stat-subtitle" style="display:block; margin-top:-10px; margin-bottom: 10px;">Rela&#xE7;&#xE3;o entre demandas de entrada e tratadas</span>
+                    <span class="stat-subtitle" style="display:block; margin-top:-10px; margin-bottom: 10px;">Protocolos realizados por dia</span>
                     
                     <div class="chart-container" id="dash-chart"></div>
                     <div class="chart-legend" style="display:flex; justify-content:center; gap: 1rem; margin-top: 10px; font-size: 0.8rem; font-weight:600; color: var(--text-light)">
-                        <span><span style="color: #d1d5db; font-size:1.2rem;">&#x25A0;</span> Recebidos</span>
                         <span><span style="color: var(--brand-primary); font-size:1.2rem;">&#x25A0;</span> Realizados</span>
                     </div>
                 </div>
@@ -854,6 +855,7 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                     <h2 id="cal-month-title">M&#xEA;s/Ano</h2>
                     <button class="secondary" onclick="changeMonth(1)">Seguinte</button>
                 </div>
+                <div class="workload-summary" id="workload-summary" aria-live="polite"></div>
                 
                 
                 <div class="calendar-grid">
@@ -869,7 +871,10 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             </div>
 
             <div class="card form-section" id="entry-form-container" style="display: none;">
-                <h3 id="entry-form-title">Registro do dia</h3>
+                <div id="entry-heading-row" class="entry-heading-row">
+                    <h3 id="entry-form-title">Registro do dia</h3>
+                    <button id="open-floating-counter" class="floating-counter-launch" type="button" onclick="openFloatingCounter()" aria-label="Abrir contador de atendimentos em uma janela flutuante" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.75" y="3.25" width="14.5" height="13.5" rx="2.25"></rect><path d="M6.75 7h6.5v6.5M13 7l-6 6"></path></svg><span class="floating-counter-label">Abrir contador flutuante</span></button>
+                </div>
                 <form id="frm-entry" onsubmit="saveEntry(event)">
                     <div class="flex-row">
                         <div class="form-group">
@@ -892,8 +897,32 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                             <input type="number" id="ent-received" min="0" value="0">
                         </div>
                         <div class="form-group">
-                            <label>Total de Protocolos Realizados</label>
+                            <label id="ent-completed-label">Total de Protocolos Realizados</label>
                             <input type="number" id="ent-completed" min="0" value="0">
+                            <span class="form-hint" id="ent-completed-hint" hidden></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="ent-hours">Horas trabalhadas</label>
+                            <input type="number" id="ent-hours" min="0" max="24" step="0.25" value="6" required>
+                            <span class="form-hint" id="ent-hours-status" aria-live="polite"></span>
+                        </div>
+                    </div>
+
+                    <div id="ent-minuta-metrics" class="flex-row" style="display:none;">
+                        <div class="form-group">
+                            <label for="ent-fila">Fila</label>
+                            <input type="number" id="ent-fila" min="0" step="1" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="ent-minutas">Elaboração de minuta</label>
+                            <input type="number" id="ent-minutas" min="0" step="1" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="ent-fechamentos">Fechamentos</label>
+                            <input type="number" id="ent-fechamentos" min="0" step="1" value="0">
+                        </div>
+                        <div class="form-group minuta-total-group">
+                            <span class="form-hint" id="ent-minuta-total" aria-live="polite">Total do dia: 0 atendimentos</span>
                         </div>
                     </div>
 
@@ -930,17 +959,17 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                             <select id="log-category" required></select>
                         </div>
                         <div class="form-group">
-                            <label>Grau de Impacto</label>
-                            <select id="log-impact" required>
-                                <option value="Alto">Alto</option>
-                                <option value="Baixo">Baixo</option>
-                                <option value="M&#xE9;dio">M&#xE9;dio</option>
-                            </select>
+                            <label for="log-time-start">Hor&#xE1;rio inicial</label>
+                            <input type="time" id="log-time-start" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="log-time-end">Hor&#xE1;rio final</label>
+                            <input type="time" id="log-time-end" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Detalhamento da Ocorr&#xEA;ncia</label>
-                        <textarea id="log-desc" rows="3" required placeholder="Forne&#xE7;a detalhes t&#xE9;cnicos ou contextuais sobre o evento que gerou impacto na produ&#xE7;&#xE3;o..."></textarea>
+                        <textarea id="log-desc" rows="3" required placeholder="Forne&#xE7;a detalhes sobre o evento que afetou sua rotina de trabalho..."></textarea>
                     </div>
                     <div style="display:flex; gap:0.65rem; flex-wrap:wrap;">
                         <button type="submit">Salvar ocorr&#xEA;ncia</button>
@@ -957,10 +986,6 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                 <div class="history-tools no-print">
                     <input type="search" id="log-search" placeholder="Buscar ocorrência..." oninput="renderAll()">
                     <select id="log-category-filter" onchange="renderAll()"><option value="TODOS">Todas as classificações</option></select>
-                    <select id="log-impact-filter" onchange="renderAll()">
-                        <option value="TODOS">Todos os impactos</option>
-                        <option value="ALTO">Alto</option><option value="MÉDIO">Médio</option><option value="BAIXO">Baixo</option>
-                    </select>
                 </div>
                 <div style="overflow-x:auto;">
                     <table id="tbl-logbook">
@@ -969,7 +994,8 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                                 <th>Data</th>
                                 <th>Classifica&#xE7;&#xE3;o</th>
                                 <th>Detalhamento</th>
-                                <th>Impacto</th>
+                                <th>Per&#xED;odo</th>
+                                <th>Registrada em</th>
                                 <th class="no-print">A&#xE7;&#xF5;es</th>
                             </tr>
                         </thead>
@@ -1026,25 +1052,41 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
     </button>
 
     <script>
+        const PROCON_OCCURRENCE_CATEGORIES = ["Instabilidade da plataforma", "Outros", "Problemas de conex\u00E3o de internet", "Reuni\u00F5es", "Sistema workflow fora do ar", "Sistema workflow lento", "Suporte t\u00E9cnico", "Treinamento"];
         const AREA_CONFIG = {
-            "CONSUMIDOR.GOV": {
-                label: "Consumidor.gov",
-                categories: ["Arquivos Corrompidos", "Outros", "Problemas de conex\u00E3o de internet", "Protocolos sem API", "Reuni\u00F5es", "Sistema SACL lento", "Sistema SACL fora do ar", "Site Consumidor.gov lento", "Site Consumidor.gov fora do ar", "Suporte t\u00E9cnico", "Treinamento"]
-            },
-            "PROCON": {
-                label: "PROCON",
-                categories: ["Outros", "Problemas de conex\u00E3o de internet", "Reuni\u00F5es", "Sistema SACL fora do ar", "Sistema SACL lento", "Suporte t\u00E9cnico", "Treinamento"]
-            },
-            "OUTRA": {
-                label: "Outra \u00E1rea",
-                categories: ["Falha de sistema", "Problemas de conex\u00E3o de internet", "Reuni\u00F5es", "Suporte t\u00E9cnico", "Treinamento", "Outros"]
-            }
+            "PROCON CADASTRO": { label: "PROCON CADASTRO", categories: PROCON_OCCURRENCE_CATEGORIES },
+            "PROCON MINUTA": { label: "PROCON MINUTA", categories: PROCON_OCCURRENCE_CATEGORIES },
+            "PROCON AUDI\u00CANCIA": { label: "PROCON AUDI\u00CANCIA", categories: PROCON_OCCURRENCE_CATEGORIES },
+            "PROCON": { label: "PROCON CADASTRO", categories: PROCON_OCCURRENCE_CATEGORIES },
+            "CONSUMIDOR.GOV": { label: "Consumidor.gov (legado)", categories: ["Arquivos Corrompidos", "Outros", "Problemas de conex\u00E3o de internet", "Protocolos sem API", "Reuni\u00F5es", "Sistema SACL lento", "Sistema SACL fora do ar", "Site Consumidor.gov lento", "Site Consumidor.gov fora do ar", "Suporte t\u00E9cnico", "Treinamento"] },
+            "OUTRA": { label: "Outra \u00E1rea", categories: ["Falha de sistema", "Problemas de conex\u00E3o de internet", "Reuni\u00F5es", "Suporte t\u00E9cnico", "Treinamento", "Outros"] }
         };
+
+        function normalizeArea(area) { return area === "PROCON" ? "PROCON CADASTRO" : area; }
+        function isProconCadastro() { return normalizeArea(appData?.settings?.area) === "PROCON CADASTRO"; }
+        function isProconMinuta() { return normalizeArea(appData?.settings?.area) === "PROCON MINUTA"; }
+        function normalizeAppData() {
+            if (!appData || typeof appData !== 'object') appData = {};
+            if (!appData.entries || typeof appData.entries !== 'object' || Array.isArray(appData.entries)) appData.entries = {};
+            if (!Array.isArray(appData.logbook)) appData.logbook = [];
+            if (!appData.settings || typeof appData.settings !== 'object') appData.settings = {};
+            appData.settings = { dailyGoal: 80, workHours: 6, name: "", funcional: "", area: "", lastBackup: 0, ...appData.settings };
+            if (!appData.proconCompletedByDate || typeof appData.proconCompletedByDate !== 'object' || Array.isArray(appData.proconCompletedByDate)) appData.proconCompletedByDate = {};
+            const previousArea = appData.settings.area;
+            appData.settings.area = normalizeArea(previousArea);
+            if (previousArea === 'PROCON' && !appData.proconCompletionMigrated) {
+                Object.entries(appData.entries).forEach(([date, entry]) => {
+                    if (!(date in appData.proconCompletedByDate)) appData.proconCompletedByDate[date] = Math.max(0, Number(entry?.completed) || 0);
+                });
+                appData.proconCompletionMigrated = true;
+            }
+        }
 
         let appData = {
             entries: {}, 
             logbook: [], 
-            settings: { dailyGoal: 80, workHours: 6, name: "", funcional: "", area: "", lastBackup: Date.now() },
+            proconCompletedByDate: {},
+            settings: { dailyGoal: 80, workHours: 6, name: "", funcional: "", area: "", lastBackup: 0 },
             lastUpdated: Date.now()
         };
 
@@ -1066,13 +1108,9 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             if (saved) {
                 try {
                     appData = JSON.parse(saved);
-                    if(!appData.logbook) appData.logbook = [];
-                    if(!appData.settings) appData.settings = { dailyGoal: 80, workHours: 6, name: "", funcional: "", area: "", lastBackup: Date.now() };
-                    if(appData.settings.name === undefined) appData.settings.name = "";
-                    if(appData.settings.funcional === undefined) appData.settings.funcional = "";
-                    if(appData.settings.area === undefined) appData.settings.area = "";
                 } catch(e) { console.error("Erro ao carregar dados", e); }
             }
+            normalizeAppData();
             
             document.getElementById('cfg-goal').value = appData.settings.dailyGoal;
             document.getElementById('cfg-hours').value = appData.settings.workHours || 6;
@@ -1121,7 +1159,7 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
         function showInitialSetup() {
             document.getElementById('setup-name').value = appData.settings.name || "";
             document.getElementById('setup-funcional').value = appData.settings.funcional || "";
-            document.getElementById('setup-area').value = appData.settings.area || "CONSUMIDOR.GOV";
+            document.getElementById('setup-area').value = appData.settings.area || "PROCON CADASTRO";
             document.getElementById('setup-goal').value = appData.settings.dailyGoal || 80;
             document.getElementById('setup-hours').value = appData.settings.workHours || 6;
             document.getElementById('setup-title').innerText = "Configura\u00E7\u00E3o do primeiro acesso";
@@ -1134,7 +1172,7 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
         function openProfileSettings() {
             document.getElementById('setup-name').value = appData.settings.name || "";
             document.getElementById('setup-funcional').value = appData.settings.funcional || "";
-            document.getElementById('setup-area').value = appData.settings.area || "CONSUMIDOR.GOV";
+            document.getElementById('setup-area').value = appData.settings.area || "PROCON CADASTRO";
             document.getElementById('setup-goal').value = appData.settings.dailyGoal || 80;
             document.getElementById('setup-hours').value = appData.settings.workHours || 6;
             document.getElementById('setup-title').innerText = "Editar perfil do analista";
@@ -1183,7 +1221,7 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
         }
 
         function getAreaConfig() {
-            return AREA_CONFIG[appData.settings.area] || AREA_CONFIG["CONSUMIDOR.GOV"];
+            return AREA_CONFIG[normalizeArea(appData.settings.area)] || AREA_CONFIG["OUTRA"];
         }
 
         function updateAreaUI() {
@@ -1210,6 +1248,20 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                 categoryFilter.value = config.categories.some(category => category.toUpperCase() === filterValue) ? filterValue : 'TODOS';
             }
             updateProfileSummary();
+            updateEntryAreaControls();
+        }
+
+        function updateEntryAreaControls() {
+            const procon = isProconCadastro();
+            const completedInput = document.getElementById('ent-completed');
+            const completedLabel = document.getElementById('ent-completed-label');
+            const completedHint = document.getElementById('ent-completed-hint');
+            if (completedInput) completedInput.readOnly = procon;
+            if (completedLabel) completedLabel.textContent = procon ? 'Protocolos concluídos pelo Leitor Procon' : 'Total de Protocolos Realizados';
+            if (completedHint) {
+                completedHint.hidden = !procon;
+                completedHint.textContent = 'Contagem automática dos cadastros concluídos hoje no Leitor Procon.';
+            }
         }
 
         function getInitials(name) {
@@ -1269,6 +1321,7 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
 
         function getStatus(entry, goal) {
             if (entry.isHoliday) return { color: 'bg-gray', label: 'Aus\u00EAncia', cls: 'gray' };
+            if (isProconCadastro()) return Number(entry.completed) >= goal ? { color: 'bg-green', label: 'Meta atingida', cls: 'green' } : { color: 'bg-red', label: 'Meta n\u00E3o atingida', cls: 'red' };
             if (entry.received < goal) return { color: 'bg-yellow', label: 'Parcial', cls: 'yellow' };
             if (entry.received >= goal && entry.completed >= goal) return { color: 'bg-green', label: 'Atingida', cls: 'green' };
             return { color: 'bg-red', label: 'N\u00E3o Atingida', cls: 'red' };
@@ -1314,6 +1367,10 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             monthSelect.innerHTML = monthNames.map((name, index) => `<option value="${index}">${name}</option>`).join('');
             const years = new Set([new Date().getFullYear(), currentDate.getFullYear()]);
             Object.keys(appData.entries || {}).forEach(date => {
+                const year = parseInt(date.slice(0, 4), 10);
+                if (Number.isFinite(year)) years.add(year);
+            });
+            Object.keys(appData.proconCompletedByDate || {}).forEach(date => {
                 const year = parseInt(date.slice(0, 4), 10);
                 if (Number.isFinite(year)) years.add(year);
             });
@@ -1371,15 +1428,18 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             };
 
             const goal = appData.settings.dailyGoal;
-            const entries = Object.keys(appData.entries)
-                                  .filter(k => k.startsWith(prefix))
-                                  .map(k => ({ date: k, ...appData.entries[k] }));
+            const dateKeys = new Set(Object.keys(appData.entries).filter(k => k.startsWith(prefix)));
+            if (isProconCadastro()) Object.keys(appData.proconCompletedByDate || {}).filter(k => k.startsWith(prefix)).forEach(k => dateKeys.add(k));
+            const entries = [...dateKeys].sort().map(date => {
+                const entry = appData.entries[date] || {};
+                return { date, ...entry, isHoliday: Boolean(entry.isHoliday), received: Number(entry.received) || 0, completed: dailyCompletedForDate(date, entry), hoursWorked: actualHoursForDate(date, entry) };
+            });
 
             entries.forEach(e => {
                 if (!e.isHoliday) {
                     stats.totRec += Number(e.received);
                     stats.totComp += Number(e.completed);
-                    stats.daysWorked++;
+                    if (Number(e.hoursWorked) > 0 || Number(e.completed) > 0) stats.daysWorked++;
 
                     const status = getStatus(e, policyAt(e.date).dailyGoal);
                     if (status.cls === 'green') stats.daysMet++;
@@ -1475,7 +1535,34 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                 }
             }
 
-            grid.innerHTML = `
+            grid.innerHTML = (isProconCadastro() || isProconMinuta()) ? `
+                <div class="stat-card">
+                    <div class="stat-title">${isProconMinuta() ? 'Atendimentos realizados' : 'Cadastros concluídos'}</div>
+                    <div class="stat-subtitle">${isProconMinuta() ? 'Fila + elaboração de minuta + fechamentos' : 'Contagem local do Leitor Procon'}</div>
+                    <div class="stat-value">${stats.totComp}</div>
+                </div>
+                ${isProconMinuta() ? `
+                <div class="stat-card">
+                    <div class="stat-title">Protocolos Recebidos</div>
+                    <div class="stat-subtitle">Volume recebido no Controle Diário</div>
+                    <div class="stat-value">${stats.totRec}</div>
+                </div>` : ''}
+                <div class="stat-card">
+                    <div class="stat-title">Dias com produção</div>
+                    <div class="stat-subtitle">${isProconMinuta() ? 'Dias com atendimentos registrados' : 'Dias com cadastros concluídos'}</div>
+                    <div class="stat-value">${stats.daysWorked}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Horas trabalhadas</div>
+                    <div class="stat-subtitle">Total registrado no Controle Diário</div>
+                    <div class="stat-value">${formatHours(workedHours)}h</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Meta diária cumprida</div>
+                    <div class="stat-subtitle">${isProconMinuta() ? 'Dias em que a soma das etapas atingiu a meta' : 'Dias com a meta de cadastros atingida'}</div>
+                    <div class="stat-value">${pctMet}%</div>
+                </div>
+            ` : `
                 <div class="stat-card">
                     <div class="stat-title">Protocolos Recebidos</div>
                     <div class="stat-subtitle">Volume total de entrada</div>
@@ -1524,6 +1611,12 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
         function renderChart(year, monthStr) {
             const chartDiv = document.getElementById('dash-chart');
             const { entries } = getMonthlyStats(year, monthStr);
+            const showReceived = !isProconCadastro();
+            const receivedFor = entry => Number(entry.received) || 0;
+            const legend = document.querySelector('#view-dashboard .chart-legend');
+            const subtitle = document.querySelector('#view-dashboard .chart-legend')?.previousElementSibling;
+            if (subtitle) subtitle.textContent = isProconCadastro() ? 'Cadastros concluídos por dia' : isProconMinuta() ? 'Protocolos recebidos e atendimentos realizados por dia' : 'Protocolos recebidos e realizados por dia';
+            if (legend) legend.innerHTML = `${showReceived ? '<span><span style="color:#d1d5db;font-size:1.2rem;">&#x25A0;</span> Recebidos</span>' : ''}<span><span style="color:var(--brand-primary);font-size:1.2rem;">&#x25A0;</span> ${isProconMinuta() ? 'Atendimentos' : 'Realizados'}</span>`;
             
             if (entries.length === 0) {
                 chartDiv.innerHTML = "<p style='color:var(--text-light); text-align:center; width:100%'>Aguardando dados para consolida\u00E7\u00E3o visual.</p>";
@@ -1531,20 +1624,20 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             }
 
             entries.sort((a,b) => a.date.localeCompare(b.date));
-            const maxVal = Math.max(...entries.map(e => Math.max(e.received, e.completed)), 10);
+            const maxVal = Math.max(...entries.map(e => e.completed), ...(showReceived ? entries.map(receivedFor) : []), 10);
 
             let html = '';
             entries.forEach(e => {
                 if (e.isHoliday) return;
-                const hRec = Math.round((e.received / maxVal) * 100);
                 const hComp = Math.round((e.completed / maxVal) * 100);
+                const hRec = Math.round((receivedFor(e) / maxVal) * 100);
                 const day = e.date.split('-')[2];
 
                 html += `
-                    <div class="chart-bar-group" title="Data: ${day}/${monthStr} | Recebidos: ${e.received} | Realizados: ${e.completed}">
+                    <div class="chart-bar-group" title="Data: ${day}/${monthStr}${showReceived ? ` | Recebidos: ${receivedFor(e)}` : ''} | ${isProconMinuta() ? 'Atendimentos' : 'Realizados'}: ${e.completed}">
                         <div class="chart-bars">
-                            <div class="bar bar-received" style="height: ${hRec}%;"></div>
-                            <div class="bar bar-completed" style="height: ${hComp}%;"></div>
+                            ${showReceived ? `<div class="bar bar-received" style="height:${hRec}%;"><span class="bar-value">${receivedFor(e)}</span></div>` : ''}
+                            <div class="bar bar-completed" style="height: ${hComp}%;"><span class="bar-value">${e.completed}</span></div>
                         </div>
                         <div class="bar-label">${day}</div>
                     </div>
@@ -1568,26 +1661,27 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                 d.setDate(today.getDate() - i);
                 
                 const dayOfWeek = d.getDay();
-                if (dayOfWeek === 0 || dayOfWeek === 6) continue;
-
                 const dStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-                const entry = appData.entries[dStr];
+                const entry = appData.entries[dStr] || null;
+                const completed = dailyCompletedForDate(dStr, entry || {});
+                const hours = actualHoursForDate(dStr, entry);
 
-                if (entry) {
-                    const st = getStatus(entry, policyAt(dStr).dailyGoal);
-                    if (st.cls === 'red') missCount++;
+                if (entry || completed > 0) {
+                    const isWeekend = [0, 6].includes(dayOfWeek);
+                    const st = isWeekend ? null : getStatus({ ...(entry || {}), completed }, policyAt(dStr).dailyGoal);
+                    if (st?.cls === 'red') missCount++;
                     html += `
                         <div class="stat-card" style="padding: 0.8rem;">
                             <div class="stat-title">${formatDateBR(dStr).slice(0,5)}</div>
-                            <div style="font-weight:700; font-size:1.1rem; color:var(--text-main)">${entry.completed} / ${entry.received}</div>
-                            <div style="font-size:0.7rem; margin-top:5px; font-weight:600;">${st.label}</div>
+                            <div style="font-weight:700; font-size:1.1rem; color:var(--text-main)">${isWeekend?`${formatHours(hours)}h extras`:isProconCadastro()?`${completed} concluídos`:isProconMinuta()?`${completed}`:`${completed} / ${Number(entry?.received)||0}`}</div>
+                            <div style="font-size:0.7rem; margin-top:5px; font-weight:600;">${dailyHoursStatus(dStr,entry,hours)}</div>
                         </div>
                     `;
                 } else {
                     html += `
                         <div class="stat-card gray" style="padding: 0.8rem; opacity:0.6;">
                             <div class="stat-title">${formatDateBR(dStr).slice(0,5)}</div>
-                            <div style="font-size:0.8rem; margin-top:5px;">Pendente</div>
+                            <div style="font-size:0.8rem; margin-top:5px;">${[0,6].includes(dayOfWeek)?'Sem horas extras':'Pendente'}</div>
                         </div>
                     `;
                 }
@@ -1625,32 +1719,28 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                 const div = document.createElement('div');
                 div.className = 'cal-day';
                 if (dStr === todayStr) div.classList.add('today');
-
+                const entry = appData.entries[dStr] || null;
+                const completed = dailyCompletedForDate(dStr, entry || {});
+                const hours = actualHoursForDate(dStr, entry);
+                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                div.onclick = () => openEntryForm(dStr);
+                if (isWeekend) div.classList.add('weekend-day');
                 let innerHTML = `<div class="cal-date">${day}</div>`;
 
-                if (dayOfWeek === 0 || dayOfWeek === 6) {
-                    div.classList.add('disabled');
-                } else {
-                    div.onclick = () => openEntryForm(dStr);
-                    const entry = appData.entries[dStr];
-                    
-                    if (entry) {
-                        const st = getStatus(entry, policyAt(dStr).dailyGoal);
-                        
-                        div.title = `Recebidos: ${entry.received} | Realizados: ${entry.completed}`;
-                        
-                        if(entry.isHoliday) {
-                            innerHTML += `<div style="text-align:center; margin: auto 0; color:var(--text-light); font-size:0.85rem; font-weight:600;">Aus\u00EAncia</div>`;
-                        } else {
-                            innerHTML += `<div style="text-align:center; margin: auto 0; font-size:1.8rem; font-weight:700; color:var(--text-main); line-height:1;">${entry.completed}</div>`;
-                        }
-                        innerHTML += `<div class="status-badge ${st.color}">${st.label}</div>`;
-                    }
+                if (entry || completed > 0) {
+                    const st = getStatus({ ...(entry || {}), completed }, policyAt(dStr).dailyGoal);
+                    div.title = `${isProconMinuta() ? `Recebidos: ${Number(entry?.received)||0} | Atendimentos: ${completed} (Fila ${Number(entry?.fila)||0}, elaboração ${Number(entry?.minutasElaboradas)||0}, fechamentos ${Number(entry?.fechamentos)||0})` : isProconCadastro() ? 'Concluídos' : `Recebidos: ${Number(entry?.received)||0} | Realizados`}: ${completed} | ${dailyHoursStatus(dStr, entry, hours)}`;
+                    if (entry?.isHoliday) innerHTML += `<div class="cal-day-summary">Aus\u00EAncia</div>`;
+                    else innerHTML += `<div class="cal-day-count">${completed}</div>`;
+                    if (!isWeekend) innerHTML += `<div class="status-badge ${st.color}">${st.label}</div>`;
+                    if (entry && !entry.isHoliday) innerHTML += `<div class="cal-hours">${formatHours(hours)}h${isWeekend ? ' extra' : ` / ${formatHours(policyAt(dStr).workHours)}h`}</div>`;
+                    if (isWeekend && !entry?.isHoliday && hours > 0) innerHTML += `<div class="status-badge bg-blue">Hora extra</div>`;
                 }
                 
                 div.innerHTML = innerHTML;
                 grid.appendChild(div);
             }
+            renderWorkloadSummary(year, month + 1);
         }
 
         function openEntryForm(dateStr) {
@@ -1660,11 +1750,15 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             
             const entry = appData.entries[dateStr];
             const btnDelete = document.getElementById('btn-delete-entry');
+            const weekday = ![0,6].includes(new Date(dateStr + 'T12:00:00').getDay());
+            const targetHours = weekday ? Number(policyAt(dateStr).workHours) || 0 : 0;
+            document.getElementById('ent-hours').oninput = updateDailyHoursPreview;
 
             if (entry) {
                 document.getElementById('ent-holiday').value = entry.isHoliday ? "true" : "false";
                 document.getElementById('ent-received').value = entry.received || 0;
-                document.getElementById('ent-completed').value = entry.completed || 0;
+                document.getElementById('ent-completed').value = dailyCompletedForDate(dateStr, entry);
+                document.getElementById('ent-hours').value = actualHoursForDate(dateStr, entry);
                 document.getElementById('ent-notes').value = entry.notes || "";
                 
                 btnDelete.style.display = 'inline-flex';
@@ -1672,8 +1766,11 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                 document.getElementById('frm-entry').reset();
                 document.getElementById('ent-holiday').value = "false";
                 document.getElementById('ent-date').value = dateStr; 
+                document.getElementById('ent-hours').value = targetHours;
+                document.getElementById('ent-completed').value = dailyCompletedForDate(dateStr, {});
                 btnDelete.style.display = 'none';
             }
+            updateEntryAreaControls();
             toggleHoliday();
             if (window.innerWidth < 1100) document.getElementById('entry-form-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -1685,6 +1782,7 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
         function toggleHoliday() {
             const isHol = document.getElementById('ent-holiday').value === "true";
             document.getElementById('ent-metrics').style.display = isHol ? 'none' : 'flex';
+            updateDailyHoursPreview();
         }
 
         function saveEntry(e) {
@@ -1693,17 +1791,41 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             const isHol = document.getElementById('ent-holiday').value === "true";
             
             const rec = parseInt(document.getElementById('ent-received').value) || 0;
-            const comp = parseInt(document.getElementById('ent-completed').value) || 0;
+            const isMinuta = isProconMinuta();
+            const minutaCounts = isMinuta ? {
+                fila: Number(document.getElementById('ent-fila').value),
+                minutasElaboradas: Number(document.getElementById('ent-minutas').value),
+                fechamentos: Number(document.getElementById('ent-fechamentos').value)
+            } : null;
+            if (isMinuta && Object.values(minutaCounts).some(value => !Number.isInteger(value) || value < 0)) {
+                alert("Informe números inteiros iguais ou maiores que zero para as três etapas.");
+                return;
+            }
+            const minutaLegacy = isMinuta ? minutaLegacyCount(appData.entries[dateStr] || {}) : 0;
+            const minutaTotal = isMinuta ? minutaLegacy + Object.values(minutaCounts).reduce((sum, value) => sum + value, 0) : 0;
+            const comp = isProconCadastro() ? dailyCompletedForDate(dateStr, appData.entries[dateStr] || {}) : isMinuta ? minutaTotal : parseInt(document.getElementById('ent-completed').value) || 0;
+            const hours = isHol ? 0 : Number(document.getElementById('ent-hours').value);
 
-            if (!isHol && comp > rec) {
+            if (!Number.isFinite(hours) || hours < 0 || hours > 24) {
+                alert("Informe uma quantidade de horas entre 0 e 24.");
+                return;
+            }
+            if (!isProconCadastro() && !isMinuta && !isHol && comp > rec) {
                 alert("Restri\u00E7\u00E3o de Sistema: O volume realizado n\u00E3o pode exceder o volume recebido.");
                 return;
             }
 
             appData.entries[dateStr] = {
                 isHoliday: isHol,
-                received: isHol ? 0 : rec,
-                completed: isHol ? 0 : comp,
+                received: isHol || isProconCadastro() ? 0 : rec,
+                completed: isHol || isProconCadastro() ? 0 : comp,
+                ...(isMinuta ? {
+                    fila: isHol ? 0 : minutaCounts.fila,
+                    minutasElaboradas: isHol ? 0 : minutaCounts.minutasElaboradas,
+                    fechamentos: isHol ? 0 : minutaCounts.fechamentos,
+                    legacyAtendimentos: isHol ? 0 : minutaLegacy
+                } : {}),
+                hoursWorked: hours,
                 notes: document.getElementById('ent-notes').value.trim().toLocaleUpperCase('pt-BR')
             };
 
@@ -1724,11 +1846,20 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
 
         function saveLogbook(e) {
             e.preventDefault();
+            const date = document.getElementById('log-date').value;
+            const timeStart = document.getElementById('log-time-start').value;
+            const timeEnd = document.getElementById('log-time-end').value;
+            if (timeEnd < timeStart) {
+                alert("O horário final deve ser igual ou posterior ao horário inicial.");
+                return;
+            }
             const log = {
                 id: Date.now().toString(),
-                date: document.getElementById('log-date').value,
+                date,
                 category: document.getElementById('log-category').value.toLocaleUpperCase('pt-BR'),
-                impact: document.getElementById('log-impact').value,
+                timeStart,
+                timeEnd,
+                createdAt: new Date().toISOString(),
                 desc: document.getElementById('log-desc').value.trim().toLocaleUpperCase('pt-BR')
             };
             appData.logbook.push(log);
@@ -1757,13 +1888,11 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             const prefix = `${year}-${monthStr}-`;
             const search = (document.getElementById('log-search')?.value || '').trim().toLocaleUpperCase('pt-BR');
             const categoryFilter = document.getElementById('log-category-filter')?.value || 'TODOS';
-            const impactFilter = document.getElementById('log-impact-filter')?.value || 'TODOS';
 
             const logs = appData.logbook
                 .filter(l => l.date.startsWith(prefix))
                 .filter(l => categoryFilter === 'TODOS' || String(l.category).toLocaleUpperCase('pt-BR') === categoryFilter)
-                .filter(l => impactFilter === 'TODOS' || String(l.impact).toLocaleUpperCase('pt-BR') === impactFilter)
-                .filter(l => !search || [l.category, l.desc, l.impact, l.date].join(' ').toLocaleUpperCase('pt-BR').includes(search))
+                .filter(l => !search || [l.category, l.desc, l.timeStart, l.timeEnd, l.date].join(' ').toLocaleUpperCase('pt-BR').includes(search))
                 .sort((a,b) => b.date.localeCompare(a.date));
 
             const count = document.getElementById('logbook-count');
@@ -1773,10 +1902,11 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                     <td>${formatDateBR(l.date)}</td>
                     <td><strong>${l.category}</strong></td>
                     <td>${l.desc}</td>
-                    <td><span class="status-badge bg-gray" style="color:#fff">${l.impact}</span></td>
+                    <td>${l.timeStart && l.timeEnd ? `${l.timeStart}–${l.timeEnd}` : 'Período não informado'}</td>
+                    <td>${l.createdAt && Number.isFinite(Date.parse(l.createdAt)) ? new Date(l.createdAt).toLocaleString('pt-BR') : 'Data não registrada'}</td>
                     <td class="no-print"><button class="danger" style="padding:0.3rem" onclick="deleteLog('${l.id}')">Excluir</button></td>
                 </tr>
-            `).join('') || `<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">▤</div><strong>${search || categoryFilter !== 'TODOS' || impactFilter !== 'TODOS' ? 'Nenhum resultado encontrado' : 'Nenhuma ocorrência registrada'}</strong><span>${search || categoryFilter !== 'TODOS' || impactFilter !== 'TODOS' ? 'Ajuste a busca ou os filtros para visualizar outros registros.' : 'Os eventos registrados nesta competência aparecerão aqui.'}</span></div></td></tr>`;
+            `).join('') || `<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">▤</div><strong>${search || categoryFilter !== 'TODOS' ? 'Nenhum resultado encontrado' : 'Nenhuma ocorrência registrada'}</strong><span>${search || categoryFilter !== 'TODOS' ? 'Ajuste a busca ou os filtros para visualizar outros registros.' : 'Os eventos registrados nesta competência aparecerão aqui.'}</span></div></td></tr>`;
         }
 
         function renderReport(year, monthStr) {
@@ -1804,7 +1934,7 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Ocorrências registradas</div>
-                    <div class="stat-subtitle">Eventos com impacto na produtividade</div>
+                    <div class="stat-subtitle">Eventos que afetaram a rotina de trabalho</div>
                     <div class="stat-value">${logsThisMonth}</div>
                 </div>
             `;
@@ -1832,22 +1962,18 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             if (logs.length > 0) {
                 justifHtml += `<ul>`;
                 logs.forEach(l => {
-                    let color = 'var(--text-main)';
-                    if(l.impact === 'Alto') color = 'var(--status-red)';
-                    if(l.impact === 'M\u00E9dio') color = 'var(--status-yellow)';
-                    
                     justifHtml += `
                         <li>
                             <strong>Refer\u00EAncia: ${formatDateBR(l.date)} | Classifica\u00E7\u00E3o: ${l.category}</strong>
                             <span>Detalhamento: ${l.desc}</span>
-                            <em>Severidade do Evento: <span style="color: ${color}; display:inline; font-weight:700">${l.impact}</span></em>
+                            <em>Per\u00EDodo: ${l.timeStart && l.timeEnd ? `${l.timeStart}\u2013${l.timeEnd}` : 'N\u00E3o informado'} | Registrada em: ${l.createdAt && Number.isFinite(Date.parse(l.createdAt)) ? new Date(l.createdAt).toLocaleString('pt-BR') : 'Data n\u00E3o registrada'}</em>
                         </li>
                     `;
                 });
                 justifHtml += `</ul>`;
             }
 
-            if(!justifHtml) justifHtml = "<p style='color:var(--text-light); text-align:center; padding: 2rem; border: 1px dashed var(--border-color); border-radius: var(--radius);'>Sem registros de impactos sist\u00EAmicos ou operacionais na compet\u00EAncia atual.</p>";
+            if(!justifHtml) justifHtml = "<p style='color:var(--text-light); text-align:center; padding: 2rem; border: 1px dashed var(--border-color); border-radius: var(--radius);'>Sem ocorrências registradas nesta competência.</p>";
             
             document.getElementById('rep-justifications').innerHTML = justifHtml;
         }
@@ -1866,6 +1992,11 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             const { stats, entries } = getMonthlyStats(y, monthStr);
             const prefix = `${y}-${monthStr}-`;
             const logs = appData.logbook.filter(l => l.date.startsWith(prefix));
+            const isProcon = isProconCadastro();
+            // PROCON Cadastro compartilha somente indicadores agregados, sem contagem por cliente ou documentos.
+            const sharedEntries = isProcon ? entries.filter(entry => Object.prototype.hasOwnProperty.call(appData.entries, entry.date)) : entries;
+            const sharedDaysWorked = stats.daysWorked;
+            const sharedHours = monthHours(y,monthStr);
 
             const exportPayload = {
                 tipo_documento: "fechamento_mensal",
@@ -1875,23 +2006,35 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                 analista: {
                     nome: appData.settings.name.toLocaleUpperCase('pt-BR'),
                     funcional: appData.settings.funcional,
-                    jornada: stats.daysWorked ? monthHours(y,monthStr)/stats.daysWorked : policyAt(prefix+'01').workHours,
+                    jornada: sharedDaysWorked ? sharedHours/sharedDaysWorked : policyAt(prefix+'01').workHours,
+                    jornadaConfigurada: policyAt(prefix+String(new Date(y,m+1,0).getDate()).padStart(2,'0')).workHours,
                     metaDiaria: policyAt(prefix+'01').dailyGoal,
                     parametrosPorVigencia: appData.settings.policyHistory
                 },
                 resultados: {
-                    totalRecebidos: stats.totRec,
+                    totalRecebidos: isProcon ? 0 : stats.totRec,
                     totalRealizados: stats.totComp,
-                    horasTrabalhadas: monthHours(y,monthStr),
-                    diasTrabalhados: stats.daysWorked,
+                    ...(isProconMinuta() ? {
+                        totalFila: entries.reduce((sum, entry) => sum + (Number(entry.fila) || 0), 0),
+                        totalMinutasElaboradas: entries.reduce((sum, entry) => sum + (Number(entry.minutasElaboradas) || 0), 0),
+                        totalFechamentos: entries.reduce((sum, entry) => sum + (Number(entry.fechamentos) || 0), 0)
+                    } : {}),
+                    horasTrabalhadas: sharedHours,
+                    horasExtrasTrabalhadas: entries.reduce((sum,entry)=>sum+extraHoursForDate(entry.date,entry),0),
+                    diasTrabalhados: sharedDaysWorked,
                     diasMetaAlcancada: stats.daysMet,
-                    conversaoMeta: stats.daysWorked > 0 ? Math.round((stats.daysMet / stats.daysWorked)*100) : 0
+                    conversaoMeta: stats.daysWorked > 0 ? Math.round((stats.daysMet / stats.daysWorked)*100) : 0,
+                    contagemProconPrivada: false
                 },
-                registrosDiarios: entries.map(e=>({...e,metaDiaria:policyAt(e.date).dailyGoal,jornada:policyAt(e.date).workHours})),
+                registrosDiarios: sharedEntries.map(e=>({...e,received:isProcon?null:e.received,completed:isProcon?null:e.completed,horasTrabalhadas:e.hoursWorked,horasExtrasTrabalhadas:extraHoursForDate(e.date,e),metaDiaria:policyAt(e.date).dailyGoal,jornada:policyAt(e.date).workHours})),
                 ocorrencias: logs.map(log => ({
-                    ...log,
+                    id: log.id,
+                    date: log.date,
                     category: log.category.toLocaleUpperCase('pt-BR'),
-                    desc: log.desc.toLocaleUpperCase('pt-BR')
+                    desc: log.desc.toLocaleUpperCase('pt-BR'),
+                    timeStart: log.timeStart || '',
+                    timeEnd: log.timeEnd || '',
+                    createdAt: log.createdAt || null
                 }))
             };
 
@@ -1904,7 +2047,7 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
             
-            alert(`Opera\u00E7\u00E3o bem-sucedida!\n\nArquivo de fechamento gerado com os dados da compet\u00EAncia ${monthStr}/${y}.\n\nPor favor, envie este arquivo gerado para a sua gest\u00E3o.`);
+            alert(`Opera\u00E7\u00E3o bem-sucedida!\n\nArquivo de fechamento gerado com os dados da compet\u00EAncia ${monthStr}/${y}.${isProcon?' Foram inclu\u00EDdos apenas os totais agregados do Leitor Procon.':''}\n\nPor favor, envie este arquivo gerado para a sua gest\u00E3o.`);
         }
 
         function printReport() {
@@ -1917,10 +2060,11 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
         }
 
         function checkBackupStatus() {
-            const daysSince = (Date.now() - appData.settings.lastBackup) / (1000 * 3600 * 24);
+            const lastBackup = Number(appData.settings.lastBackup) || 0;
+            const daysSince = lastBackup > 0 ? (Date.now() - lastBackup) / (1000 * 3600 * 24) : Infinity;
             const lbl = document.getElementById('lbl-backup-status');
             if (daysSince > 7) {
-                lbl.innerHTML = `<span class="warning-text">Alerta: \u00DAltimo backup h\u00E1 ${Math.floor(daysSince)} dias. Realize a exporta\u00E7\u00E3o.</span>`;
+                lbl.innerHTML = `<span class="warning-text">${lastBackup > 0 ? `Alerta: \u00DAltimo backup h\u00E1 ${Math.floor(daysSince)} dias` : 'Alerta: nenhum backup completo foi feito'}. Realize a exporta\u00E7\u00E3o.</span>`;
             } else {
                 lbl.innerHTML = `<span style="color:var(--status-green); font-weight: 600;">Sincronizado</span>`;
             }
@@ -1951,7 +2095,7 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                         appData = imported;
                         if (!appData.settings) appData.settings = {};
                         if (appData.settings.area === undefined) appData.settings.area = "";
-                        if (appData.settings.lastBackup === undefined) appData.settings.lastBackup = Date.now();
+                        if (appData.settings.lastBackup === undefined) appData.settings.lastBackup = 0;
                         saveData();
                         renderAll();
                         
@@ -1976,7 +2120,7 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
 // Ajustes exclusivamente de apresentação e navegação acessível.
 const UI_PATHS={file:'M6 3h8l4 4v14H6z M14 3v5h5 M9 12h6 M9 16h6',check:'M20 11v1a9 9 0 1 1-5-8 M9 11l3 3 9-9',clock:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 7v5l3 2',target:'M20 12a8 8 0 1 1-8-8 M16 12a4 4 0 1 1-4-4 M12 12l8-8 M16 4h4v4',chart:'M4 20V10h3v10 M10 20V4h3v16 M16 20v-8h3v8',settings:'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M12 2v3 M12 19v3 M2 12h3 M19 12h3 M5 5l2 2 M17 17l2 2 M5 19l2-2 M17 7l2-2'};
 function uiIcon(name){return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${UI_PATHS[name]||UI_PATHS.file}"/></svg>`}
-function decorateStats(){document.getElementById("dashboard-avatar").textContent=getInitials(appData.settings.name);['dash-indicators','rep-stats'].forEach(id=>document.querySelectorAll('#'+id+' .stat-card').forEach((card,i)=>{if(!card.querySelector('.stat-icon'))card.insertAdjacentHTML('afterbegin',`<span class="stat-icon">${uiIcon(['file','check',id==='rep-stats'?'chart':'clock','target'][i])}</span>`)}));document.querySelectorAll('.bar').forEach(bar=>{if(bar.querySelector('.bar-value'))return;const text=bar.closest('.chart-bar-group').title;const match=text.match(/Recebidos: (\d+) \| Realizados: (\d+)/);if(match)bar.innerHTML=`<span class="bar-value">${match[bar.classList.contains('bar-received')?1:2]}</span>`});}
+function decorateStats(){document.getElementById("dashboard-avatar").textContent=getInitials(appData.settings.name);['dash-indicators','rep-stats'].forEach(id=>document.querySelectorAll('#'+id+' .stat-card').forEach((card,i)=>{if(!card.querySelector('.stat-icon'))card.insertAdjacentHTML('afterbegin',`<span class="stat-icon">${uiIcon(['file','check',id==='rep-stats'?'chart':'clock','target'][i])}</span>`)}));document.querySelectorAll('.bar').forEach(bar=>{if(bar.querySelector('.bar-value'))return;const text=bar.closest('.chart-bar-group').title;const match=text.match(/Realizados: (\d+)/);if(match)bar.innerHTML=`<span class="bar-value">${match[1]}</span>`});}
 const originalRenderAll=renderAll;renderAll=function(){originalRenderAll();decorateStats()};
 const originalOpenEntry=openEntryForm;openEntryForm=function(date){originalOpenEntry(date);document.getElementById('entry-form-title').textContent='Registro do dia';document.getElementById('entry-date-caption').textContent=new Date(date+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});document.querySelectorAll('.cal-day').forEach(d=>d.classList.remove('selected'));const day=Number(date.slice(-2));document.querySelectorAll('.cal-day').forEach(d=>{if(Number(d.querySelector('.cal-date')?.textContent)===day)d.classList.add('selected')});};
 const originalSwitchTab=switchTab;switchTab=function(tab){originalSwitchTab(tab);document.querySelector('.sidebar').classList.remove('mobile-open');document.getElementById('mobile-menu').setAttribute('aria-expanded','false');if(tab==='calendar'&&document.getElementById('entry-form-container').style.display==='none'){let d=new Date(currentDate.getFullYear(),currentDate.getMonth(),1);const now=new Date();if(d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth())d=now;while([0,6].includes(d.getDay()))d.setDate(d.getDate()+1);openEntryForm(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`)}};
@@ -1986,7 +2130,7 @@ function prepareInterface(){
  document.getElementById('entry-form-title').insertAdjacentHTML('afterend','<p class="entry-date-caption" id="entry-date-caption"></p>');
  const table=document.getElementById('tbl-top5');const heading=table.previousElementSibling;const wrap=document.createElement('div');wrap.className='report-table-card';heading.before(wrap);wrap.append(heading,table);
  document.getElementById('logbook-count').parentElement.classList.add('history-heading');document.getElementById('tbl-logbook').parentElement.classList.add('history-scroll');
- document.querySelector('#view-dashboard>.flex-row h3').textContent='Recebidos x realizados';document.querySelector('.dashboard-profile-card h3').textContent='Meu perfil';document.querySelector('#view-dashboard>.card:last-child h3').textContent='Lançamentos recentes';
+ document.querySelector('#view-dashboard>.flex-row h3').textContent='Volume realizado no mês';document.querySelector('.dashboard-profile-card h3').textContent='Meu perfil';document.querySelector('#view-dashboard>.card:last-child h3').textContent='Lançamentos recentes';
  document.querySelectorAll('label').forEach(label=>{const field=label.parentElement.querySelector('input:not([type=file]),select,textarea');if(field?.id&&!label.htmlFor)label.htmlFor=field.id});
  document.querySelectorAll('#logbook-period-label,#rep-period').forEach(label=>{label.before(Object.assign(document.createElement('button'),{className:'period-arrow no-print',textContent:'‹',onclick:()=>changeMonth(-1)}));label.after(Object.assign(document.createElement('button'),{className:'period-arrow no-print',textContent:'›',onclick:()=>changeMonth(1)}));});
  const mobile=document.createElement('button');mobile.id='mobile-menu';mobile.className='mobile-menu no-print';mobile.textContent='☰';mobile.setAttribute('aria-label','Abrir menu');mobile.setAttribute('aria-expanded','false');mobile.onclick=()=>{const open=document.querySelector('.sidebar').classList.toggle('mobile-open');mobile.setAttribute('aria-expanded',String(open))};document.body.append(mobile);
@@ -2012,10 +2156,10 @@ function polishDetails(){
  const recent=document.querySelector('#view-dashboard>.card:last-child');
  if(!recent.querySelector('.recent-heading')){const h=recent.querySelector('h3');const wrap=document.createElement('div');wrap.className='recent-heading';h.before(wrap);const left=document.createElement('div');wrap.append(left);left.append(h);h.classList.add('section-title-icon');h.insertAdjacentHTML('afterbegin',uiIcon('clock'));left.insertAdjacentHTML('beforeend','<span class="recent-subtitle">Dias úteis nos últimos 7 dias</span>');const link=document.createElement('button');link.className='recent-link';link.textContent='Ver controle diário →';link.onclick=()=>switchTab('calendar');wrap.append(link)}
  const list=document.getElementById('dash-7days-list');list.replaceChildren();const today=new Date();
- for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);if([0,6].includes(d.getDay()))continue;const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;const entry=appData.entries[key];const button=document.createElement('button');button.type='button';button.className='recent-item';button.innerHTML=uiIcon('calendar');const copy=document.createElement('span');copy.className='recent-copy';const date=document.createElement('span');date.className='recent-date';date.textContent=formatDateBR(key).slice(0,5);copy.append(date);if(entry){const desc=document.createElement('span');desc.className='recent-detail';desc.textContent=entry.isHoliday?'Ausência registrada':`${entry.received} recebidos · ${entry.completed} realizados`;copy.append(desc);const st=getStatus(entry,policyAt(key).dailyGoal);const badge=document.createElement('span');badge.className='status-badge '+st.color;badge.textContent=st.label;copy.append(badge)}else{const status=document.createElement('span');status.className='recent-status pending';status.textContent='Pendente';copy.append(status)}button.append(copy);button.onclick=()=>{currentDate=new Date(d.getFullYear(),d.getMonth(),1);switchTab('calendar');openEntryForm(key)};button.setAttribute('aria-label','Consultar registro de '+formatDateBR(key));list.append(button)}
+  for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);if([0,6].includes(d.getDay()))continue;const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;const entry=appData.entries[key];const completed=dailyCompletedForDate(key,entry||{});const button=document.createElement('button');button.type='button';button.className='recent-item';button.innerHTML=uiIcon('calendar');const copy=document.createElement('span');copy.className='recent-copy';const date=document.createElement('span');date.className='recent-date';date.textContent=formatDateBR(key).slice(0,5);copy.append(date);if(entry||completed>0){const desc=document.createElement('span');desc.className='recent-detail';desc.textContent=entry?.isHoliday?'Ausência registrada':isProconCadastro()?`${completed} cadastros concluídos`:isProconMinuta()?`${completed} atendimentos (fila ${entry.fila||0} · minuta ${entry.minutasElaboradas||0} · fechamentos ${entry.fechamentos||0})`:`${entry.received} recebidos · ${completed} realizados`;copy.append(desc);const st=getStatus({...entry,completed},policyAt(key).dailyGoal);const badge=document.createElement('span');badge.className='status-badge '+st.color;badge.textContent=st.label;copy.append(badge)}else{const status=document.createElement('span');status.className='recent-status pending';status.textContent='Pendente';copy.append(status)}button.append(copy);button.onclick=()=>{currentDate=new Date(d.getFullYear(),d.getMonth(),1);switchTab('calendar');openEntryForm(key)};button.setAttribute('aria-label','Consultar registro de '+formatDateBR(key));list.append(button)}
 }
 const prePolishRender=renderAll;renderAll=function(){prePolishRender();polishDetails()};
-const prePolishOpen=openEntryForm;openEntryForm=function(date){prePolishOpen(date);let badge=document.getElementById('entry-status');if(!badge){badge=document.createElement('span');badge.id='entry-status';document.getElementById('entry-form-title').before(badge)}const entry=appData.entries[date];const status=entry?getStatus(entry,policyAt(date).dailyGoal):{label:'Sem registro',color:'bg-gray'};badge.className='entry-status '+status.color;badge.textContent=status.label};
+const prePolishOpen=openEntryForm;openEntryForm=function(date){prePolishOpen(date);let badge=document.getElementById('entry-status');if(!badge){badge=document.createElement('span');badge.id='entry-status';document.getElementById('entry-form-title').before(badge)}const entry=appData.entries[date],completed=dailyCompletedForDate(date,entry||{});const status=entry||completed>0?getStatus({...entry,completed},policyAt(date).dailyGoal):{label:'Sem registro',color:'bg-gray'};badge.className='entry-status '+status.color;badge.textContent=status.label};
 const prePolishLoad=window.onload;window.onload=function(){Object.assign(UI_PATHS,{person:'M20 21v-2a7 7 0 0 0-14 0v2 M13 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8',id:'M3 5h18v14H3z M7 9h3v3H7z M6 16h5 M14 9h4 M14 13h4',calendar:'M4 5h16v16H4z M8 3v4 M16 3v4 M4 10h16 M8 14h1 M13 14h1',trend:'M3 3v18h18 M6 15l4-5 5 3 5-7',info:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 7v6 M12 16h.01'});prePolishLoad();polishDetails();document.querySelectorAll('.calendar-legend .legend-item').forEach(item=>{const text=item.lastChild.textContent;item.lastChild.remove();const copy=document.createElement('div');copy.className='legend-copy';const b=document.createElement('b');b.textContent=text;const small=document.createElement('small');small.textContent=({'Meta atingida':'Objetivo alcançado','Parcial':'Recebidos abaixo da meta','Não atingida':'Produção abaixo da meta','Ausência':'Folga, feriado ou atestado','Sem registro':'Dia útil não lançado','Fim de semana':'Sábados e domingos','Dia selecionado':'Aberto para edição'})[text];copy.append(b,small);item.append(copy)});document.getElementById('view-calendar').insertAdjacentHTML('beforeend','<div class="calendar-help">'+uiIcon('info')+'Selecione uma data no calendário para consultar ou editar o registro do dia.</div>');};
 </script>
 <script>const beforeMenuLoad=window.onload;window.onload=function(){beforeMenuLoad();document.querySelector("#sidebar-logo-slot .brand-logo").src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODQgMzgiPjxnIGZpbGw9IiNjYzAwMzMiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMCAtMTMpIj48cGF0aCBkPSJNMzkuMTYsMjQuMDNjLTEuNzksMC0zLjc1LjE2LTUuNjkuNDksMS45Ni0yLjUyLDUuMDctNC4xNCw4LjUzLTQuMTQsMi41NiwwLDUuMTEuOTYsNi44MywyLjQuMzEuMjYuNTUuMjguNzkuMDUuMjQtLjI0LjIyLS40Ny0uMDUtLjc4LTIuMjUtMi42MS01LjU0LTQuMzctOS40NC00LjMtNS4wOS4wOS05LjQxLDMuMzEtMTEuMDYsNy43OC0xLjUxLjQ3LTIuODksMS4wMy00LjExLDEuNzItLjMzLjE5LS40NS40Mi0uMzMuNzEuMTIuMjYuMzYuMzUuNjkuMjYsMS4wNS0uMzEsMi4xMy0uNTYsMy4yNS0uOC0uMTIuNTktLjE5LDEuMi0uMTksMS44My0uMSw0LjExLDIuMSw4LjAyLDUuNSwxMC4xNi4zMy4yMS42Mi4yMS44MS0uMDUuMTktLjI2LjE3LS40OS0uMTItLjc1LTIuMTUtMS45My0zLjM1LTQuOC0zLjM1LTcuNjQsMC0xLjQzLjI5LTIuODIuODQtNC4wNywxLjEyLS4wOSwyLjM0LS4xNiwzLjY4LS4xNiw4LjcsMCwxNi4wMywyLjg3LDE2LjAzLDYuNjMsMCwxLjktMi40MSwzLjgxLTUuMjgsNS4wOC0uNjkuMzEtLjc2LjUyLS42Ny44Mi4xLjI4LjQxLjM4Ljc2LjI2LDUuMDItMS42NSw4LjgyLTQuMzUsOC44Mi03LjYyLDAtNC40NC03LjE3LTcuODgtMTYuMjUtNy44OGgwWiIvPjxwYXRoIGQ9Ik00My4zMiw0Ni42M3YtOS41MmMwLS4zNi0uMzUtLjUtLjY0LS4zM2wtMi40MiwxLjM5djguOTJoMi42Yy4yNiwwLC40Ni0uMi40Ni0uNDZaIi8+PHBhdGggZD0iTTM3LjMxLDQwLjIxdjYuNThjMCwuMTYuMTMuMy4zLjNoMS44M3YtOC40NWwtMS44MywxLjA1Yy0uMTkuMTEtLjMuMjctLjMuNTJaIi8+PC9nPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1IC0xMDcpIHNjYWxlKDIuMzUpIj48cGF0aCBkPSJNMjguNjQsNTQuNzFjLS43OC0uMDItMS40Ni4wOC0yLjEzLjI0LS4xMy40NS0uMTEsMS4xLDAsMS41Ni44My0uMTksMS4yOS0uMjEsMS44MS0uMjEsMS4wMiwwLDEuNTEuNDEsMS41MSwxLjI2di4wOGMtLjMtLjAzLS42Ny0uMDYtLjkyLS4wNi0xLjY5LDAtMy4xMy42LTMuMTMsMi4yMywwLDEuODMsMS4zLDIuNDUsMy4yLDIuNDUuODksMCwxLjg2LS4xNiwyLjc1LS40M3YtNC4xMmMwLTEuOTctMS4wNy0yLjk0LTMuMDgtMi45OWgtLjAxWk0yOS44Myw2MC42M2MtLjExLjAzLS42LjA4LS44NC4wOC0uOTEsMC0xLjQtLjI3LTEuNC0uOTFzLjQ5LS44OSwxLjQtLjg5Yy4zLDAsLjY1LjAzLjg0LjA1djEuNjdaIi8+PHBhdGggZD0iTTI1LDU0LjgxYy0uOTQsMC0xLjQ4LjM3LTEuOTksMS4wMi0uMDUtLjMzLS4xMS0uNi0uMjItLjk0LS4xOS0uMDYtLjUyLS4wOC0uODEtLjA4LS4yNywwLS42Mi4wMy0uNzkuMDh2Ny4yYy4yNC4wNi42NC4wOC45OS4wOHMuNzgtLjAzLjk5LS4wOHYtMy41MWMwLTEuNC43My0yLjE1LDEuNzItMi4xNS4xNywwLC40OCwwLC42NS4wMy4xMS0uNDYuMTMtMS4xMy4wMy0xLjU5LS4xMS0uMDMtLjQtLjA2LS41Ni0uMDZoLS4wMVoiLz48cGF0aCBkPSJNMTYuNzcsNTQuNzRjLS41NywwLTEuMTMuMTMtMS40OC4zdi0zLjUzYy0uNTYuMjEtMS4xNC40OS0xLjY0Ljg5LS4yNS4yMS0uMzMuNDEtLjMzLjcydjguNzFjLjUyLjIyLDEuNTkuNDEsMi42MS40MSwyLjU4LDAsNC4wNS0xLjU3LDQuMDUtMy44NXMtMS4wNS0zLjY2LTMuMjEtMy42NmgwWk0xNi4wMyw2MC42NGMtLjIxLDAtLjUyLDAtLjc1LS4wOHYtMy45NmMuMjctLjE0LjY1LS4yMiwxLjE0LS4yMi45OSwwLDEuNTEuNjgsMS41MSwxLjk3cy0uNjIsMi4yOS0xLjkxLDIuMjloLjAxWiIvPjxwYXRoIGQ9Ik0zNy40Niw1My4xMnYxLjczYy0uMzUtLjEtLjcyLS4xMS0xLjAzLS4xMS0yLjE4LDAtMy42NiwxLjQ2LTMuNjYsMy44czEuNDUsMy43LDMuNywzLjdjMS4wMywwLDIuMDUtLjE0LDIuOTYtLjQ1di0xMC4yOWMtLjU2LjIxLTEuMTQuNDktMS42NC44OS0uMjUuMjEtLjMzLjQxLS4zMy43MmgwWk0zNy40Niw2MC41M2MtLjMzLjEtLjU3LjExLS44NC4xMS0xLjMsMC0xLjgxLS44Ni0xLjgxLTIuMSwwLTEuMzguNTEtMi4yMywxLjgtMi4yMy4zOCwwLC42Mi4wNS44Ni4xMXY0LjFoMFoiLz48cGF0aCBkPSJNNTEuNTcsNTcuODFsLS43OS0uMzNjLS40Ni0uMTktLjczLS4zNS0uNzMtLjY1LDAtLjQ2LjQxLS41Ni45NS0uNTZzMS4xLjA2LDEuODYuM2MuMS0uNTIuMS0xLjAyLDAtMS40OC0uNDgtLjI1LTEuMzctLjM4LTIuMTUtLjM4LTEuNTMsMC0yLjY5LjgzLTIuNjksMi4wNywwLDEuMTEuNDgsMS42NywxLjgxLDIuMjFsLjYyLjI1Yy41OS4yNC43Ni4zOC43Ni43NiwwLC41Ny0uNTcuNjctMS4wNS42Ny0uNzksMC0xLjQtLjE2LTIuMTYtLjQzLS4xMy40Ni0uMTMsMS4wNywwLDEuNTQuNjUuMzUsMS41NC40NiwyLjQ4LjQ2LDEuNTEsMCwyLjcyLS43OSwyLjcyLTIuMjMsMC0xLjE4LS41MS0xLjczLTEuNjQtMi4yMWgwWiIvPjxwYXRoIGQ9Ik01Ny43LDYwLjYzYy0uOTksMC0xLjY0LS43OC0xLjY0LTIuMTVzLjUyLTIuMTUsMS42NS0yLjE1Yy40OCwwLC44MS4wOCwxLjI2LjI1LjEzLS40NS4zNy0uOTUuNy0xLjM4LS42Mi0uMzItMS4yMi0uNDktMi4yMS0uNDktMi4xOCwwLTMuNDMsMS41NC0zLjQzLDMuNzdzMS4yOSwzLjc3LDMuNTEsMy43N2MuODEsMCwxLjU2LS4xNCwyLjE2LS40OC0uMjctLjM1LS41Ny0uODMtLjc1LTEuMzgtLjU2LjIyLS43OS4yNC0xLjI2LjI0aDBaIi8+PHBhdGggZD0iTTYzLjIyLDU0LjcxYy0yLjIxLDAtMy40NSwxLjUxLTMuNDUsMy43OHMxLjMsMy43NSwzLjQ1LDMuNzUsMy40Ny0xLjQ4LDMuNDctMy43NS0xLjI0LTMuNzgtMy40Ny0zLjc4Wk02My4yMiw2MC42NmMtMS4xLDAtMS40My0uODktMS40My0yLjE2cy4zMy0yLjE5LDEuNDMtMi4xOSwxLjQ1LjkyLDEuNDUsMi4xOWMwLDEuMzQtLjM3LDIuMTYtMS40NSwyLjE2WiIvPjxwYXRoIGQ9Ik00My45OCw1NC43MWMtMi4xMywwLTMuNDMsMS40My0zLjQzLDMuODJzMS4zOCwzLjcyLDMuNzUsMy43MmMuODEsMCwxLjY5LS4xNCwyLjI0LS40MS4xMS0uNDYuMTEtMS4wNywwLTEuNTMtLjczLjIxLTEuMzUuMzMtMi4wMy4zMy0xLjEsMC0xLjg2LS40MS0yLjAyLTEuNTdoNC40OGMuMDYtLjE3LjA4LS43Ni4wOC0xLDAtMi4xNS0xLjIxLTMuMzUtMy4wNy0zLjM1aDBaTTQyLjQ5LDU3LjYyYy4xNC0uODcuNjctMS40LDEuNDYtMS40Ljg5LDAsMS4yNC42LDEuMjcsMS40aC0yLjczWiIvPjwvZz48L2c+PC9zdmc+';};</script>
@@ -2098,9 +2242,16 @@ document.addEventListener('keydown',event=>{const overlay=document.getElementByI
 </script>
 
 <style>
-.product-dialog{margin:auto;width:min(620px,calc(100% - 28px));max-height:85dvh;overflow:auto;padding:28px;border:1px solid var(--border-color);border-radius:18px;background:var(--card-bg);color:var(--text-main);box-shadow:0 28px 90px #0005}.product-dialog::backdrop{background:#10131b80;backdrop-filter:blur(8px)}.product-dialog[open]{animation:productIn .22s ease}.product-dialog h2{font-size:22px;margin-bottom:15px}.product-dialog p{line-height:1.7;color:var(--text-light);white-space:pre-line}.product-dialog footer{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.product-dialog button,.product-toolbar button,.action-summary button{padding:10px 14px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg);color:var(--text-main);cursor:pointer}.product-dialog .primary{background:var(--brand-primary);color:white;border-color:var(--brand-primary)}.product-dialog li{padding:10px 0;border-bottom:1px solid var(--border-color);list-style:none;font-size:13px;overflow-wrap:anywhere}.product-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:400;padding:14px 20px;border-radius:12px;background:var(--card-bg);color:var(--text-main);border:1px solid var(--border-color);box-shadow:0 8px 35px #0003;max-width:90vw}.product-toast button{margin-left:16px;color:var(--brand-primary);background:transparent;border:0;cursor:pointer}.product-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}.product-toolbar input,.product-toolbar select{min-height:38px;padding:8px 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg);color:var(--text-main);max-width:100%}.product-toolbar input{flex:1;min-width:160px}.product-toolbar button{font-size:12px}.action-summary{padding:14px 18px;margin-bottom:16px;border:1px solid var(--border-color);border-radius:12px;background:var(--card-bg);display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-size:13px}.action-summary p{flex:1;margin:0;color:var(--text-light);line-height:1.6}.metric-help{border:1px solid var(--border-color);background:transparent;color:var(--text-light);border-radius:50%;width:18px;height:18px;padding:0!important;min-height:0!important;font-size:11px;margin-left:5px;cursor:pointer}.product-comparison{font-size:12px;color:var(--text-light);line-height:1.6;padding:0 2px;margin-bottom:14px}.future-day{opacity:.55}.missing-day{border-style:dashed!important}.calendar-preview{font-size:12px;padding:12px;margin:12px 0;border-radius:8px;background:var(--bg-color);line-height:1.7}.compact .card{padding:12px!important}.compact .stat-card{padding-top:10px!important;padding-bottom:10px!important;min-height:78px!important}.compact td{padding-top:8px!important;padding-bottom:8px!important}.compact .cal-day{min-height:58px!important}.print-heading{display:none}body.motion-off *,body.motion-off *::before,body.motion-off *::after{animation:none!important;transition:none!important}
+.product-dialog{margin:auto;width:min(620px,calc(100% - 28px));max-height:85dvh;overflow:auto;padding:28px;border:1px solid var(--border-color);border-radius:18px;background:var(--card-bg);color:var(--text-main);color-scheme:light;scrollbar-color:var(--border-color) var(--card-bg);box-shadow:0 28px 90px #0005}.product-dialog::-webkit-scrollbar{width:12px}.product-dialog::-webkit-scrollbar-track{background:var(--card-bg)}.product-dialog::-webkit-scrollbar-thumb{background:var(--border-color);border:3px solid var(--card-bg);border-radius:8px}body.dark-mode .product-dialog{color-scheme:dark;scrollbar-color:var(--text-light) var(--card-bg)}.product-dialog::backdrop{background:#10131b80;backdrop-filter:blur(8px)}.product-dialog[open]{animation:productIn .22s ease}.product-dialog h2{font-size:22px;margin-bottom:15px}.product-dialog p{line-height:1.7;color:var(--text-light);white-space:pre-line}.product-dialog footer{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.product-dialog button,.product-toolbar button,.action-summary button{padding:10px 14px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg);color:var(--text-main);cursor:pointer}.product-dialog .primary{background:var(--brand-primary);color:white;border-color:var(--brand-primary)}.product-dialog li{padding:10px 0;border-bottom:1px solid var(--border-color);list-style:none;font-size:13px;overflow-wrap:anywhere}.product-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:400;padding:14px 20px;border-radius:12px;background:var(--card-bg);color:var(--text-main);border:1px solid var(--border-color);box-shadow:0 8px 35px #0003;max-width:90vw}.product-toast button{margin-left:16px;color:var(--brand-primary);background:transparent;border:0;cursor:pointer}.product-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}.product-toolbar input,.product-toolbar select{min-height:38px;padding:8px 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg);color:var(--text-main);max-width:100%}.product-toolbar input{flex:1;min-width:160px}.product-toolbar button{font-size:12px}.action-summary{padding:14px 18px;margin-bottom:16px;border:1px solid var(--border-color);border-radius:12px;background:var(--card-bg);display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-size:13px}.action-summary p{flex:1;margin:0;color:var(--text-light);line-height:1.6}.metric-help{border:1px solid var(--border-color);background:transparent;color:var(--text-light);border-radius:50%;width:18px;height:18px;padding:0!important;min-height:0!important;font-size:11px;margin-left:5px;cursor:pointer}.product-comparison{font-size:12px;color:var(--text-light);line-height:1.6;padding:0 2px;margin-bottom:14px}.future-day{opacity:.55}.missing-day{border-style:dashed!important}.calendar-preview{font-size:12px;padding:12px;margin:12px 0;border-radius:8px;background:var(--bg-color);line-height:1.7}.compact .card{padding:12px!important}.compact .stat-card{padding-top:10px!important;padding-bottom:10px!important;min-height:78px!important}.compact td{padding-top:8px!important;padding-bottom:8px!important}.compact .cal-day{min-height:58px!important}.print-heading{display:none}body.motion-off *,body.motion-off *::before,body.motion-off *::after{animation:none!important;transition:none!important}
 @keyframes productIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){.product-dialog[open]{animation:none}}
 @media print{@page{size:A4 landscape;margin:12mm}body,body.dark-mode{display:block!important;height:auto!important;overflow:visible!important;background:white!important;color:#111!important;--card-bg:#fff;--bg-color:#fff;--text-main:#111;--text-light:#444;--border-color:#ccc}aside,.sidebar,.topbar-controls,.product-toolbar,.action-summary,button,dialog,.product-toast,.setup-overlay,.mobile-nav-button,.no-print{display:none!important}main,.content-area{display:block!important;width:100%!important;margin:0!important;padding:0!important;overflow:visible!important;height:auto!important}.view:not(.active){display:none!important}.view.active{display:block!important}.print-heading{display:block;margin-bottom:15px;font-size:14px}.card,.stat-card,tr,.occurrence-detail-card{break-inside:avoid;box-shadow:none!important}.ranking-table-wrap,.micro-occ-table,.occurrence-details-card{overflow:visible!important;max-height:none!important}.card{margin-bottom:12px}.bar{transform:none!important}.product-comparison{color:#444}.profile-edit{display:none!important}}
+</style>
+
+<style>
+.workload-summary{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin:0 0 1rem;padding:14px 16px;border:1px solid var(--border-color);border-radius:var(--radius);background:var(--bg-color)}
+.workload-summary>div{display:flex;flex-direction:column;gap:4px}.workload-summary>div span{font-size:.85rem;color:var(--text-light)}
+.workload-status{font-size:.82rem;font-weight:700;color:var(--status-yellow)}.workload-status.met{color:var(--status-green)}
+.cal-day{cursor:pointer}.cal-day.weekend-day{background:color-mix(in srgb,var(--bg-color) 65%,var(--border-color));opacity:.9}.cal-day-count{margin:auto 0;text-align:center;font-size:1.35rem;font-weight:700;color:var(--text-main);line-height:1.1}.cal-day-summary{margin:auto 0;text-align:center;color:var(--text-light);font-size:.8rem;font-weight:600}.cal-hours{font-size:.63rem;text-align:center;color:var(--text-light);line-height:1.2}.form-hint[hidden]{display:none!important}
 </style>
 <script>
 const productStorePrefix=typeof teamData!=='undefined'?'leadershipUX':'analystUX';
@@ -2115,16 +2266,16 @@ window.addEventListener('load',()=>{productPreferences();productHelp()});
 </script>
 
 <script>
-const uxRender=renderAll;renderAll=function(){uxRender();productHelp();const comp=currentDate.getFullYear()+'-'+String(currentDate.getMonth()+1).padStart(2,'0');const prev=productPrevious(comp);const now=getMonthlyStats(...comp.split('-')).stats;const before=getMonthlyStats(...prev.split('-')).stats;let comparison=document.getElementById('analyst-comparison');if(!comparison){comparison=document.createElement('p');comparison.id='analyst-comparison';comparison.className='product-comparison';document.getElementById('dash-indicators').after(comparison)}comparison.textContent=productCompare(now.totComp,before.totComp,Object.keys(appData.entries).some(k=>k.startsWith(prev)));const grid=document.querySelector('#view-calendar .calendar-grid');grid?.querySelectorAll('.cal-day').forEach(cell=>{const day=Number(cell.querySelector('.cal-date')?.textContent);if(!day)return;const date=comp+'-'+String(day).padStart(2,'0');const entry=appData.entries[date];cell.classList.toggle('future-day',date>getTodayStr());cell.classList.toggle('missing-day',date<getTodayStr()&&!entry&&!cell.classList.contains('disabled'));if(!cell.classList.contains('disabled')){cell.tabIndex=0;cell.setAttribute('role','button');cell.setAttribute('aria-label',date+(entry?`, ${entry.received} recebidos, ${entry.completed} realizados`:date>getTodayStr()?', dia futuro':', sem lançamento'));cell.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();cell.click()}}}});};
-const uxEntry=openEntryForm;openEntryForm=function(date){uxEntry(date);let preview=document.getElementById('daily-preview');if(!preview){preview=document.createElement('div');preview.id='daily-preview';preview.className='calendar-preview';document.getElementById('entry-form-title').after(preview)}const e=appData.entries[date];const count=appData.logbook.filter(l=>l.date===date).length;preview.textContent=(e?(e.isHoliday?'Ausência registrada':`${e.received} recebidos • ${e.completed} realizados`):'Nenhuma produção registrada')+` • Meta atual: ${appData.settings.dailyGoal} • ${count} ocorrência(s)`;};
+const uxRender=renderAll;renderAll=function(){uxRender();productHelp();const comp=currentDate.getFullYear()+'-'+String(currentDate.getMonth()+1).padStart(2,'0');const prev=productPrevious(comp);const now=getMonthlyStats(...comp.split('-')).stats;const before=getMonthlyStats(...prev.split('-')).stats;let comparison=document.getElementById('analyst-comparison');if(!comparison){comparison=document.createElement('p');comparison.id='analyst-comparison';comparison.className='product-comparison';document.getElementById('dash-indicators').after(comparison)}comparison.textContent=productCompare(now.totComp,before.totComp,Object.keys(appData.entries).some(k=>k.startsWith(prev))||Object.keys(appData.proconCompletedByDate||{}).some(k=>k.startsWith(prev)));const grid=document.querySelector('#view-calendar .calendar-grid');grid?.querySelectorAll('.cal-day').forEach(cell=>{const day=Number(cell.querySelector('.cal-date')?.textContent);if(!day)return;const date=comp+'-'+String(day).padStart(2,'0');const entry=appData.entries[date];const weekend=[0,6].includes(new Date(date+'T12:00:00').getDay());cell.classList.toggle('future-day',date>getTodayStr());cell.classList.toggle('missing-day',!weekend&&date<getTodayStr()&&!entry);cell.tabIndex=0;cell.setAttribute('role','button');cell.setAttribute('aria-label',date+(entry?(isProconMinuta()?`, ${dailyCompletedForDate(date,entry)} atendimentos: fila ${entry.fila||0}, elaboração ${entry.minutasElaboradas||0}, fechamentos ${entry.fechamentos||0}`:`${entry.received||0} recebidos, ${dailyCompletedForDate(date,entry)} realizados`)+`, ${dailyHoursStatus(date,entry)}`:weekend?', fim de semana — registro de horas extras':date>getTodayStr()?', dia futuro':', sem lançamento'));cell.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();cell.click()}}});};
+const uxEntry=openEntryForm;openEntryForm=function(date){uxEntry(date);let preview=document.getElementById('daily-preview');if(!preview){preview=document.createElement('div');preview.id='daily-preview';preview.className='calendar-preview';document.getElementById('entry-form-title').after(preview)}const e=appData.entries[date];const count=appData.logbook.filter(l=>l.date===date).length;const completed=dailyCompletedForDate(date,e||{});const received=Number(e?.received)||0;const hours=Number(document.getElementById('ent-hours').value)||0;const production=isProconCadastro()?`${completed} protocolo(s) concluído(s) pelo Leitor Procon`:isProconMinuta()?`${completed} atendimentos (fila ${e?.fila||0} + elaboração ${e?.minutasElaboradas||0} + fechamentos ${e?.fechamentos||0})`:`${completed} realizados / ${received} recebidos`;preview.textContent=(e?.isHoliday?'Ausência registrada':production)+` • ${dailyHoursStatus(date,e||null,hours)} • Meta vigente: ${policyAt(date).dailyGoal} • ${count} ocorrência(s)`;};
 deleteEntry=async function(){const date=document.getElementById('ent-date').value;if(!appData.entries[date])return;if(!await productDialog('Excluir registro?',`O lançamento de ${formatDateBR(date)} será removido.`,[['Cancelar',false],['Excluir',true]]))return;const saved=structuredClone(appData.entries[date]);delete appData.entries[date];saveData();closeEntryForm();renderAll();productToast('Registro excluído.',()=>{if(appData.entries[date]){productDialog('Registro já existente','Há um novo lançamento nesta data. A restauração não irá substituí-lo.');return}appData.entries[date]=saved;saveData();renderAll()});};
 deleteLog=async function(id){if(!await productDialog('Excluir ocorrência?','Você poderá desfazer esta exclusão por alguns segundos.',[['Cancelar',false],['Excluir',true]]))return;const saved=appData.logbook.find(l=>l.id===id);appData.logbook=appData.logbook.filter(l=>l.id!==id);saveData();renderAll();productToast('Ocorrência excluída.',()=>{if(saved&&!appData.logbook.some(l=>l.id===id))appData.logbook.push(saved);saveData();renderAll()});};
-const uxBackupImport=importData;importData=async function(event){const file=event.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data.entries||typeof data.entries!=='object'||Array.isArray(data.entries)||!data.settings||!Array.isArray(data.logbook)||Object.values(data.entries).some(e=>!e||!Number.isFinite(Number(e.received))||!Number.isFinite(Number(e.completed))))throw Error();if(await productDialog('Conferir restauração',`${file.name}\n${Object.keys(data.entries).length} dias registrados • ${data.logbook.length} ocorrências\nEste backup substituirá os dados atuais.`,[['Cancelar',false],['Restaurar backup',true]])){const snapshot=structuredClone(appData);appData=data;saveData();renderAll();if(!isProfileConfigured())showInitialSetup();else{document.getElementById('setup-overlay').style.display='none';onboardingInert(false)}productToast('Backup restaurado.',()=>{appData=snapshot;saveData();renderAll()});}}catch{productDialog('Backup inválido','Selecione um backup completo da aplicação do analista.')}event.target.value='';};
-window.addEventListener('load',()=>{const tools=document.createElement('div');tools.className='product-toolbar';tools.innerHTML='<input aria-label="Buscar data ou ocorrência" placeholder="Buscar data (AAAA-MM-DD) ou ocorrência…"><button type="button">Buscar</button>';document.querySelector('main').prepend(tools);const input=tools.querySelector('input');input.value=localStorage.getItem('analystSearch')||'';const search=()=>{localStorage.setItem('analystSearch',input.value);const q=input.value.trim().toLowerCase();if(!q)return;const dates=Object.keys(appData.entries).filter(d=>d.includes(q));const logs=appData.logbook.filter(l=>[l.date,l.category,l.desc].join(' ').toLowerCase().includes(q));const list=document.createElement('ul');[...dates.map(date=>({date,label:date+' • Produção'})),...logs.map(l=>({date:l.date,label:l.date+' • '+l.category+' • '+l.desc}))].slice(0,100).forEach(item=>{const li=document.createElement('li'),b=document.createElement('button');b.textContent=item.label;b.onclick=()=>{b.closest('dialog').close();currentDate=new Date(item.date+'T12:00:00');switchTab('calendar');openEntryForm(item.date)};li.append(b);list.append(li)});if(!list.children.length)list.textContent='Nenhum registro encontrado.';productDialog('Resultados da busca',list)};tools.querySelector('button').onclick=search;input.onkeydown=e=>{if(e.key==='Enter')search()};renderAll();});
+const uxBackupImport=importData;importData=async function(event){const file=event.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data.entries||typeof data.entries!=='object'||Array.isArray(data.entries)||!data.settings||!Array.isArray(data.logbook)||Object.values(data.entries).some(e=>!e||!Number.isFinite(Number(e.received))||!Number.isFinite(Number(e.completed))))throw Error();if(await productDialog('Conferir restauração',`${file.name}\n${Object.keys(data.entries).length} dias registrados • ${data.logbook.length} ocorrências\nEste backup substituirá os dados atuais.`,[['Cancelar',false],['Restaurar backup',true]])){const snapshot=structuredClone(appData);appData=data;normalizeAppData();saveData();renderAll();if(!isProfileConfigured())showInitialSetup();else{document.getElementById('setup-overlay').style.display='none';onboardingInert(false)}productToast('Backup restaurado.',()=>{appData=snapshot;normalizeAppData();saveData();renderAll()});}}catch{productDialog('Backup inválido','Selecione um backup completo da aplicação do analista.')}event.target.value='';};
+window.addEventListener('load',()=>renderAll());
 </script>
 
 <script>
-window.addEventListener('load',()=>{['log-search','log-impact-filter','log-category-filter'].forEach(id=>{const el=document.getElementById(id);if(!el)return;const saved=localStorage.getItem('analystFilter-'+id);if(saved!==null)el.value=saved;el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));['input','change'].forEach(type=>el.addEventListener(type,()=>localStorage.setItem('analystFilter-'+id,el.value)))});});
+window.addEventListener('load',()=>{['log-search','log-category-filter'].forEach(id=>{const el=document.getElementById(id);if(!el)return;const saved=localStorage.getItem('analystFilter-'+id);if(saved!==null){if(id==='log-category-filter'&&![...el.options].some(option=>option.value===saved))el.value='TODOS';else el.value=saved;}el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));['input','change'].forEach(type=>el.addEventListener(type,()=>localStorage.setItem('analystFilter-'+id,el.value)))});});
 </script>
 
 <script>
@@ -2132,59 +2283,53 @@ window.addEventListener('beforeprint',()=>{const heading=document.querySelector(
 </script>
 
 <script>
-window.addEventListener('load',()=>{const reset=document.createElement('button');reset.type='button';reset.className='secondary';reset.textContent='Limpar filtros';reset.onclick=()=>{['log-search','log-impact-filter','log-category-filter'].forEach(id=>{const el=document.getElementById(id);el.value=id==='log-search'?'':'TODOS';localStorage.removeItem('analystFilter-'+id)});renderAll()};document.querySelector('.history-tools').append(reset);});
+window.addEventListener('load',()=>{const reset=document.createElement('button');reset.type='button';reset.className='secondary';reset.textContent='Limpar filtros';reset.onclick=()=>{['log-search','log-category-filter'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.value=id==='log-search'?'':'TODOS';localStorage.removeItem('analystFilter-'+id)});renderAll()};document.querySelector('.history-tools').append(reset);});
 </script>
 
 <script>
 function ensurePolicies(){if(!Array.isArray(appData.settings.policyHistory)||!appData.settings.policyHistory.length){appData.settings.policyHistory=[{from:'0001-01-01',dailyGoal:Number(appData.settings.dailyGoal)||80,workHours:Number(appData.settings.workHours)||6}];}}
 function policyAt(date){ensurePolicies();return [...appData.settings.policyHistory].sort((a,b)=>a.from.localeCompare(b.from)).filter(p=>p.from<=date).at(-1)||appData.settings.policyHistory[0]}
-function monthHours(year,month){return Object.entries(appData.entries).filter(([date,e])=>date.startsWith(`${year}-${month}-`)&&!e.isHoliday).reduce((sum,[date])=>sum+policyAt(date).workHours,0)}
+function minutaStageCounts(entry={}){return{fila:Math.max(0,Number(entry?.fila)||0),minutasElaboradas:Math.max(0,Number(entry?.minutasElaboradas)||0),fechamentos:Math.max(0,Number(entry?.fechamentos)||0)}}
+function minutaLegacyCount(entry={}){const hasStages=['fila','minutasElaboradas','fechamentos'].some(key=>Object.prototype.hasOwnProperty.call(entry,key));return Math.max(0,Number(hasStages?entry.legacyAtendimentos:entry.completed)||0)}
+function minutaDailyTotal(entry={}){const counts=minutaStageCounts(entry);return minutaLegacyCount(entry)+counts.fila+counts.minutasElaboradas+counts.fechamentos}
+function dailyCompletedForDate(date,entry=appData.entries[date]){if(isProconCadastro())return Math.max(0,Number(appData.proconCompletedByDate?.[date])||0);if(isProconMinuta())return minutaDailyTotal(entry||{});return Math.max(0,Number(entry?.completed)||0)}
+function actualHoursForDate(date,entry=appData.entries[date]){if(!entry||entry.isHoliday)return 0;const value=entry.hoursWorked;if(value!==undefined&&value!==null&&value!=='')return Math.max(0,Math.min(24,Number(value)||0));return Math.max(0,Number(policyAt(date).workHours)||0)}
+function extraHoursForDate(date,entry=appData.entries[date]){if(!entry||entry.isHoliday)return 0;const day=new Date(date+'T12:00:00').getDay(),expected=day===0||day===6?0:Number(policyAt(date).workHours)||0;return Math.max(0,actualHoursForDate(date,entry)-expected)}
+function changeProconDailyCount(date,delta){if(!isProconCadastro())return false;appData.proconCompletedByDate=appData.proconCompletedByDate||{};const next=Math.max(0,(Number(appData.proconCompletedByDate[date])||0)+delta);if(next)appData.proconCompletedByDate[date]=next;else delete appData.proconCompletedByDate[date];saveData();const input=document.getElementById('ent-date');if(input?.value===date){document.getElementById('ent-completed').value=next;}return true}
+function formatHours(value){return Number(value||0).toLocaleString('pt-BR',{minimumFractionDigits:Number(value)%1?1:0,maximumFractionDigits:2})}
+function monthHours(year,month){const prefix=`${year}-${String(month).padStart(2,'0')}-`;return Object.entries(appData.entries).filter(([date])=>date.startsWith(prefix)).reduce((sum,[date,entry])=>sum+actualHoursForDate(date,entry),0)}
 function monthTarget(year,month){let target=0;for(let d=1;d<=new Date(year,Number(month),0).getDate();d++){const day=new Date(year,Number(month)-1,d);if(![0,6].includes(day.getDay()))target+=policyAt(`${year}-${month}-${String(d).padStart(2,'0')}`).dailyGoal;}return target}
+function expectedHoursThrough(year,month,endDay){let expected=0;for(let day=1;day<=endDay;day++){const date=new Date(year,month-1,day);if([0,6].includes(date.getDay()))continue;const key=`${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;if(appData.entries[key]?.isHoliday)continue;expected+=Number(policyAt(key).workHours)||0;}return expected}
+function monthlyWorkload(year,month){const monthText=String(month).padStart(2,'0'),lastDay=new Date(year,month,0).getDate(),today=getTodayStr(),periodStart=`${year}-${monthText}-01`,periodEnd=`${year}-${monthText}-${String(lastDay).padStart(2,'0')}`;let cutoff=periodEnd,phase='closed';if(today<periodStart){cutoff=`${year}-${monthText}-00`;phase='future'}else if(today<=periodEnd){cutoff=today;phase='current'}const todayEntry=appData.entries[today];const todayIsWorkday=new Date(today+'T12:00:00').getDay()!==0&&new Date(today+'T12:00:00').getDay()!==6;const deferToday=phase==='current'&&todayIsWorkday&&!todayEntry;const expected=phase==='future'?0:expectedHoursThrough(year,month,deferToday?Math.max(0,Number(today.slice(8))-1):Number(cutoff.slice(8)));const actual=phase==='future'?0:Object.entries(appData.entries).filter(([date])=>date.startsWith(`${year}-${monthText}-`)&&date<=cutoff).reduce((sum,[date,entry])=>sum+actualHoursForDate(date,entry),0);return{cutoff,expected,actual,phase,deferToday,fulfilled:expected===0||actual>=expected}}
+function dailyHoursStatus(date,entry=appData.entries[date],hours=actualHoursForDate(date,entry)){const day=new Date(date+'T12:00:00').getDay(),expected=[0,6].includes(day)?0:Number(policyAt(date).workHours)||0;if(entry?.isHoliday)return'Ausência — sem carga prevista';if(!entry)return expected?`Sem lançamento • previsto ${formatHours(expected)}h`:'Fim de semana • registre as horas extras, se houver';if(!expected)return hours?`Horas extras registradas • ${formatHours(hours)}h`:'Nenhuma hora extra registrada';if(hours>=expected)return`Carga diária cumprida • ${formatHours(hours)}h de ${formatHours(expected)}h${hours>expected?` (+${formatHours(hours-expected)}h extra)`:''}`;return`Carga abaixo do esperado • ${formatHours(hours)}h de ${formatHours(expected)}h`}
+function updateDailyHoursPreview(){const date=document.getElementById('ent-date')?.value,input=document.getElementById('ent-hours'),status=document.getElementById('ent-hours-status');if(!date||!input||!status)return;const current=appData.entries[date]||null;const temporary={...(current||{}),isHoliday:document.getElementById('ent-holiday').value==='true'};status.textContent=temporary.isHoliday?'Ausência — sem carga horária prevista':dailyHoursStatus(date,temporary,Number(input.value)||0)}
+function renderWorkloadSummary(year,month){const host=document.getElementById('workload-summary');if(!host)return;const summary=monthlyWorkload(year,month);if(summary.phase==='future'){host.innerHTML='<strong>Carga mensal</strong><span>Esta competência ainda não começou.</span>';return}const state=summary.deferToday?'Em andamento — o dia de hoje ainda não foi lançado':summary.fulfilled?'Carga horária cumprida':'Abaixo da carga horária prevista';const dateLabel=summary.phase==='current'?'até '+formatDateBR(summary.cutoff):'no mês';host.innerHTML=`<div><strong>Carga horária ${dateLabel}</strong><span>${formatHours(summary.actual)}h trabalhadas de ${formatHours(summary.expected)}h previstas</span></div><span class="workload-status ${summary.fulfilled?'met':'pending'}">${state}</span>`}
 const periodSetup=completeInitialSetup;completeInitialSetup=async function(e){e.preventDefault();ensurePolicies();const g=Number(document.getElementById('setup-goal').value),h=Number(document.getElementById('setup-hours').value);const from=document.getElementById('policy-from').value;const existing=isProfileConfigured();if(!document.getElementById('setup-form').reportValidity())return;const current=policyAt(from);if(g!==current.dailyGoal||h!==current.workHours){if(existing&&!await productDialog('Aplicar nova vigência?',`Meta: ${g} protocolos • Jornada: ${h} horas\nA partir de ${formatDateBR(from)}. Registros anteriores a essa data manterão os parâmetros anteriores.`,[['Cancelar',false],['Aplicar',true]]))return;appData.settings.policyHistory=appData.settings.policyHistory.filter(p=>p.from!==from);appData.settings.policyHistory.push({from:existing?from:'0001-01-01',dailyGoal:g,workHours:h});}periodSetup(e);};
 const policyOpen=openProfileSettings;openProfileSettings=function(){policyOpen();document.getElementById('policy-from').value=getTodayStr();const p=policyAt(getTodayStr());document.getElementById('setup-goal').value=p.dailyGoal;document.getElementById('setup-hours').value=p.workHours;};
 const policyRender=renderAll;renderAll=function(){ensurePolicies();policyRender();document.querySelectorAll('.stat-card').forEach((card,i)=>{if(!card.querySelector('.stat-value'))return;card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label','Detalhar '+card.querySelector('.stat-title')?.textContent);const open=()=>showMetricRecords(card.querySelector('.stat-title')?.textContent||'Indicador');card.onclick=e=>{if(!e.target.closest('.metric-help'))open()};card.onkeydown=e=>{if(e.target===card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();open()}}});};
-function showMetricRecords(title){const comp=currentDate.getFullYear()+'-'+String(currentDate.getMonth()+1).padStart(2,'0');const entries=Object.entries(appData.entries).filter(([d])=>d.startsWith(comp)).sort();const content=document.createElement('div');const p=document.createElement('p');p.textContent='Registros do período e parâmetros vigentes em cada data. Ausências não entram nas médias de produção.';content.append(p);const list=document.createElement('ul');entries.forEach(([d,e])=>{const li=document.createElement('li'),b=document.createElement('button'),policy=policyAt(d);b.textContent=`${formatDateBR(d)} • ${e.isHoliday?'Ausência':`${e.received} recebidos / ${e.completed} realizados • Saldo ${Number(e.received)-Number(e.completed)} • Meta ${policy.dailyGoal} • ${policy.workHours}h`}`;b.onclick=()=>{b.closest('dialog').close();switchTab('calendar');openEntryForm(d)};li.append(b);list.append(li)});if(!entries.length)list.textContent='Sem registros neste período.';content.append(list);productDialog(title,content)}
+function showMetricRecords(title){
+ const comp=currentDate.getFullYear()+'-'+String(currentDate.getMonth()+1).padStart(2,'0');
+ const dates=new Set(Object.keys(appData.entries).filter(date=>date.startsWith(comp)));
+ if(isProconCadastro())Object.keys(appData.proconCompletedByDate||{}).filter(date=>date.startsWith(comp)).forEach(date=>dates.add(date));
+ const content=document.createElement('div'),p=document.createElement('p'),list=document.createElement('ul');
+ p.textContent='Registros do período e parâmetros vigentes em cada data.';content.append(p);
+ [...dates].sort().forEach(date=>{const entry=appData.entries[date]||{},li=document.createElement('li'),button=document.createElement('button'),policy=policyAt(date);const completed=dailyCompletedForDate(date,entry);
+  button.textContent=entry.isHoliday?`${formatDateBR(date)} • Ausência`:isProconCadastro()?`${formatDateBR(date)} • ${completed} cadastros concluídos • ${formatHours(actualHoursForDate(date,entry))}h trabalhadas`:isProconMinuta()?`${formatDateBR(date)} • Fila ${entry.fila||0} • Minutas ${entry.minutasElaboradas||0} • Fechamentos ${entry.fechamentos||0} • Total ${completed} atendimentos • ${formatHours(actualHoursForDate(date,entry))}h`:`${formatDateBR(date)} • ${entry.received} recebidos / ${completed} realizados • Saldo ${Number(entry.received)-completed} • Meta ${policy.dailyGoal} • ${formatHours(actualHoursForDate(date,entry))}h`;
+  button.onclick=()=>{button.closest('dialog').close();switchTab('calendar');openEntryForm(date)};li.append(button);list.append(li)});
+ if(!dates.size)list.textContent='Sem registros neste período.';content.append(list);productDialog(title,content)
+}
 const periodEntry=openEntryForm;openEntryForm=function(d){periodEntry(d);const p=policyAt(d);document.getElementById('daily-preview').textContent=document.getElementById('daily-preview').textContent.replace(/Meta atual: \d+/,`Meta vigente: ${p.dailyGoal} • Jornada: ${p.workHours}h`);};
 window.addEventListener('load',()=>{ensurePolicies();saveData();const group=document.createElement('div');group.className='form-group policy-group';group.innerHTML='<label for="policy-from">Vigência da meta e jornada</label><input id="policy-from" type="date" required><span class="form-hint">Alterações valem a partir desta data. O histórico anterior é preservado.</span>';document.querySelector('.setup-modal-actions').before(group);document.getElementById('policy-from').value=getTodayStr();renderAll();});
 </script>
 <style>.policy-group{display:none}.profile-edit .policy-group{display:block}.profile-edit .setup-content{padding:24px!important}.profile-edit .setup-content .form-group{margin-bottom:8px}.profile-edit .setup-section-title{margin:10px 0!important}.stat-card[role=button]{cursor:pointer}.stat-card[role=button]:hover{border-color:var(--brand-primary)!important}</style>
 
 <script>
-function evolutionChart(records,mode){const wrap=document.createElement('div');if(!records?.length){wrap.textContent='Sem registros diários disponíveis. Importe um fechamento gerado pela versão atual da aplicação do analista.';return wrap}const sorted=[...records].filter(e=>!e.isHoliday).sort((a,b)=>a.date.localeCompare(b.date));if(!sorted.length){wrap.textContent='Sem dias trabalhados neste período.';return wrap}let cumulative=0;const values=sorted.map(e=>mode==='balance'?(cumulative+=Number(e.received)-Number(e.completed)):Number(e.completed));const goals=sorted.map(e=>Number(e.metaDiaria)||0);const max=Math.max(1,...values,...(mode==='production'?goals:[]));const min=Math.min(0,...values);const x=i=>40+i*520/Math.max(1,values.length-1),y=v=>150-(v-min)/(max-min)*125;const ns='http://www.w3.org/2000/svg';const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 590 190');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('role','img');svg.setAttribute('aria-label',mode==='balance'?'Saldo acumulado dos registros disponíveis':'Produção diária e meta vigente');svg.style.cssText='width:100%;height:100%;min-height:110px;max-height:280px';const line=(vals,color,dash)=>{const el=document.createElementNS(ns,'polyline');el.setAttribute('points',vals.map((v,i)=>x(i)+','+y(v)).join(' '));el.setAttribute('fill','none');el.setAttribute('stroke',color);el.setAttribute('stroke-width','2.5');if(dash)el.setAttribute('stroke-dasharray','6 4');svg.append(el)};for(let i=0;i<=4;i++){const val=min+(max-min)*i/4;const l=document.createElementNS(ns,'line');Object.entries({x1:40,x2:560,y1:y(val),y2:y(val),stroke:'var(--border-color)'}).forEach(([k,v])=>l.setAttribute(k,v));svg.append(l);const t=document.createElementNS(ns,'text');t.setAttribute('x',2);t.setAttribute('y',y(val)+4);t.setAttribute('fill','var(--text-light)');t.setAttribute('font-size',10);t.textContent=Math.round(val);svg.append(t)}line(values,'#e71951');if(mode==='production')line(goals,'#c78f17',true);values.forEach((v,i)=>{const dot=document.createElementNS(ns,'circle');Object.entries({cx:x(i),cy:y(v),r:3,fill:'#e71951'}).forEach(([k,v])=>dot.setAttribute(k,v));const title=document.createElementNS(ns,'title');title.textContent=sorted[i].date+': '+v+(mode==='production'?' • Meta '+goals[i]:'');dot.append(title);svg.append(dot);if(i===0||i===values.length-1||i%Math.max(1,Math.ceil(values.length/7))===0){const t=document.createElementNS(ns,'text');t.setAttribute('x',x(i));t.setAttribute('y',171);t.setAttribute('text-anchor','middle');t.setAttribute('fill','var(--text-light)');t.setAttribute('font-size',10);t.textContent=sorted[i].date.slice(8)+'/'+sorted[i].date.slice(5,7);svg.append(t)}});wrap.append(svg);return wrap}
-function openQuickGuide(){const management=typeof teamData!=='undefined';productDialog('Guia rápido',management?'1. Importe os fechamentos JSON e confira a prévia antes de confirmar.\n\n2. Escolha área e mês. Compare por volume, protocolos/hora ou cumprimento da meta.\n\n3. Clique nos indicadores ou em um analista para consultar os dados que compõem os resultados.\n\n4. Consulte ocorrências no calendário ou na lista. A evolução diária exige um fechamento da versão atual.\n\n5. Use Imprimir / PDF para compartilhar a visão atual. Os dados ficam neste navegador.':'1. No Controle Diário, selecione uma data e registre recebidos, realizados ou ausência.\n\n2. Registre no Diário de Ocorrências os eventos que afetaram a produção.\n\n3. No painel, alterne Volume, Produção/meta e Saldo acumulado. Clique nos indicadores para consultar os registros.\n\n4. Em Perfil e metas, informe a data de vigência das alterações. Datas anteriores continuam usando os parâmetros anteriores. Dados anteriores à atualização usam a configuração que estava salva.\n\n5. Em Fechamento Mensal, revise e exporte o arquivo JSON para a liderança. Salve também um backup completo nas Configurações.\n\nStatus: Parcial = recebidos abaixo da meta; Atingida = recebidos e realizados atingiram a meta; Não atingida = recebidos atingiram a meta, mas realizados não.');}
+function openQuickGuide(){const management=typeof teamData!=='undefined';productDialog('Guia rápido',management?'1. Importe os fechamentos JSON e confira a prévia antes de confirmar.\n\n2. Escolha área e mês. Compare por volume, protocolos/hora ou cumprimento da meta.\n\n3. Clique nos indicadores ou em um analista para consultar os dados que compõem os resultados.\n\n4. Consulte ocorrências no calendário ou na lista. A evolução diária exige um fechamento da versão atual.\n\n5. Use Imprimir / PDF para compartilhar a visão atual. Os dados ficam neste navegador.':'1. No Controle Diário, selecione uma data, informe as horas trabalhadas e registre a produção ou uma ausência. Sábados e domingos ficam disponíveis para lançar horas extras.\n\n2. Para PROCON CADASTRO, conclua cada registro no Leitor Procon; a contagem do dia é atualizada automaticamente nessa tela.\n\n3. Registre no Diário de Ocorrências a classificação, o período e o detalhamento do evento.\n\n4. O resumo mensal compara as horas trabalhadas com as horas previstas até hoje; em competências encerradas, considera o mês completo.\n\n5. Em Fechamento Mensal, revise e exporte o arquivo JSON. Para PROCON CADASTRO, o arquivo compartilha os totais agregados de protocolos realizados, dias com meta atingida e conversão. Os dados de clientes, documentos e quantidades diárias não são exportados.');}
 window.addEventListener('load',()=>{const b=document.createElement('button');b.textContent='Guia rápido';b.className='guide-trigger';b.onclick=openQuickGuide;document.querySelector('.sidebar-footer,.sidebar-bottom').prepend(b)});
 </script>
-<style>.guide-trigger{background:transparent;border:0;color:inherit;padding:8px 0;font-size:12px;cursor:pointer}.evolution-modes{display:flex;gap:6px;margin:4px 0 8px;flex-wrap:wrap}.evolution-modes button{font-size:11px;padding:5px 9px;min-height:26px;border:1px solid var(--border-color);border-radius:7px;background:var(--card-bg);color:var(--text-light);cursor:pointer}.evolution-modes button.active{color:var(--brand-primary);border-color:var(--brand-primary)}.evolution-legend{font-size:10px;color:var(--text-light);margin-top:3px}.line-evolution{height:100%;min-height:0}.line-evolution>div{height:100%}</style>
-
-<script>
-let evolutionMode='volume';const evolvingRender=renderChart;renderChart=function(y,m){evolvingRender(y,m);const chart=document.getElementById('dash-chart');let controls=document.getElementById('evolution-modes');if(!controls){controls=document.createElement('div');controls.id='evolution-modes';controls.className='evolution-modes';chart.before(controls)}controls.replaceChildren();[['volume','Volume'],['production','Produção / meta'],['balance','Saldo acumulado']].forEach(([id,label])=>{const b=document.createElement('button');b.textContent=label;b.classList.toggle('active',evolutionMode===id);b.onclick=()=>{evolutionMode=id;renderChart(y,m)};controls.append(b)});chart.classList.toggle('line-evolution',evolutionMode!=='volume');if(evolutionMode!=='volume'){const entries=getMonthlyStats(y,m).entries.map(e=>({...e,metaDiaria:policyAt(e.date).dailyGoal}));chart.replaceChildren(evolutionChart(entries,evolutionMode));}let legend=document.getElementById('evolution-legend');if(!legend){legend=document.createElement('div');legend.id='evolution-legend';legend.className='evolution-legend';chart.after(legend)}legend.textContent=evolutionMode==='production'?'Rosa: realizados • Tracejado: meta vigente • Apenas dias registrados':evolutionMode==='balance'?'Acumulado de recebidos − realizados nos registros do mês; início em zero.':'';};
-window.addEventListener('load',()=>{const search=document.querySelector('main > .product-toolbar');if(search){search.classList.add('dashboard-search');const trigger=document.createElement('button');trigger.className='guide-trigger';trigger.textContent='Buscar registros';trigger.onclick=()=>{const content=document.createElement('div');content.append(search);productDialog('Buscar registros',content).then(()=>{document.querySelector('main').append(search);search.hidden=true});search.hidden=false};document.querySelector('.sidebar-bottom').prepend(trigger);search.hidden=true;}renderAll();});
-</script>
-<style>.dashboard-search[hidden]{display:none!important}@media(min-width:1100px) and (min-height:700px){#view-dashboard{display:none}#view-dashboard.active{display:flex;flex-direction:column;min-height:0}#view-dashboard .dashboard-heading{min-height:50px;margin-bottom:8px!important}#view-dashboard .product-comparison{margin-bottom:7px;font-size:11px}#view-dashboard #dash-indicators{margin-bottom:9px}#view-dashboard .stat-card{min-height:78px!important;padding-top:10px;padding-bottom:10px}#view-dashboard .stat-value{font-size:25px}#view-dashboard .metrics-strip{margin-bottom:8px;min-height:55px;padding:7px 0}#view-dashboard .pending-alert{min-height:43px;margin-bottom:8px;padding:6px 12px}#view-dashboard>.flex-row{margin-bottom:8px}#view-dashboard .chart-container{height:110px;min-height:100px;padding-top:18px}#view-dashboard .chart-container.line-evolution{padding-top:0;background:none}#view-dashboard .evolution-modes{margin:0 0 3px}#view-dashboard .dashboard-profile-card{padding:12px}#view-dashboard .profile-summary-grid{gap:4px;padding:4px 0}#view-dashboard .profile-summary-avatar{width:34px;height:34px;flex-basis:34px}#view-dashboard #dash-7days-list .recent-item{padding:9px;min-height:49px}#view-dashboard>.card:last-child{padding:9px 13px}#view-dashboard .profile-summary{padding-bottom:4px}}</style>
-<script>saveSettings=function(){openProfileSettings();};window.addEventListener('load',()=>{const b=document.createElement('button');b.type='button';b.className='secondary';b.textContent='Consultar vigências';b.onclick=()=>{const list=document.createElement('ul');[...appData.settings.policyHistory].sort((a,b)=>a.from.localeCompare(b.from)).forEach(p=>{const li=document.createElement('li');li.textContent=(p.from==='0001-01-01'?'Configuração inicial preservada':formatDateBR(p.from))+` • Meta ${p.dailyGoal} • Jornada ${p.workHours}h`;list.append(li)});productDialog('Histórico de metas e jornadas',list)};document.querySelector('.policy-group').append(b)});</script><script>
-const framedChart=renderChart;renderChart=function(y,m){framedChart(y,m);const chart=document.getElementById('dash-chart');const card=chart.closest('.card');const heading=card.querySelector('h3');if(!heading.dataset.volumeTitle)heading.dataset.volumeTitle=heading.innerHTML;heading.innerHTML=evolutionMode==='volume'?heading.dataset.volumeTitle:evolutionMode==='production'?'Produção e meta vigente':'Saldo acumulado no mês';const legend=card.querySelector('.chart-legend');if(legend)legend.style.setProperty('display',evolutionMode==='volume'?'flex':'none','important');const note=document.getElementById('evolution-legend');if(note)note.textContent=evolutionMode==='production'?'Linha rosa: realizados • Linha tracejada: meta vigente • Dias registrados':evolutionMode==='balance'?'Linha rosa: saldo acumulado (recebidos − realizados), a partir de zero.':'';};
-window.addEventListener('load',()=>renderChart(currentDate.getFullYear(),String(currentDate.getMonth()+1).padStart(2,'0')));
-</script>
-<script>
-// Motion follows each new chart instance, without changing values or chart geometry.
-const motionEvolutionChart=evolutionChart;
-evolutionChart=function(records,mode){
- const wrap=motionEvolutionChart(records,mode);
- if(matchMedia('(prefers-reduced-motion: reduce)').matches||document.body.classList.contains('motion-off'))return wrap;
- requestAnimationFrame(()=>{
-  if(!wrap.isConnected)return;
-  const paths=[...wrap.querySelectorAll('polyline')];
-  paths.forEach((line,i)=>{
-   // A clipping reveal preserves the goal line's dashed appearance.
-   line.animate([{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)'}],{duration:950,delay:i*100,easing:'cubic-bezier(.22,.61,.36,1)',fill:'backwards'});
-  });
-  const dots=[...wrap.querySelectorAll('circle')];dots.forEach((dot,i)=>dot.animate([{opacity:0},{opacity:1}],{duration:280,delay:150+i/Math.max(1,dots.length-1)*700,easing:'ease-out',fill:'backwards'}));
-  wrap.querySelector('.evolution-legend')?.animate([{opacity:0},{opacity:1}],{duration:350,delay:200,fill:'backwards'});
- });
- return wrap;
-};
-</script>
-<style id="profile-balanced-layout">
+<style>.guide-trigger{background:transparent;border:0;color:inherit;padding:8px 0;font-size:12px;cursor:pointer}</style>
+<style>@media(min-width:1100px) and (min-height:700px){#view-dashboard{display:none}#view-dashboard.active{display:flex;flex-direction:column;min-height:0}#view-dashboard .dashboard-heading{min-height:50px;margin-bottom:8px!important}#view-dashboard .product-comparison{margin-bottom:7px;font-size:11px}#view-dashboard #dash-indicators{margin-bottom:9px}#view-dashboard .stat-card{min-height:78px!important;padding-top:10px;padding-bottom:10px}#view-dashboard .stat-value{font-size:25px}#view-dashboard .metrics-strip{margin-bottom:8px;min-height:55px;padding:7px 0}#view-dashboard .pending-alert{min-height:43px;margin-bottom:8px;padding:6px 12px}#view-dashboard>.flex-row{margin-bottom:8px}#view-dashboard .chart-container{height:110px;min-height:100px;padding-top:18px}#view-dashboard .dashboard-profile-card{padding:12px}#view-dashboard .profile-summary-grid{gap:4px;padding:4px 0}#view-dashboard .profile-summary-avatar{width:34px;height:34px;flex-basis:34px}#view-dashboard #dash-7days-list .recent-item{padding:9px;min-height:49px}#view-dashboard>.card:last-child{padding:9px 13px}#view-dashboard .profile-summary{padding-bottom:4px}}</style>
+<script>saveSettings=function(){openProfileSettings();};window.addEventListener('load',()=>{const b=document.createElement('button');b.type='button';b.className='secondary';b.textContent='Consultar vigências';b.onclick=()=>{const list=document.createElement('ul');[...appData.settings.policyHistory].sort((a,b)=>a.from.localeCompare(b.from)).forEach(p=>{const li=document.createElement('li');li.textContent=(p.from==='0001-01-01'?'Configuração inicial preservada':formatDateBR(p.from))+` • Meta ${p.dailyGoal} • Jornada ${p.workHours}h`;list.append(li)});productDialog('Histórico de metas e jornadas',list)};document.querySelector('.policy-group').append(b)});</script><style id="profile-balanced-layout">
 @media screen and (min-width:1100px) and (min-height:700px){
 #view-dashboard .dashboard-profile-card{container-type:size}
 #view-dashboard .dashboard-profile-card h3{margin-bottom:clamp(8px,3cqh,16px);flex:0 0 auto}
@@ -2344,7 +2489,7 @@ evolutionChart=function(records,mode){
    const actions=make('div','procon-result-actions'),completion=make('button',result.done?'secondary':'procon-complete-button',result.done?'Reabrir cadastro':'Marcar cadastro concluído');completion.type='button';completion.dataset.toggleDone=String(index);actions.append(completion);card.append(actions);host.append(card);
   });
   host.querySelectorAll('[data-copy-key]').forEach(button=>button.addEventListener('click',()=>copyField(Number(button.dataset.copyIndex),button.dataset.copyKey)));
-  host.querySelectorAll('[data-toggle-done]').forEach(button=>button.addEventListener('click',()=>{const item=state.results[Number(button.dataset.toggleDone)];if(item){item.done=!item.done;renderResults()}}));
+  host.querySelectorAll('[data-toggle-done]').forEach(button=>button.addEventListener('click',()=>{const item=state.results[Number(button.dataset.toggleDone)];if(!item||!isProconCadastro())return;if(item.done){if(item.completionDate)changeProconDailyCount(item.completionDate,-1);item.done=false;item.completionDate=null}else{item.completionDate=getTodayStr();changeProconDailyCount(item.completionDate,1);item.done=true}renderAll();renderResults()}));
  }
  async function copyText(text){try{await navigator.clipboard.writeText(text)}catch{const area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.opacity='0';document.body.append(area);area.select();document.execCommand('copy');area.remove()}}
  async function copyField(index,key){const item=state.results[index];if(!item||!item.values[key])return;const value=key==='tracking'?item.values[key].replace(/\D/g,''):key==='cpf'?item.values[key].replace(/\D/g,''):item.values[key];await copyText(value);productToast(fields.find(([k])=>k===key)[1]+' copiado.')}
@@ -2355,12 +2500,390 @@ evolutionChart=function(records,mode){
   const view=make('section','view');view.id='view-procon';view.innerHTML=`<div class="procon-heading"><div class="procon-heading-copy"><div class="page-breadcrumb">Meu espaço <span>/</span> Procon</div><h2>Leitor de reclamações</h2><p>Selecione PDFs ou ZIPs para extrair os campos principais e os demais dados do formulário.</p></div><div class="procon-heading-actions"><button id="procon-pick" type="button">Selecionar PDFs ou ZIPs</button><button id="procon-clear" class="secondary" type="button">Limpar resultados</button></div></div><input id="procon-input" type="file" accept=".pdf,.zip,application/pdf,application/zip" multiple hidden><div class="procon-progress" id="procon-progress"><div id="procon-progress-label" role="status">Preparando…</div><div class="procon-progress-track"><div class="procon-progress-bar" id="procon-progress-bar"></div></div></div><div class="procon-alert" id="procon-alert" role="alert"></div><div class="procon-results" id="procon-results"></div>`;document.querySelector('main').append(view);
   $('#procon-pick').onclick=()=>$('#procon-input').click();$('#procon-clear').onclick=reset;$('#procon-input').onchange=e=>handleFiles(e.target.files);renderResults();
  }
- function syncAccess(){const tab=$('#procon-tab');if(!tab)return;const allowed=appData?.settings?.area==='PROCON';tab.hidden=!allowed;if(!allowed&&$('#view-procon')?.classList.contains('active'))window.switchTab('dashboard')}
+ function syncAccess(){const tab=$('#procon-tab');if(!tab)return;const allowed=isProconCadastro();tab.hidden=!allowed;if(!allowed&&$('#view-procon')?.classList.contains('active'))window.switchTab('dashboard')}
  buildView();
- const baseSwitch=window.switchTab;window.switchTab=function(tabId){if(tabId==='procon'&&appData?.settings?.area!=='PROCON'){productToast('O Leitor Procon fica disponível apenas para perfis configurados na área PROCON.');return}return baseSwitch.apply(this,arguments)};
+ const baseSwitch=window.switchTab;window.switchTab=function(tabId){if(tabId==='procon'&&!isProconCadastro()){productToast('O Leitor Procon fica disponível apenas para perfis configurados em PROCON CADASTRO.');return}return baseSwitch.apply(this,arguments)};
  const baseArea=window.updateAreaUI;window.updateAreaUI=function(){const result=baseArea.apply(this,arguments);syncAccess();return result};
  window.addEventListener('load',syncAccess);
 })();
+</script>
+
+<script>
+// Melhorias de indicadores, acessibilidade e autoatendimento.
+function productHelp(){
+ const explain=(raw)=>{const t=raw.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  if(t.includes('meta semanal'))return 'Meta diária vigente multiplicada por cinco dias úteis. Para cada competência, considera a meta ativa no último dia do mês selecionado.';
+  if(t.includes('meta mensal'))return 'Soma da meta diária vigente em cada dia útil da competência selecionada. A meta considera mudanças de meta registradas por vigência.';
+  if(t.includes('media diaria'))return 'Protocolos realizados divididos pelos dias com produção no período selecionado.';
+  if(t.includes('media horaria'))return 'Protocolos realizados divididos pelo total de horas trabalhadas no período.';
+  if(t.includes('meta horaria'))return 'Meta diária vigente dividida pela jornada diária configurada no perfil.';
+  if(t.includes('recebido')||t.includes('recebidos'))return 'Soma dos protocolos recebidos nos registros do período selecionado.';
+  if(t.includes('realizado')||t.includes('realizados')||t.includes('concluido')||t.includes('cadastros concluidos'))return 'Quantidade de protocolos efetivamente realizados no período.';
+  if(t.includes('meta diaria cumprida')||t.includes('dias com meta atingida')||t.includes('convers'))return 'Percentual de dias trabalhados em que a meta diária vigente foi atingida. O cálculo considera somente dados disponíveis no período.';
+  if(t.includes('dias com producao'))return 'Quantidade de dias em que houve produção registrada no período selecionado.';
+  if(t.includes('dias trabalhados'))return 'Quantidade de dias de trabalho informados no fechamento importado para esta competência.';
+  if(t.includes('horas trabalhadas'))return 'Soma das horas registradas no Controle Diário no período selecionado. Horas extras de fim de semana entram no total realizado.';
+  if(t.includes('saldo')||t.includes('pendente'))return 'Protocolos recebidos menos protocolos realizados no período selecionado.';
+  if(t.includes('ocorrencia'))return 'Quantidade de ocorrências registradas durante a competência selecionada.';
+  return 'Este indicador resume os registros disponíveis no período selecionado. Selecione o card para consultar os dados que o compõem.';
+ };
+ document.querySelectorAll('.stat-title,.metric-cell>span').forEach(el=>{if(el.querySelector('.metric-help'))return;const title=el.textContent.trim(),b=document.createElement('button');b.type='button';b.className='metric-help';b.textContent='?';b.setAttribute('aria-label','Entender o indicador: '+title);b.title='Como este indicador é calculado';b.onclick=e=>{e.stopPropagation();productDialog('Como este indicador é calculado',explain(title))};el.append(b)});
+}
+
+const accessibilityPreferencesBase=productPreferences;
+const productFontBaselines=new WeakMap();
+let productFontScale=1;
+function productFontElements(root=document.body){
+ if(!(root instanceof HTMLElement))return [];
+ return [root,...root.querySelectorAll('*')].filter(element=>element instanceof HTMLElement&&element.tagName!=='SCRIPT'&&element.tagName!=='STYLE');
+}
+function applyProductFontScale(value,root=document.body){
+ productFontScale=Math.max(.85,Math.min(1.25,Number(value)||1));
+ const elements=productFontElements(root);
+ elements.forEach(element=>{
+  if(productFontBaselines.has(element))return;
+  const current=parseFloat(getComputedStyle(element).fontSize)||16,parent=element.parentElement,parentBase=parent&&productFontBaselines.get(parent),parentCurrent=parent?parseFloat(getComputedStyle(parent).fontSize):NaN;
+  const inheritsParent=Boolean(parentBase)&&Number.isFinite(parentCurrent)&&Math.abs(current-parentCurrent)<.1;
+  productFontBaselines.set(element,{size:inheritsParent?parentBase.size:current,inline:element.style.getPropertyValue('font-size'),priority:element.style.getPropertyPriority('font-size')});
+ });
+ elements.forEach(element=>{
+  const baseline=productFontBaselines.get(element);
+  if(productFontScale===1){if(baseline.inline)element.style.setProperty('font-size',baseline.inline,baseline.priority);else element.style.removeProperty('font-size')}
+  else element.style.setProperty('font-size',`${baseline.size*productFontScale}px`);
+ });
+}
+productPreferences=function(){
+ accessibilityPreferencesBase();
+ const key=productStorePrefix+'FontScale',stored=Number(localStorage.getItem(key)),initial=Number.isFinite(stored)&&stored>=.85&&stored<=1.25?stored:1;
+ const apply=value=>{const scale=Math.max(.85,Math.min(1.25,Number(value)||1));document.body.style.removeProperty('zoom');applyProductFontScale(scale);localStorage.setItem(key,String(scale));const range=document.getElementById('font-scale-range'),output=document.getElementById('font-scale-value');if(range){range.value=String(Math.round(scale*100));range.style.setProperty('--range-progress',`${Math.max(0,Math.min(100,((scale-.85)/.4)*100))}%`)}if(output)output.textContent=Math.round(scale*100)+'%'};
+ if(!window.productFontObserver){window.productFontObserver=new MutationObserver(records=>records.forEach(record=>record.addedNodes.forEach(node=>{if(node instanceof HTMLElement)applyProductFontScale(productFontScale,node)})));window.productFontObserver.observe(document.body,{childList:true,subtree:true})}
+ apply(initial);
+ const host=document.querySelector('#management-settings,#settings-dialog');
+ if(host&&!host.querySelector('.accessibility-font-control')){const box=document.createElement('section');box.className='accessibility-font-control';box.setAttribute('aria-labelledby','font-scale-title');box.innerHTML='<strong id="font-scale-title">Tamanho da fonte</strong><p>Ajuste o tamanho tipográfico da aplicação entre 85% e 125%.</p><div><label for="font-scale-range">Tamanho: <output id="font-scale-value">100%</output></label><input id="font-scale-range" type="range" min="85" max="125" step="5" value="100" aria-describedby="font-scale-title"><button type="button" class="secondary" id="font-scale-reset">Restaurar 100%</button></div>';host.append(box);const range=box.querySelector('#font-scale-range');range.oninput=()=>apply(Number(range.value)/100);box.querySelector('#font-scale-reset').onclick=()=>apply(1);apply(initial)}
+};
+
+function updateDashboardBackupStatus(){
+ const dashboard=document.getElementById('view-dashboard'),heading=dashboard?.querySelector('.dashboard-heading');if(!heading)return;
+ let box=document.getElementById('dashboard-backup-status');if(!box){box=document.createElement('div');box.id='dashboard-backup-status';box.className='dashboard-backup-status';box.setAttribute('role','status');box.setAttribute('aria-live','polite');heading.after(box)}
+ const last=Number(appData?.settings?.lastBackup),days=Number.isFinite(last)&&last>0?(Date.now()-last)/86400000:Infinity,warning=days>7;
+ const label=last>0?'Último backup em '+new Date(last).toLocaleDateString('pt-BR'):'Nenhum backup completo foi feito';
+ box.classList.toggle('warning',warning);box.innerHTML=`<span class="backup-status-icon" aria-hidden="true">${warning?'!':'✓'}</span><span><strong>${warning?'Backup precisa ser atualizado':'Backup em dia'}</strong><small>${label}${Number.isFinite(days)?` • ${Math.floor(days)} ${Math.floor(days)===1?'dia':'dias'} atrás`:''}</small></span><button type="button" class="secondary">Fazer backup</button>`;box.querySelector('button').onclick=()=>exportData();
+}
+const backupStatusBase=checkBackupStatus;
+checkBackupStatus=function(){backupStatusBase.apply(this,arguments);updateDashboardBackupStatus()};
+const backupExportBase=exportData;
+exportData=function(){const result=backupExportBase.apply(this,arguments);checkBackupStatus();return result};
+
+const dashboardMetricsBase=renderDashboard;
+renderDashboard=function(year,monthStr){
+ dashboardMetricsBase.apply(this,arguments);
+ const lastDay=new Date(Number(year),Number(monthStr),0).getDate(),lastDate=`${year}-${String(monthStr).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
+ const weeklyGoal=Math.round((Number(policyAt(lastDate).dailyGoal)||0)*5),monthlyGoal=Math.round(monthTarget(year,monthStr));
+ const stats=getMonthlyStats(year,monthStr).stats,avgDay=stats.daysWorked?(stats.totComp/stats.daysWorked).toFixed(1):'0',hours=monthHours(year,monthStr),avgHour=hours?(stats.totComp/hours).toFixed(1):'0';
+ const metrics=document.getElementById('dash-metrics-strip');
+ if(metrics)metrics.innerHTML=`<div class="metric-cell"><span>Média diária</span><strong>${avgDay}</strong></div><div class="metric-cell"><span>Média horária</span><strong>${avgHour}</strong></div><div class="metric-cell"><span>Meta horária base</span><strong>${(Number(policyAt(lastDate).dailyGoal||0)/Math.max(1,Number(policyAt(lastDate).workHours)||1)).toFixed(1)}</strong></div><div class="metric-cell"><span>Meta semanal</span><strong>${weeklyGoal}</strong></div><div class="metric-cell"><span>Meta mensal</span><strong>${monthlyGoal}</strong></div>`;
+ if(metrics){const icons=['chart','clock','target','file','trend'],descriptions=['Média de produção por dia','Média de produção por hora','Objetivo de produção por hora','Meta para cinco dias úteis','Meta acumulada nos dias úteis do mês'];metrics.querySelectorAll('.metric-cell').forEach((cell,index)=>{if(!cell.querySelector('svg'))cell.insertAdjacentHTML('afterbegin',uiIcon(icons[index]));let caption=cell.querySelector('.metric-caption');if(!caption){caption=document.createElement('small');caption.className='metric-caption';cell.append(caption)}caption.textContent=descriptions[index]})}
+ const statsGrid=document.getElementById('dash-indicators');if(statsGrid){[...statsGrid.querySelectorAll('.stat-card')].find(card=>/convers[aã]o de meta/i.test(card.querySelector('.stat-title')?.textContent||''))?.remove();const specialProduction=isProconCadastro()||isProconMinuta();statsGrid.classList.toggle('dashboard-procon-metrics',specialProduction);statsGrid.classList.toggle('dashboard-standard-metrics',!specialProduction)}
+ // Esconde também o divisor visual “Parcial” somente para PROCON CADASTRO.
+ document.querySelectorAll('.calendar-legend .legend-item').forEach(item=>{const partial=item.textContent.toLocaleLowerCase('pt-BR').includes('parcial');item.hidden=isProconCadastro()&&partial});
+ productHelp();updateDashboardBackupStatus();
+};
+
+function updateMinutaDailyTotal(){const fields=['ent-fila','ent-minutas','ent-fechamentos'].map(id=>Number(document.getElementById(id)?.value)||0),total=fields.reduce((sum,value)=>sum+value,0),date=document.getElementById('ent-date')?.value,legacy=minutaLegacyCount(appData.entries[date]||{}),output=document.getElementById('ent-minuta-total');if(output)output.textContent=`Total do dia: ${legacy+total} ${(legacy+total)===1?'atendimento':'atendimentos'}${legacy?` (inclui ${legacy} anterior(es) sem divisão por etapa)`:''}`}
+const entryControlsBase=updateEntryAreaControls;
+updateEntryAreaControls=function(){
+ entryControlsBase.apply(this,arguments);const procon=isProconCadastro(),minuta=isProconMinuta(),holiday=document.getElementById('ent-holiday')?.value==='true';
+ const floatingButton=document.getElementById('open-floating-counter');if(floatingButton)floatingButton.hidden=!minuta;
+ if(!minuta){const pipWindow=window.documentPictureInPicture?.window;if(pipWindow&&!pipWindow.closed)pipWindow.close()}
+ [['ent-received',procon],['ent-completed',procon||minuta]].forEach(([id,hidden])=>{const field=document.getElementById(id),group=field?.closest('.form-group');if(group)group.classList.toggle('procon-entry-field-hidden',hidden)});
+ const minutaRow=document.getElementById('ent-minuta-metrics');if(minutaRow)minutaRow.style.display=minuta&&!holiday?'flex':'none';
+ document.querySelectorAll('.calendar-legend .legend-item').forEach(item=>{if(item.textContent.toLocaleLowerCase('pt-BR').includes('parcial'))item.hidden=procon});
+ ['ent-fila','ent-minutas','ent-fechamentos'].forEach(id=>{const field=document.getElementById(id);if(field&&!field.dataset.totalBound){field.dataset.totalBound='true';field.addEventListener('input',updateMinutaDailyTotal)}});
+ updateMinutaDailyTotal();
+};
+const minutaToggleBase=toggleHoliday;toggleHoliday=function(){minutaToggleBase.apply(this,arguments);const row=document.getElementById('ent-minuta-metrics');if(row)row.style.display=isProconMinuta()&&document.getElementById('ent-holiday').value!=='true'?'flex':'none'};
+function normalizeEntryHeading(){const heading=document.getElementById('entry-heading-row'),title=document.getElementById('entry-form-title'),status=document.getElementById('entry-status'),button=document.getElementById('open-floating-counter'),caption=document.getElementById('entry-date-caption'),preview=document.getElementById('daily-preview');if(!heading||!title)return;if(status)heading.append(status);heading.append(title);if(button)heading.append(button);if(caption)heading.after(caption);if(preview)heading.after(preview)}
+const minutaOpenBase=openEntryForm;openEntryForm=function(date){minutaOpenBase.apply(this,arguments);normalizeEntryHeading();if(!isProconMinuta())return;const entry=appData.entries[date]||{},counts=minutaStageCounts(entry);document.getElementById('ent-fila').value=counts.fila;document.getElementById('ent-minutas').value=counts.minutasElaboradas;document.getElementById('ent-fechamentos').value=counts.fechamentos;updateMinutaDailyTotal()};
+
+function guideSection(title,paragraphs){const details=document.createElement('details');details.className='guide-section';const summary=document.createElement('summary');summary.textContent=title;details.append(summary);const content=document.createElement('div');content.className='guide-section-content';paragraphs.forEach(text=>{const p=document.createElement('p');p.textContent=text;content.append(p)});details.append(content);return details}
+function openQuickGuide(){
+ const management=typeof teamData!=='undefined',content=document.createElement('div');content.className='quick-guide-content';
+ const sections=management?[
+  ['Painel de indicadores','Importe o fechamento mensal JSON gerado pelo analista e confira nome, funcional, área e competência antes de confirmar. Um arquivo inválido, duplicado no lote ou incompatível é sinalizado antes da importação.','Use os filtros de área e mês para limitar a comparação. Os cards “?” explicam o cálculo e os cards podem abrir a composição dos números.','Para PROCON Cadastro, os fechamentos incluem totais agregados de protocolos realizados, dias com meta atingida e conversão. Dados por cliente e documentos não são enviados.'],
+  ['Ranking e análise individual','Pesquise por nome ou funcional e escolha volume realizado, protocolos por hora ou cumprimento da meta como critério do ranking. Protocolos por hora considera a jornada e os dias informados no fechamento.','Selecione uma pessoa para ver recebidos, realizados, saldo, dias trabalhados e registros disponíveis. Para PROCON Cadastro, os totais são compartilhados sem a contagem diária nem os dados dos clientes.','Fechamentos antigos marcados como privados precisam ser gerados novamente na versão atual para incluir esses totais.'],
+  ['Ocorrências','Use a competência, os filtros de analista/classificação e alterne entre calendário e lista. Selecione uma data no calendário para ver descrição, período da ocorrência e horário em que foi registrada.','A gestão só exibe ocorrências incluídas nos arquivos importados. Uma atualização do analista exige importar o novo fechamento para substituir a versão anterior.'],
+  ['Configurações e dados','Os fechamentos importados ficam armazenados neste navegador. Para atualizar a base, importe os arquivos do período; para limpar, abra Configurações e use a ação de limpeza.','A comparação entre meses depende dos fechamentos carregados e da cobertura de cada equipe. Um resultado ausente não significa produção zero quando faltam dados.']
+ ]:[
+  ['Painel de Indicadores','Os cards mostram o resumo da competência escolhida. Clique em “?” para entender o cálculo ou no card para abrir os registros que formam aquele total. Média diária divide os protocolos realizados pelos dias com produção.','Meta semanal equivale à meta diária ativa multiplicada por cinco dias úteis. Meta mensal soma a meta vigente em cada dia útil da competência. Metas registradas com uma data de vigência preservam o histórico anterior.','O aviso de backup informa quando o último backup completo foi exportado. Use “Fazer backup” e guarde o JSON em local seguro; o arquivo é salvo no seu dispositivo.'],
+  ['Controle Diário','Selecione um dia no calendário para criar ou editar o lançamento. Nos demais setores, informe protocolos recebidos e realizados; o realizado não pode exceder o recebido. Registre as horas trabalhadas, inclusive valores acima da jornada padrão quando houver hora extra.','Para PROCON CADASTRO, o Controle Diário registra a jornada e a ausência. Recebidos e cadastros concluídos não são preenchidos aqui: conclua os atendimentos no Leitor Procon. Para PROCON MINUTA, informe separadamente Fila, Elaboração de minuta e Fechamentos; o calendário e a produção diária somam as três etapas como atendimentos do dia. Fins de semana ficam disponíveis para lançar horas extras.','O resumo mensal compara as horas registradas com a carga prevista. O dia de hoje fica pendente de avaliação até ser lançado; dias sem registro podem ser revisados pelo calendário.'],
+  ['Diário de Ocorrências','Registre a classificação, a data, o horário inicial e final e um detalhamento claro do que ocorreu e como afetou a rotina. O sistema guarda automaticamente a data e hora exatas do registro.','Use busca e filtros para localizar ocorrências. Revise a competência antes do fechamento mensal. O horário final deve ser igual ou posterior ao inicial.'],
+  ['Leitor Procon','Disponível para perfil PROCON CADASTRO. Selecione PDFs ou ZIPs; quando o ZIP contém uma pasta por cliente, o painel agrupa os arquivos, escolhe a reclamação como documento principal e deixa os anexos acessíveis.','Os campos identificados, o relato, o pedido e os demais trechos do documento ficam organizados na tela para conferência. O protocolo evita importar duplicados dentro do lote.','Ao terminar um cadastro, use “Marcar cadastro concluído”: isso soma um protocolo ao Controle Diário da data de hoje. O fechamento mensal compartilha somente os totais de protocolos realizados, dias com meta atingida e conversão; dados por cliente e documentos ficam locais.'],
+  ['Fechamento Mensal','Confira os indicadores, destaques diários e ocorrências antes de exportar. O arquivo inclui as horas efetivamente trabalhadas e as horas extras calculadas por dia. Para o Leitor Procon, o JSON inclui apenas totais agregados de produção e mantém protocolos individualizados, dados de clientes e documentos fora do arquivo.','“Exportar para a liderança” gera o arquivo do mês escolhido. O “Backup Sistema” das Configurações é diferente: ele guarda a base completa local para restauração.'],
+  ['Configurações e acessibilidade','Edite nome, funcional, setor, meta e jornada. Alterações de meta ou jornada precisam de uma data de vigência; os registros anteriores continuam usando a configuração válida na época.','Em “Tamanho da fonte”, mova o controle entre 85% e 125% e use Restaurar 100% para voltar ao padrão. O ajuste altera a tipografia sem aplicar zoom à página. Para transferir a base completa para outro navegador, restaure um backup JSON.']
+ ];
+ sections.forEach(([title,...paragraphs],index)=>{const section=guideSection(title,paragraphs);section.open=index===0;content.append(section)});
+ productDialog(management?'Guia rápido da gestão':'Guia rápido da aplicação',content);
+}
+</script>
+<style>
+#dash-indicators.dashboard-standard-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:1099px){#dash-indicators.dashboard-standard-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.accessibility-font-control{border-top:1px solid var(--border-color);margin-top:18px;padding-top:16px}.accessibility-font-control>strong{display:block;margin-bottom:4px}.accessibility-font-control>p{color:var(--text-light);font-size:12px;margin:0 0 10px}.accessibility-font-control>div{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center}.accessibility-font-control label{margin:0}.accessibility-font-control input{grid-column:1/-1;width:100%;accent-color:var(--brand-primary)}.accessibility-font-control button{grid-column:1/-1;justify-self:start;min-height:34px}.dashboard-backup-status{display:flex;align-items:center;justify-content:center;gap:12px;min-height:42px;margin:-5px 0 12px;padding:6px 14px;border:1px solid #208b5945;border-radius:9px;background:#208b590d;color:var(--text-main)}.dashboard-backup-status.warning{border-color:#d29a3755;background:#d29a370e}.dashboard-backup-status>span:nth-child(2){display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.dashboard-backup-status strong{font-size:12px}.dashboard-backup-status small{font-size:11px;color:var(--text-light)}.dashboard-backup-status .backup-status-icon{width:20px;height:20px;display:grid;place-items:center;border-radius:50%;background:#208b5918;color:#208b59;font-weight:800}.dashboard-backup-status.warning .backup-status-icon{background:#d29a3720;color:#a87310}.dashboard-backup-status button{min-height:30px;padding:4px 10px;font-size:11px}.procon-entry-field-hidden{display:none!important}.minuta-total-group{flex:1 0 100%;margin-bottom:4px}.minuta-total-group .form-hint{font-size:13px;font-weight:650;color:var(--text-main)}.cal-day-count small{font-size:.6em;font-weight:600;color:var(--text-light)}.metric-help{display:inline-grid;place-items:center;vertical-align:middle}.quick-guide-content{display:grid;gap:9px}.guide-section{border:1px solid var(--border-color);border-radius:9px;background:var(--bg-color);padding:0 13px}.guide-section summary{cursor:pointer;padding:12px 0;font-weight:650;color:var(--text-main)}.guide-section-content{padding:0 0 10px}.guide-section-content p{margin:0 0 10px;font-size:13px;line-height:1.65}.guide-section-content p:last-child{margin-bottom:0}@media(max-width:700px){.dashboard-backup-status{justify-content:flex-start;flex-wrap:wrap}.dashboard-backup-status>span:nth-child(2){display:block;flex:1}.dashboard-backup-status button{margin-left:auto}.accessibility-font-control>div{grid-template-columns:1fr}}
+</style>
+
+<style>
+.accessibility-font-control input[type="range"]{-webkit-appearance:none;appearance:none;grid-column:1/-1;width:100%;height:24px;min-height:24px;padding:0;border:0;border-radius:0;background:transparent;cursor:pointer}
+.accessibility-font-control input[type="range"]::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:linear-gradient(to right,var(--brand-primary) var(--range-progress,37.5%),var(--border-color) var(--range-progress,37.5%))}
+.accessibility-font-control input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin-top:-5px;border:2px solid var(--card-bg);border-radius:50%;background:var(--brand-primary);box-shadow:0 0 0 1px var(--brand-primary)}
+.accessibility-font-control input[type="range"]::-moz-range-track{height:6px;border:0;border-radius:999px;background:var(--border-color)}
+.accessibility-font-control input[type="range"]::-moz-range-progress{height:6px;border-radius:999px;background:var(--brand-primary)}
+.accessibility-font-control input[type="range"]::-moz-range-thumb{width:12px;height:12px;border:2px solid var(--card-bg);border-radius:50%;background:var(--brand-primary);box-shadow:0 0 0 1px var(--brand-primary)}
+</style>
+
+<style>
+#entry-heading-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:12px;min-height:42px;margin-bottom:8px}
+#entry-form-title{grid-column:1;grid-row:1;margin:0;padding:0!important}
+#entry-form-container .entry-status{grid-column:2;grid-row:1;justify-self:center;float:none;margin:0}
+.floating-counter-launch{position:static;grid-column:3;grid-row:1;justify-self:end;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:8px 13px;border:1px solid var(--brand-primary);border-radius:10px;background:var(--brand-primary);color:#fff;font-size:12px;font-weight:700;letter-spacing:.01em;box-shadow:0 4px 12px rgba(204,0,51,.22);cursor:pointer;transition:transform .16s ease,filter .16s ease,box-shadow .16s ease}
+.floating-counter-launch[hidden]{display:none}
+.floating-counter-launch svg{width:17px;height:17px;flex:0 0 17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.floating-counter-launch:hover{transform:translateY(-1px);filter:brightness(.94);box-shadow:0 6px 16px rgba(204,0,51,.3)}
+.floating-counter-launch:focus-visible{outline:3px solid color-mix(in srgb,var(--brand-primary),transparent 65%);outline-offset:2px}
+.floating-counter-launch.is-open{background:var(--brand-primary);border-color:var(--brand-primary);box-shadow:0 0 0 3px rgba(204,0,51,.18),0 5px 14px rgba(204,0,51,.3)}
+.floating-counter-launch.is-open:hover{filter:brightness(.94);box-shadow:0 0 0 3px rgba(204,0,51,.22),0 7px 18px rgba(204,0,51,.34)}
+@media(max-width:700px){#entry-heading-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto;gap:8px}#entry-form-title{grid-column:1;grid-row:1}#entry-form-container .entry-status{grid-column:1/-1;grid-row:2;justify-self:center}.floating-counter-launch{grid-column:2;grid-row:1;justify-self:end}.floating-counter-launch:hover,.floating-counter-launch.is-open:hover{transform:translateY(-1px)}}
+</style>
+
+<script>
+let floatingCounterWindow = null;
+
+function setFloatingCounterButtonState(isOpen) {
+    const button = document.getElementById('open-floating-counter');
+    if (!button) return;
+    button.classList.toggle('is-open', isOpen);
+    const label = button.querySelector('.floating-counter-label');
+    if (label) label.textContent = isOpen ? 'Contador flutuante aberto' : 'Abrir contador flutuante';
+    button.setAttribute('aria-label', isOpen
+        ? 'Contador de atendimentos aberto; trazer a janela para frente'
+        : 'Abrir contador de atendimentos em uma janela flutuante');
+}
+
+function floatingCounterItems(date) {
+    if (!isProconMinuta()) return [];
+    const entry = appData.entries[date] || {};
+    const counts = minutaStageCounts(entry);
+    return [
+        { key: 'fila', label: 'Fila', value: counts.fila },
+        { key: 'minutasElaboradas', label: 'Elaboração de minuta', value: counts.minutasElaboradas },
+        { key: 'fechamentos', label: 'Fechamentos', value: counts.fechamentos }
+    ];
+}
+
+function syncFloatingCounterToEntryForm(date) {
+    if (!isProconMinuta()) return;
+    if (document.getElementById('ent-date')?.value !== date) return;
+    const entry = appData.entries[date] || {};
+    const counts = minutaStageCounts(entry);
+    document.getElementById('ent-fila').value = counts.fila;
+    document.getElementById('ent-minutas').value = counts.minutasElaboradas;
+    document.getElementById('ent-fechamentos').value = counts.fechamentos;
+    document.getElementById('ent-completed').value = dailyCompletedForDate(date, entry);
+    updateMinutaDailyTotal();
+    const preview = document.getElementById('daily-preview');
+    if (preview) {
+        const completed = dailyCompletedForDate(date, entry);
+        const hours = Number(document.getElementById('ent-hours').value) || 0;
+        const occurrenceCount = appData.logbook.filter(item => item.date === date).length;
+        const production = `${completed} atendimentos (fila ${entry.fila || 0} + elaboração ${entry.minutasElaboradas || 0} + fechamentos ${entry.fechamentos || 0})`;
+        preview.textContent = (entry.isHoliday ? 'Ausência registrada' : production) + ` • ${dailyHoursStatus(date, entry, hours)} • Meta vigente: ${policyAt(date).dailyGoal} • ${occurrenceCount} ocorrência(s)`;
+    }
+    const badge = document.getElementById('entry-status');
+    if (badge) {
+        const completed = dailyCompletedForDate(date, entry);
+        const status = entry.isHoliday || appData.entries[date] || completed > 0
+            ? getStatus({ ...entry, completed }, policyAt(date).dailyGoal)
+            : { label: 'Sem registro', color: 'bg-gray' };
+        badge.className = 'entry-status ' + status.color;
+        badge.textContent = status.label;
+    }
+}
+
+function updateFloatingCounter(date, key, delta) {
+    if (!isProconMinuta()) return { ok: false, message: 'O contador flutuante está disponível apenas para PROCON MINUTA.' };
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || ![-1, 1].includes(delta)) {
+        return { ok: false, message: 'Escolha uma data válida.' };
+    }
+    const entry = appData.entries[date] || {};
+    if (entry.isHoliday) return { ok: false, message: 'Este dia está marcado como ausência.' };
+
+    const allowed = ['fila', 'minutasElaboradas', 'fechamentos'];
+    if (!allowed.includes(key)) return { ok: false, message: 'Etapa inválida para este setor.' };
+    const counts = minutaStageCounts(entry);
+    if (counts[key] + delta < 0) return { ok: false, message: 'O contador já está em zero.' };
+    const updated = { ...entry, legacyAtendimentos: minutaLegacyCount(entry), [key]: counts[key] + delta };
+    updated.completed = minutaDailyTotal(updated);
+    appData.entries[date] = updated;
+    saveData();
+
+    renderAll();
+    syncFloatingCounterToEntryForm(date);
+    return { ok: true, message: 'Salvo no Controle Diário.' };
+}
+
+async function openFloatingCounter() {
+    if (!isProconMinuta()) {
+        const message = 'O contador flutuante está disponível apenas para PROCON MINUTA.';
+        if (typeof productToast === 'function') productToast(message); else alert(message);
+        return;
+    }
+    const api = window.documentPictureInPicture;
+    if (!window.isSecureContext || !api) {
+        const message = 'A janela flutuante requer Chrome ou Edge compatível e a versão HTTPS da aplicação.';
+        if (typeof productToast === 'function') productToast(message); else alert(message);
+        return;
+    }
+    if (api.window) {
+        floatingCounterWindow = api.window;
+        floatingCounterWindow.focus();
+        setFloatingCounterButtonState(true);
+        return;
+    }
+
+    const dateAtOpen = document.getElementById('ent-date')?.value || getTodayStr();
+    const height = 400;
+    try {
+        floatingCounterWindow = await api.requestWindow({ width: 390, height, preferInitialWindowPlacement: true, disallowReturnToOpener: false });
+    } catch (error) {
+        const message = error?.name === 'NotAllowedError'
+            ? 'O navegador bloqueou a janela. Clique novamente em “Abrir contador flutuante”.'
+            : 'Não foi possível abrir o contador flutuante neste navegador.';
+        if (typeof productToast === 'function') productToast(message); else alert(message);
+        return;
+    }
+
+    const pipDoc = floatingCounterWindow.document;
+    pipDoc.title = 'Bradesco | Contador diário';
+    pipDoc.documentElement.lang = 'pt-BR';
+    const theme = getComputedStyle(document.body);
+    const rootTheme = getComputedStyle(document.documentElement);
+    const cssVar = name => theme.getPropertyValue(name).trim() || rootTheme.getPropertyValue(name).trim();
+    const styles = pipDoc.createElement('style');
+    styles.textContent = `
+        :root{color-scheme:${document.body.classList.contains('dark-mode') ? 'dark' : 'light'};--pip-bg:${cssVar('--bg-color')};--pip-card:${cssVar('--card-bg')};--pip-text:${cssVar('--text-main')};--pip-muted:${cssVar('--text-light')};--pip-border:${cssVar('--border-color')};--pip-brand:${cssVar('--brand-primary')};--pip-font:${theme.fontFamily}}
+        *{box-sizing:border-box}body{margin:0;padding:15px;background:var(--pip-bg);color:var(--pip-text);font-family:var(--pip-font);font-size:13px}
+        .counter-widget{display:grid;gap:11px}.counter-heading{display:grid;grid-template-columns:88px minmax(0,1fr);align-items:center;gap:12px;padding:0 0 10px;border-bottom:1px solid var(--pip-border)}.counter-logo{display:block;width:84px;height:28px;object-fit:contain;object-position:left center;filter:${document.body.classList.contains('dark-mode') ? 'brightness(0) invert(1)' : 'none'}}.counter-heading h1{margin:0;font-size:16px;line-height:1.25;letter-spacing:-.02em}.counter-heading p{margin:4px 0 0;color:var(--pip-muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .counter-date{display:grid;gap:5px;color:var(--pip-muted);font-size:11px}.counter-date input{width:100%;height:36px;padding:6px 9px;border:1px solid var(--pip-border);border-radius:8px;background:var(--pip-card);color:var(--pip-text);font:inherit}
+        .counter-list{display:grid;gap:8px}.counter-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;min-height:54px;padding:8px 10px;border:1px solid var(--pip-border);border-radius:9px;background:var(--pip-card)}.counter-label{font-size:12px;font-weight:600}.counter-value{min-width:24px;text-align:center;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+        button{min-width:34px;height:34px;border:1px solid var(--pip-border);border-radius:8px;background:var(--pip-card);color:var(--pip-text);font:inherit;font-size:16px;font-weight:700;cursor:pointer}button.add{background:var(--pip-brand);border-color:var(--pip-brand);color:#fff}button:disabled{opacity:.4;cursor:not-allowed}
+        .counter-total{padding:10px 11px;border-radius:8px;background:var(--pip-card);font-size:12px;font-weight:650}.counter-feedback{min-height:16px;margin:0;color:var(--pip-muted);font-size:11px}.counter-feedback[data-error="true"]{color:var(--pip-brand)}
+    `;
+    pipDoc.head.append(styles);
+    const widget = pipDoc.createElement('main');
+    widget.className = 'counter-widget';
+    const heading = pipDoc.createElement('header');
+    heading.className = 'counter-heading';
+    const sourceLogo = document.querySelector('#sidebar-logo-slot .brand-logo');
+    const logo = pipDoc.createElement('img');
+    logo.className = 'counter-logo';
+    logo.alt = 'Bradesco';
+    if (sourceLogo?.currentSrc || sourceLogo?.src) logo.src = sourceLogo.currentSrc || sourceLogo.src;
+    if (logo.src) {
+        const favicon = pipDoc.createElement('link');
+        favicon.rel = 'icon';
+        favicon.href = logo.src;
+        pipDoc.head.append(favicon);
+    }
+    const headingCopy = pipDoc.createElement('div');
+    const title = pipDoc.createElement('h1');
+    title.textContent = 'Contador de atendimentos';
+    const sector = pipDoc.createElement('p');
+    sector.textContent = `${appData.settings.name || 'Analista'} • ${getAreaConfig().label}`;
+    headingCopy.append(title, sector);
+    if (logo.src) heading.append(logo);
+    heading.append(headingCopy);
+
+    const dateLabel = pipDoc.createElement('label');
+    dateLabel.className = 'counter-date';
+    dateLabel.textContent = 'Data do lançamento';
+    const dateInput = pipDoc.createElement('input');
+    dateInput.type = 'date';
+    dateInput.value = dateAtOpen;
+    dateInput.setAttribute('aria-label', 'Data do lançamento');
+    dateLabel.append(dateInput);
+    const counterList = pipDoc.createElement('section');
+    counterList.className = 'counter-list';
+    counterList.setAttribute('aria-label', 'Contadores do dia');
+    const total = pipDoc.createElement('div');
+    total.className = 'counter-total';
+    total.setAttribute('aria-live', 'polite');
+    const feedback = pipDoc.createElement('p');
+    feedback.className = 'counter-feedback';
+    feedback.setAttribute('aria-live', 'polite');
+    widget.append(heading, dateLabel, counterList, total, feedback);
+    pipDoc.body.replaceChildren(widget);
+
+    const draw = () => {
+        const date = dateInput.value || getTodayStr();
+        if (!dateInput.value) dateInput.value = date;
+        const entry = appData.entries[date] || {};
+        const items = floatingCounterItems(date);
+        counterList.replaceChildren();
+        items.forEach(item => {
+            const row = pipDoc.createElement('div');
+            row.className = 'counter-row';
+            const label = pipDoc.createElement('span');
+            label.className = 'counter-label';
+            label.textContent = item.label;
+            const value = pipDoc.createElement('output');
+            value.className = 'counter-value';
+            value.textContent = String(item.value);
+            const actions = pipDoc.createElement('div');
+            actions.style.display = 'flex';
+            actions.style.gap = '6px';
+            const decrement = pipDoc.createElement('button');
+            decrement.type = 'button';
+            decrement.textContent = '−';
+            decrement.setAttribute('aria-label', `Diminuir ${item.label}`);
+            decrement.disabled = item.value <= 0 || entry.isHoliday;
+            decrement.addEventListener('click', () => apply(item.key, -1));
+            const increment = pipDoc.createElement('button');
+            increment.type = 'button';
+            increment.className = 'add';
+            increment.textContent = '+';
+            increment.setAttribute('aria-label', `Adicionar ${item.label}`);
+            increment.disabled = Boolean(entry.isHoliday);
+            increment.addEventListener('click', () => apply(item.key, 1));
+            actions.append(decrement, increment);
+            row.append(label, value, actions);
+            counterList.append(row);
+        });
+        const completed = dailyCompletedForDate(date, entry);
+        total.textContent = `Total do dia: ${completed} ${completed === 1 ? 'atendimento' : 'atendimentos'}`;
+        if (entry.isHoliday) {
+            feedback.textContent = 'Dia marcado como ausência; os contadores estão bloqueados.';
+            feedback.dataset.error = 'true';
+        } else if (!feedback.textContent) {
+            feedback.textContent = 'Cada toque salva no Controle Diário.';
+        }
+    };
+    const apply = (key, delta) => {
+        const result = updateFloatingCounter(dateInput.value, key, delta);
+        feedback.textContent = result.message;
+        feedback.dataset.error = result.ok ? 'false' : 'true';
+        draw();
+    };
+    dateInput.addEventListener('change', () => {
+        feedback.textContent = '';
+        feedback.dataset.error = 'false';
+        draw();
+    });
+    floatingCounterWindow.addEventListener('pagehide', () => {
+        floatingCounterWindow = null;
+        setFloatingCounterButtonState(false);
+    }, { once: true });
+    setFloatingCounterButtonState(true);
+    draw();
+}
 </script>
 
 </body>
