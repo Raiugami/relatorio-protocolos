@@ -11,7 +11,7 @@
 ## Fluxo de trabalho
 
 1. Antes de editar, confira `git status`, branch atual e diff. Preserve alterações que já existam; nunca as descarte ou sobrescreva.
-2. Faça cada tarefa em uma branch própria, criada a partir do `main` atualizado. Não trabalhe diretamente em `main`, não faça push para `main` e não faça merge; entregue a branch/PR para revisão humana.
+2. Faça cada tarefa em uma branch própria, criada a partir do `main` atualizado. Não trabalhe diretamente em `main` e não faça push para `main`; entregue a branch/PR para revisão humana. Faça o merge do PR somente quando o dono do repositório pedir explicitamente, para aquele PR, e confirme antes que ele está sem conflitos e que as verificações do passo 5 foram feitas.
 3. Descreva mudanças com escopo pequeno. Como `index.html` concentra muitas partes da aplicação, combine um único agente como autor de alterações nesse arquivo por vez. Se houver trabalho simultâneo, peça ao outro agente que revise ou teste até o primeiro concluir, evitando conflitos e perda de mudanças.
 4. Edite os arquivos-fonte na raiz. Não trate cópias exportadas, capturas de tela ou arquivos temporários como fonte da verdade.
 5. Ao terminar, revise `git diff --check` e o diff completo. Teste no navegador a página afetada; para alterações no leitor, valide ao menos a seleção de PDF/ZIP, os dados extraídos e a visualização de anexos quando aplicável.
