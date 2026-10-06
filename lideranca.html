@@ -1454,7 +1454,7 @@ renderMacroView=function(data){
  privateAwareMacro(data);
  if(!Object.values(data).some(d=>d.resultados.contagemProconPrivada))return;
  document.querySelectorAll('#macro-stats .stat-card').forEach(card=>{
-  const show=()=>{const list=document.createElement('ul');Object.values(data).forEach(d=>{const li=document.createElement('li');li.textContent=d.resultados.contagemProconPrivada?`${d.analista.nome} • Produção do Leitor Procon não compartilhada`: `${d.analista.nome} • ${d.resultados.totalRecebidos} recebidos • ${d.resultados.totalRealizados} realizados • Saldo ${d.resultados.totalRecebidos-d.resultados.totalRealizados} • Conversão ${d.resultados.conversaoMeta}%`;list.append(li)});productDialog('Composição do indicador • '+currentCompetencia,list)};
+  const show=()=>{const list=document.createElement('ul');Object.values(data).forEach(d=>{const li=document.createElement('li');li.textContent=d.resultados.contagemProconPrivada?`${d.analista.nome} • Produção do Leitor não compartilhada`: `${d.analista.nome} • ${d.resultados.totalRecebidos} recebidos • ${d.resultados.totalRealizados} realizados • Saldo ${d.resultados.totalRecebidos-d.resultados.totalRealizados} • Conversão ${d.resultados.conversaoMeta}%`;list.append(li)});productDialog('Composição do indicador • '+currentCompetencia,list)};
   card.onclick=e=>{if(!e.target.closest('.metric-help'))show()};card.onkeydown=e=>{if(e.target===card&&e.key==='Enter')show()};
  });
 };
@@ -1463,7 +1463,7 @@ openMicroView=function(id){
  privateAwareMicro(id);
  const data=teamData[currentCompetencia]?.[id];if(!data?.resultados?.contagemProconPrivada)return;
  document.querySelectorAll('#micro-stats .stat-card').forEach(card=>{
-  const show=()=>{const list=document.createElement('ul');(data.registrosDiarios||[]).forEach(day=>{const li=document.createElement('li');li.textContent=day.isHoliday?`${day.date} • Ausência`:`${day.date} • Produção não compartilhada • ${day.horasTrabalhadas??day.jornada??'—'}h`;list.append(li)});if(!list.children.length)list.textContent='A produção do Leitor Procon não é compartilhada com a aplicação de gestão.';productDialog('Registros do período',list)};
+  const show=()=>{const list=document.createElement('ul');(data.registrosDiarios||[]).forEach(day=>{const li=document.createElement('li');li.textContent=day.isHoliday?`${day.date} • Ausência`:`${day.date} • Produção não compartilhada • ${day.horasTrabalhadas??day.jornada??'—'}h`;list.append(li)});if(!list.children.length)list.textContent='A produção do Leitor não é compartilhada com a aplicação de gestão.';productDialog('Registros do período',list)};
   card.onclick=show;card.onkeydown=e=>{if(e.target===card&&e.key==='Enter')show()};
  });
 };
@@ -1472,7 +1472,7 @@ openMicroView=function(id){
 function productHelp(){
  const selected=Object.values(teamData[currentCompetencia]||{}).filter(data=>currentArea==='TODAS'||data.area===currentArea),proconOnly=selected.length>0&&selected.every(isProconCadastroData);
  const explain=(raw)=>{const t=raw.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-  if(t.includes('recebido'))return proconOnly?'O Leitor Procon não registra protocolos recebidos; este indicador não se aplica ao PROCON Cadastro.':'Soma dos protocolos recebidos nos fechamentos importados. O PROCON Cadastro não utiliza controle de protocolos recebidos.';
+  if(t.includes('recebido'))return proconOnly?'O Leitor não registra protocolos recebidos; este indicador não se aplica ao PROCON Cadastro.':'Soma dos protocolos recebidos nos fechamentos importados. O PROCON Cadastro não utiliza controle de protocolos recebidos.';
   if(t.includes('realizado'))return 'Soma dos protocolos realizados nos fechamentos importados.';
   if(t.includes('media diaria'))return 'Protocolos realizados divididos pelos dias com produção registrados no período. A cobertura dos fechamentos pode variar entre pessoas.';
   if(t.includes('media horaria')||t.includes('protocolos por hora'))return 'Protocolos realizados divididos pelas horas trabalhadas disponíveis nos fechamentos.';
