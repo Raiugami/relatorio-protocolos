@@ -2960,5 +2960,133 @@ async function openFloatingCounter() {
 }
 </script>
 
+<style>
+.gd{margin:2px 0 12px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-color);overflow:hidden;font-size:12px;line-height:1.4;color:var(--text-main);user-select:none}
+.gd-stage{position:relative;height:200px}
+.gd-frame{position:absolute;inset:0;padding:12px 14px;opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s}
+.gd-frame.on{opacity:1;transform:none}
+.gd-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-weight:700}
+.gd-bar>span:last-child{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.gd-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:7px;background:var(--brand-primary);color:#fff;font-weight:600;font-size:11px;white-space:nowrap;transition:transform .15s}
+.gd-btn.alt{background:var(--card-bg);color:var(--text-main);border:1px solid var(--border-color)}
+.gd-card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;padding:7px 10px;min-width:0}
+.gd-grid{display:grid;gap:8px;margin-bottom:8px}
+.gd-muted{color:var(--text-light);font-size:11px}
+.gd-num{font-size:15px;font-weight:700}
+.gd-row{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--border-color)}
+.gd-row:last-child{border-bottom:0}
+.gd-ok{color:#208b59}.gd-warn{color:#b47b00}.gd-red{color:var(--brand-primary)}
+.gd-input{background:var(--card-bg);border:1px solid var(--border-color);border-radius:6px;padding:4px 8px;color:var(--text-light);margin-bottom:6px}
+.gd-cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.gd-day{border:1px solid var(--border-color);border-radius:5px;background:var(--card-bg);text-align:center;padding:3px 0;font-size:11px}
+.gd-day.g{background:#208b5922;border-color:#208b5966}.gd-day.y{background:#d39e0022;border-color:#d39e0066}.gd-day.r{background:#cc092f1f;border-color:#cc092f55}.gd-day.m:after{content:" •";color:var(--brand-primary)}
+.gd-help{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--border-color);font-size:10px;font-weight:700;margin-left:4px;color:var(--text-light)}
+.gd-hl{outline:2px solid var(--brand-primary);outline-offset:2px}
+.gd-press{transform:scale(.93)}
+.gd-cur{position:absolute;left:0;top:0;width:16px;height:16px;transition:transform .7s ease-in-out;z-index:3;pointer-events:none;opacity:0}
+.gd-cur.on{opacity:1}
+.gd-ring{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border:2px solid var(--brand-primary);border-radius:50%;opacity:0;pointer-events:none}
+.gd-ring.go{animation:gdRing .5s ease-out}
+@keyframes gdRing{from{opacity:1;transform:scale(.3)}to{opacity:0;transform:scale(1.4)}}
+.gd-foot{display:flex;align-items:center;gap:10px;padding:7px 12px;border-top:1px solid var(--border-color);background:var(--card-bg)}
+.gd-cap{flex:1;font-size:12px;font-weight:600;min-height:16px}
+.gd-dots{display:flex;gap:4px}.gd-dots i{width:14px;height:3px;border-radius:2px;background:var(--border-color)}.gd-dots i.on{background:var(--brand-primary)}
+.gd-ctl{border:1px solid var(--border-color);background:transparent;color:var(--text-main);border-radius:6px;font-size:11px;padding:3px 8px;cursor:pointer;min-height:0}
+@media(prefers-reduced-motion:reduce){.gd-frame,.gd-cur{transition:none}.gd-cur,.gd-ring{display:none}}
+</style>
+<script>
+// Guia rápido animado: cada item do guia ganha uma demonstração em código (sem vídeo), com as cores do tema ativo.
+(()=>{
+ 'use strict';
+ const B=(t,k,alt)=>`<span class="gd-btn${alt?' alt':''}"${k?` data-k="${k}"`:''}>${t}</span>`;
+ const C=(label,value,k)=>`<div class="gd-card"${k?` data-k="${k}"`:''}><div class="gd-muted">${label}</div><div class="gd-num">${value}</div></div>`;
+ const R=(a,b='',cls='',k)=>`<div class="gd-row"${k?` data-k="${k}"`:''}><span>${a}</span><span class="${cls}">${b}</span></div>`;
+ const K=(inner,k,style='')=>`<div class="gd-card"${k?` data-k="${k}"`:''}${style?` style="${style}"`:''}>${inner}</div>`;
+ const G=(cols,inner)=>`<div class="gd-grid" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${inner}</div>`;
+ const BAR=(title,right='')=>`<div class="gd-bar"><span>${title}</span><span>${right}</span></div>`;
+ const CAL=(marks={},k)=>`<div class="gd-cal">${Array.from({length:21},(_,i)=>{const d=i+1,c=marks[d]||'';return `<span class="gd-day ${c}"${k&&k[0]===d?` data-k="${k[1]}"`:''}>${d}</span>`}).join('')}</div>`;
+ window.guideDemoParts={B,C,R,K,G,BAR,CAL};
+ function guideDemo(frames){
+  const root=document.createElement('div');root.className='gd';root.setAttribute('role','img');
+  root.setAttribute('aria-label','Demonstração: '+frames.map((f,i)=>`${i+1}. ${f.cap}`).join(' '));
+  root.innerHTML=`<div class="gd-stage">${frames.map(f=>`<div class="gd-frame" aria-hidden="true">${f.html}</div>`).join('')}<svg class="gd-cur" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l7 19 2.5-7.5L20 11z" fill="var(--text-main)" stroke="var(--card-bg)" stroke-width="1.5"/></svg><div class="gd-ring"></div></div><div class="gd-foot"><span class="gd-cap" aria-hidden="true"></span><span class="gd-dots" aria-hidden="true">${frames.map(()=>'<i></i>').join('')}</span><button type="button" class="gd-ctl"></button></div>`;
+  const stage=root.querySelector('.gd-stage'),fr=[...root.querySelectorAll('.gd-frame')],cur=root.querySelector('.gd-cur'),ring=root.querySelector('.gd-ring'),cap=root.querySelector('.gd-cap'),dots=[...root.querySelectorAll('.gd-dots i')],ctl=root.querySelector('.gd-ctl');
+  const reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let index=0,timers=[],playing=false;
+  const later=(ms,fn)=>timers.push(setTimeout(fn,ms));
+  const clear=()=>{timers.forEach(clearTimeout);timers=[];root.querySelectorAll('.gd-hl').forEach(el=>el.classList.remove('gd-hl'))};
+  const point=el=>{const s=stage.getBoundingClientRect(),r=el.getBoundingClientRect();return [r.left-s.left+r.width/2,r.top-s.top+r.height/2]};
+  const show=n=>{fr.forEach((f,i)=>f.classList.toggle('on',i===n));dots.forEach((d,i)=>d.classList.toggle('on',i===n));cap.textContent=`${n+1}. ${frames[n].cap}`};
+  const label=()=>{ctl.textContent=reduced?'Próximo passo':playing?'Pausar':'Reproduzir'};
+  const step=()=>{
+   clear();if(!root.isConnected){playing=false;return}
+   const frame=frames[index],target=frame.k&&fr[index].querySelector(`[data-k="${frame.k}"]`);show(index);
+   if(target&&!reduced){
+    later(250,()=>{target.classList.add('gd-hl');const [x,y]=point(target);cur.classList.add('on');cur.style.transform=`translate(${x-3}px,${y-2}px)`});
+    if(frame.click!==false)later(1300,()=>{const [x,y]=point(target);ring.style.left=x+'px';ring.style.top=y+'px';ring.classList.remove('go');void ring.offsetWidth;ring.classList.add('go');target.classList.add('gd-press');setTimeout(()=>target.classList.remove('gd-press'),180)});
+   }else if(target)target.classList.add('gd-hl');
+   if(playing)later(frame.ms||2800,()=>{index=(index+1)%frames.length;step()});
+  };
+  const play=()=>{if(reduced||playing)return;playing=true;label();step()};
+  const pause=()=>{playing=false;clear();label()};
+  ctl.addEventListener('click',()=>{if(reduced){index=(index+1)%frames.length;step()}else if(playing)pause();else play()});
+  root.guidePlay=play;root.guidePause=pause;label();show(0);
+  return root;
+ }
+ window.attachGuideDemo=(section,frames)=>{
+  if(!frames||!section)return section;
+  const demo=guideDemo(frames),content=section.querySelector('.guide-section-content');
+  (content||section).prepend(demo);
+  const sync=()=>{if(section.open)requestAnimationFrame(()=>demo.guidePlay());else demo.guidePause()};
+  section.addEventListener('toggle',sync);setTimeout(sync,60);
+  return section;
+ };
+})();
+</script>
+<script>
+// Cenas do guia da aplicação do analista (dados fictícios).
+(()=>{
+ 'use strict';
+ const {B,C,R,K,G,BAR,CAL}=window.guideDemoParts;
+ const scenes={
+  'Painel de Indicadores':[
+   {cap:'Os cards resumem a competência escolhida.',k:'kp',click:false,html:BAR('Painel de Indicadores')+G(3,C('Realizados','1.655','kp')+C('Média diária','78,8')+C('Meta mensal','1.680'))},
+   {cap:'Clique em “?” para entender o cálculo.',k:'q',html:BAR('Painel de Indicadores')+G(3,C('Realizados','1.655')+`<div class="gd-card"><div class="gd-muted">Média diária<span class="gd-help" data-k="q">?</span></div><div class="gd-num">78,8</div></div>`+C('Meta mensal','1.680'))},
+   {cap:'A explicação mostra como o número é formado.',k:'ent',html:K('<b>Média diária</b><div class="gd-muted" style="margin:6px 0 10px">Protocolos realizados divididos pelos dias com produção no período selecionado.</div>'+`<div style="text-align:right">${B('Entendi','ent')}</div>`,'','max-width:340px;margin:18px auto 0')},
+   {cap:'Clique no card para abrir os registros do total.',k:'card',ms:3200,html:BAR('Painel de Indicadores')+G(3,C('Realizados','1.655','card')+C('Média diária','78,8')+C('Meta mensal','1.680'))+K(R('01/09','82')+R('02/09','76'))}
+  ],
+  'Controle Diário':[
+   {cap:'Selecione um dia no calendário.',k:'d',html:BAR('Controle Diário',B('+ Registrar produção','',1))+CAL({1:'g',2:'g',3:'y',4:'g',5:'r',8:'g',9:'g'},[10,'d'])},
+   {cap:'Informe recebidos, realizados e horas trabalhadas.',k:'h',click:false,html:BAR('Registro do dia • 10/09')+G(3,C('Recebidos','90')+C('Realizados','84')+C('Horas trabalhadas','6','h'))+'<div class="gd-muted">O realizado não pode exceder o recebido.</div>'},
+   {cap:'Salve o registro.',k:'sv',html:BAR('Registro do dia • 10/09')+G(3,C('Recebidos','90')+C('Realizados','84')+C('Horas trabalhadas','6'))+`<div style="text-align:right">${B('Salvar Registro','sv')}</div>`},
+   {cap:'A cor do dia mostra se a meta foi atingida.',k:'d',click:false,ms:3200,html:BAR('Controle Diário')+CAL({1:'g',2:'g',3:'y',4:'g',5:'r',8:'g',9:'g',10:'g'},[10,'d'])}
+  ],
+  'Diário de Ocorrências':[
+   {cap:'Escolha a classificação e a data.',k:'cl',html:BAR('Diário de Ocorrências')+K(R('Classificação','Sistema lento ▾','','cl')+R('Data','15/09/2026')+R('Período','10:00 – 11:00'))},
+   {cap:'Descreva o que ocorreu e como afetou a rotina.',k:'ds',click:false,html:BAR('Diário de Ocorrências')+K(R('Classificação','Sistema lento')+R('Data','15/09/2026')+R('Período','10:00 – 11:00'))+K('<span class="gd-muted">Detalhamento</span><div>Lentidão durante o atendimento.</div>','ds','margin-top:8px')},
+   {cap:'Salve a ocorrência.',k:'sv',html:BAR('Diário de Ocorrências')+K(R('Classificação','Sistema lento')+R('Data','15/09/2026'))+`<div style="text-align:right;margin-top:8px">${B('Salvar ocorrência','sv')}</div>`},
+   {cap:'O histórico do mês guarda a hora exata do registro.',k:'hi',click:false,ms:3200,html:BAR('Histórico do mês')+K(R('15/09 • SISTEMA LENTO','registrada às 11:05','','hi')+R('09/09 • REUNIÕES','registrada às 16:20'))}
+  ],
+  'Leitor':[
+   {cap:'Escolha o fluxo: CIP, Malote ou SINDEC.',k:'fl',html:BAR('Leitor de reclamações',B('Selecionar PDFs ou ZIPs'))+`<div style="display:flex;gap:4px">${B('CIP','',1)}${B('Malote','fl')}${B('SINDEC','',1)}</div>`},
+   {cap:'Selecione os PDFs ou ZIPs.',k:'sel',html:BAR('Leitor de reclamações',B('Selecionar PDFs ou ZIPs','sel'))+`<div style="display:flex;gap:4px">${B('CIP','',1)}${B('Malote')}${B('SINDEC','',1)}</div>`},
+   {cap:'Confira os campos encontrados e o Número do Procon.',k:'pc',click:false,ms:3200,html:K('<b>CONSUMIDOR FICTÍCIO - 0001/2026</b> <span class="gd-muted">• 4 de 4 campos encontrados</span>')+G(2,C('CPF do consumidor','000.000.000-00')+`<div class="gd-card" data-k="pc"><div class="gd-muted">Número do Procon</div><div class="gd-num">391</div><div class="gd-ok" style="font-size:10px">Confiança alta</div></div>`)},
+   {cap:'Ao terminar, marque o cadastro como concluído.',k:'mc',ms:3200,html:K('<b>CONSUMIDOR FICTÍCIO - 0001/2026</b>')+K('<span class="gd-muted">Relato da reclamação</span><div>Cobrança não reconhecida no cartão.</div>','','margin:8px 0')+`<div style="text-align:right">${B('Marcar cadastro concluído','mc',1)}</div>`}
+  ],
+  'Fechamento Mensal':[
+   {cap:'Confira indicadores, destaques e ocorrências do mês.',k:'res',click:false,html:BAR('Fechamento Mensal')+G(3,C('Realizados','1.655','res')+C('Dias com meta','17')+C('Ocorrências','3'))},
+   {cap:'Clique em “Exportar para a liderança”.',k:'exp',html:BAR('Fechamento Mensal',B('Exportar para a liderança','exp'))+G(3,C('Realizados','1.655')+C('Dias com meta','17')+C('Ocorrências','3'))},
+   {cap:'Envie o arquivo JSON gerado para a liderança.',k:'arq',click:false,ms:3200,html:K('<b>Arquivo de fechamento gerado</b>'+R('fechamento_2026-09.json','✓','gd-ok','arq'),'','max-width:360px;margin:18px auto 0')}
+  ],
+  'Configurações e acessibilidade':[
+   {cap:'Em “Editar perfil e metas”, ajuste nome, setor, meta e jornada.',k:'ed',html:BAR('Configurações')+K(R('Nome','ANALISTA EXEMPLO 1')+R('Meta diária','80')+R('Jornada','6 h'))+`<div style="margin-top:8px">${B('Editar perfil e metas','ed',1)}</div>`},
+   {cap:'Mudança de meta ou jornada pede uma data de vigência.',k:'vg',click:false,html:BAR('Perfil e metas')+K(R('Meta diária','80 → 85')+R('Vigente a partir de','01/10/2026','','vg'))},
+   {cap:'Em “Tamanho da fonte”, ajuste entre 85% e 125%.',k:'fz',click:false,ms:3200,html:BAR('Tamanho da fonte')+K('<div class="gd-muted">Tamanho: 110%</div><div style="height:4px;border-radius:2px;background:var(--border-color);margin:10px 0;position:relative"><span data-k="fz" style="position:absolute;left:62%;top:-5px;width:14px;height:14px;border-radius:50%;background:var(--brand-primary)"></span></div>'+B('Restaurar 100%','',1))}
+  ]
+ };
+ const base=guideSection;
+ guideSection=function(title,paragraphs){return attachGuideDemo(base(title,paragraphs),scenes[title])};
+})();
+</script>
 </body>
 </html>
