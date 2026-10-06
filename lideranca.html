@@ -1750,5 +1750,129 @@ body.dark-mode{--calendar-weekend:#292c33;--calendar-empty:#26292f}
 @media(max-width:1150px){.micro-profile{grid-template-columns:auto minmax(0,1fr) auto}.micro-profile .micro-evolution-button{grid-column:3;grid-row:1}.micro-profile .micro-profile-metric{grid-row:2}}
 @media(max-width:700px){.micro-profile{grid-template-columns:auto minmax(0,1fr)}.micro-profile .micro-evolution-button{grid-column:1/-1;grid-row:2;justify-self:start}.micro-profile .micro-profile-metric{grid-row:3;min-width:0;padding:0 10px}}
 </style>
+<style>
+.gd{margin:2px 0 12px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-color);overflow:hidden;font-size:12px;line-height:1.4;color:var(--text-main);user-select:none}
+.gd-stage{position:relative;height:200px}
+.gd-frame{position:absolute;inset:0;padding:12px 14px;opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s}
+.gd-frame.on{opacity:1;transform:none}
+.gd-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-weight:700}
+.gd-bar>span:last-child{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.gd-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:7px;background:var(--brand-primary);color:#fff;font-weight:600;font-size:11px;white-space:nowrap;transition:transform .15s}
+.gd-btn.alt{background:var(--card-bg);color:var(--text-main);border:1px solid var(--border-color)}
+.gd-card{background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;padding:7px 10px;min-width:0}
+.gd-grid{display:grid;gap:8px;margin-bottom:8px}
+.gd-muted{color:var(--text-light);font-size:11px}
+.gd-num{font-size:15px;font-weight:700}
+.gd-row{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--border-color)}
+.gd-row:last-child{border-bottom:0}
+.gd-ok{color:#208b59}.gd-warn{color:#b47b00}.gd-red{color:var(--brand-primary)}
+.gd-input{background:var(--card-bg);border:1px solid var(--border-color);border-radius:6px;padding:4px 8px;color:var(--text-light);margin-bottom:6px}
+.gd-cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.gd-day{border:1px solid var(--border-color);border-radius:5px;background:var(--card-bg);text-align:center;padding:3px 0;font-size:11px}
+.gd-day.g{background:#208b5922;border-color:#208b5966}.gd-day.y{background:#d39e0022;border-color:#d39e0066}.gd-day.r{background:#cc092f1f;border-color:#cc092f55}.gd-day.m:after{content:" •";color:var(--brand-primary)}
+.gd-help{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--border-color);font-size:10px;font-weight:700;margin-left:4px;color:var(--text-light)}
+.gd-hl{outline:2px solid var(--brand-primary);outline-offset:2px}
+.gd-press{transform:scale(.93)}
+.gd-cur{position:absolute;left:0;top:0;width:16px;height:16px;transition:transform .7s ease-in-out;z-index:3;pointer-events:none;opacity:0}
+.gd-cur.on{opacity:1}
+.gd-ring{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border:2px solid var(--brand-primary);border-radius:50%;opacity:0;pointer-events:none}
+.gd-ring.go{animation:gdRing .5s ease-out}
+@keyframes gdRing{from{opacity:1;transform:scale(.3)}to{opacity:0;transform:scale(1.4)}}
+.gd-foot{display:flex;align-items:center;gap:10px;padding:7px 12px;border-top:1px solid var(--border-color);background:var(--card-bg)}
+.gd-cap{flex:1;font-size:12px;font-weight:600;min-height:16px}
+.gd-dots{display:flex;gap:4px}.gd-dots i{width:14px;height:3px;border-radius:2px;background:var(--border-color)}.gd-dots i.on{background:var(--brand-primary)}
+.gd-ctl{border:1px solid var(--border-color);background:transparent;color:var(--text-main);border-radius:6px;font-size:11px;padding:3px 8px;cursor:pointer;min-height:0}
+@media(prefers-reduced-motion:reduce){.gd-frame,.gd-cur{transition:none}.gd-cur,.gd-ring{display:none}}
+</style>
+<script>
+// Guia rápido animado: cada item do guia ganha uma demonstração em código (sem vídeo), com as cores do tema ativo.
+(()=>{
+ 'use strict';
+ const B=(t,k,alt)=>`<span class="gd-btn${alt?' alt':''}"${k?` data-k="${k}"`:''}>${t}</span>`;
+ const C=(label,value,k)=>`<div class="gd-card"${k?` data-k="${k}"`:''}><div class="gd-muted">${label}</div><div class="gd-num">${value}</div></div>`;
+ const R=(a,b='',cls='',k)=>`<div class="gd-row"${k?` data-k="${k}"`:''}><span>${a}</span><span class="${cls}">${b}</span></div>`;
+ const K=(inner,k,style='')=>`<div class="gd-card"${k?` data-k="${k}"`:''}${style?` style="${style}"`:''}>${inner}</div>`;
+ const G=(cols,inner)=>`<div class="gd-grid" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${inner}</div>`;
+ const BAR=(title,right='')=>`<div class="gd-bar"><span>${title}</span><span>${right}</span></div>`;
+ const CAL=(marks={},k)=>`<div class="gd-cal">${Array.from({length:21},(_,i)=>{const d=i+1,c=marks[d]||'';return `<span class="gd-day ${c}"${k&&k[0]===d?` data-k="${k[1]}"`:''}>${d}</span>`}).join('')}</div>`;
+ window.guideDemoParts={B,C,R,K,G,BAR,CAL};
+ function guideDemo(frames){
+  const root=document.createElement('div');root.className='gd';root.setAttribute('role','img');
+  root.setAttribute('aria-label','Demonstração: '+frames.map((f,i)=>`${i+1}. ${f.cap}`).join(' '));
+  root.innerHTML=`<div class="gd-stage">${frames.map(f=>`<div class="gd-frame" aria-hidden="true">${f.html}</div>`).join('')}<svg class="gd-cur" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2l7 19 2.5-7.5L20 11z" fill="var(--text-main)" stroke="var(--card-bg)" stroke-width="1.5"/></svg><div class="gd-ring"></div></div><div class="gd-foot"><span class="gd-cap" aria-hidden="true"></span><span class="gd-dots" aria-hidden="true">${frames.map(()=>'<i></i>').join('')}</span><button type="button" class="gd-ctl"></button></div>`;
+  const stage=root.querySelector('.gd-stage'),fr=[...root.querySelectorAll('.gd-frame')],cur=root.querySelector('.gd-cur'),ring=root.querySelector('.gd-ring'),cap=root.querySelector('.gd-cap'),dots=[...root.querySelectorAll('.gd-dots i')],ctl=root.querySelector('.gd-ctl');
+  const reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let index=0,timers=[],playing=false;
+  const later=(ms,fn)=>timers.push(setTimeout(fn,ms));
+  const clear=()=>{timers.forEach(clearTimeout);timers=[];root.querySelectorAll('.gd-hl').forEach(el=>el.classList.remove('gd-hl'))};
+  const point=el=>{const s=stage.getBoundingClientRect(),r=el.getBoundingClientRect();return [r.left-s.left+r.width/2,r.top-s.top+r.height/2]};
+  const show=n=>{fr.forEach((f,i)=>f.classList.toggle('on',i===n));dots.forEach((d,i)=>d.classList.toggle('on',i===n));cap.textContent=`${n+1}. ${frames[n].cap}`};
+  const label=()=>{ctl.textContent=reduced?'Próximo passo':playing?'Pausar':'Reproduzir'};
+  const step=()=>{
+   clear();if(!root.isConnected){playing=false;return}
+   const frame=frames[index],target=frame.k&&fr[index].querySelector(`[data-k="${frame.k}"]`);show(index);
+   if(target&&!reduced){
+    later(250,()=>{target.classList.add('gd-hl');const [x,y]=point(target);cur.classList.add('on');cur.style.transform=`translate(${x-3}px,${y-2}px)`});
+    if(frame.click!==false)later(1300,()=>{const [x,y]=point(target);ring.style.left=x+'px';ring.style.top=y+'px';ring.classList.remove('go');void ring.offsetWidth;ring.classList.add('go');target.classList.add('gd-press');setTimeout(()=>target.classList.remove('gd-press'),180)});
+   }else if(target)target.classList.add('gd-hl');
+   if(playing)later(frame.ms||2800,()=>{index=(index+1)%frames.length;step()});
+  };
+  const play=()=>{if(reduced||playing)return;playing=true;label();step()};
+  const pause=()=>{playing=false;clear();label()};
+  ctl.addEventListener('click',()=>{if(reduced){index=(index+1)%frames.length;step()}else if(playing)pause();else play()});
+  root.guidePlay=play;root.guidePause=pause;label();show(0);
+  return root;
+ }
+ window.attachGuideDemo=(section,frames)=>{
+  if(!frames||!section)return section;
+  const demo=guideDemo(frames),content=section.querySelector('.guide-section-content');
+  (content||section).prepend(demo);
+  const sync=()=>{if(section.open)requestAnimationFrame(()=>demo.guidePlay());else demo.guidePause()};
+  section.addEventListener('toggle',sync);setTimeout(sync,60);
+  return section;
+ };
+})();
+</script>
+<script>
+// Cenas do guia da liderança (dados fictícios).
+(()=>{
+ 'use strict';
+ const {B,C,R,K,G,BAR,CAL}=window.guideDemoParts;
+ const kpis=(a,b,c)=>G(3,C('Analistas',a)+C('Realizados',b)+C('Conversão de meta',c));
+ const scenes={
+  'Importação dos fechamentos':[
+   {cap:'Clique em “Importar fechamentos”.',k:'imp',html:BAR('Painel Geral da Equipe',B('Importar fechamentos','imp'))+kpis('—','—','—')},
+   {cap:'Selecione os arquivos JSON enviados pelos analistas.',k:'arq',html:BAR('Selecionar arquivos')+K('<div class="gd-muted">Downloads</div>'+R('fechamento_analista_1.json','✓','gd-ok')+R('fechamento_analista_2.json','✓','gd-ok')+R('fechamento_analista_3.json','✓','gd-ok','arq'))},
+   {cap:'Confira a prévia e confirme em “Importar”.',k:'ok',html:BAR('Conferir importação • 3 válido(s)')+K(R('ANALISTA EXEMPLO 1 • 2026-09','Novo fechamento','gd-ok')+R('ANALISTA EXEMPLO 2 • 2026-09','Novo fechamento','gd-ok')+R('ANALISTA EXEMPLO 3 • 2026-09','Substituir existente','gd-warn'))+`<div style="text-align:right;margin-top:8px">${B('Cancelar','',1)} ${B('Importar','ok')}</div>`},
+   {cap:'Os indicadores da equipe são atualizados.',ms:3200,html:BAR('Painel Geral da Equipe',B('Importar fechamentos'))+kpis('3','4.812','82%')+K('<span class="gd-ok">✓ 3 fechamento(s) importado(s).</span>')}
+  ],
+  'Painel de indicadores':[
+   {cap:'Escolha a competência e o setor nos filtros.',k:'mes',html:BAR('Painel Geral da Equipe',B('Setembro/2026 ▾','mes',1)+B('Todos os setores ▾','',1))+kpis('6','9.540','78%')},
+   {cap:'Clique em “?” para ver como o indicador é calculado.',k:'q',html:BAR('Painel Geral da Equipe',B('Setembro/2026 ▾','',1)+B('Todos os setores ▾','',1))+G(3,C('Analistas','6')+C('Realizados','9.540')+`<div class="gd-card"><div class="gd-muted">Conversão de meta<span class="gd-help" data-k="q">?</span></div><div class="gd-num">78%</div></div>`)},
+   {cap:'A explicação aparece em uma janela.',k:'ent',html:K('<b>Conversão de meta</b><div class="gd-muted" style="margin:6px 0 10px">Percentual de dias trabalhados em que a meta diária vigente foi atingida.</div>'+`<div style="text-align:right">${B('Entendi','ent')}</div>`,'','max-width:340px;margin:18px auto 0')},
+   {cap:'“Horas extras realizadas” soma e compara a equipe.',k:'he',click:false,ms:3200,html:BAR('Painel Geral da Equipe')+K('<b>Horas extras realizadas</b>'+R('ANALISTA EXEMPLO 1','6 h')+R('ANALISTA EXEMPLO 2','3,5 h')+R('ANALISTA EXEMPLO 3','2,5 h')+R('Equipe','12 h','gd-red'),'he')}
+  ],
+  'Ranking e análise individual':[
+   {cap:'Pesquise pelo nome ou funcional e escolha a ordenação.',k:'ord',html:BAR('Ranking da equipe',B('Volume realizado ▾','ord',1))+'<div class="gd-input">Buscar analista ou funcional…</div>'+K(R('1º ANALISTA EXEMPLO 3','1.720')+R('2º ANALISTA EXEMPLO 1','1.655')+R('3º ANALISTA EXEMPLO 2','1.480'))},
+   {cap:'Clique em uma linha para abrir o Raio-X.',k:'lin',html:BAR('Ranking da equipe',B('Volume realizado ▾','',1))+'<div class="gd-input">Buscar analista ou funcional…</div>'+K(R('1º ANALISTA EXEMPLO 3','1.720','','lin')+R('2º ANALISTA EXEMPLO 1','1.655')+R('3º ANALISTA EXEMPLO 2','1.480'))},
+   {cap:'O Raio-X mostra os indicadores e as horas extras da pessoa.',k:'hx',click:false,ms:3400,html:BAR('Raio-X • ANALISTA EXEMPLO 3')+G(4,C('Recebidos','1.950')+C('Realizados','1.720')+C('Dias','21')+C('Meta','86%'))+K('<b>Horas extras realizadas</b>'+R('12/09','+1,5 h')+R('19/09','+2 h'),'hx')}
+  ],
+  'Ocorrências':[
+   {cap:'Filtre por competência, analista e classificação.',k:'fa',html:BAR('Quadro de Ocorrências',B('Todos os analistas ▾','fa',1)+B('Classificação ▾','',1))+CAL({4:'m',9:'m',15:'m'})},
+   {cap:'Selecione uma data marcada no calendário.',k:'d',html:BAR('Quadro de Ocorrências',B('📅 Calendário','',1)+B('☷ Lista','',1))+CAL({4:'m',9:'m',15:'m'},[15,'d'])},
+   {cap:'Os detalhes mostram período e horário do registro.',k:'det',click:false,html:BAR('Detalhes do dia • 15/09')+K('<b>SISTEMA LENTO</b><div class="gd-muted">ANALISTA EXEMPLO 2 • 10:00–11:00 • registrada às 11:05</div><div style="margin-top:4px">LENTIDÃO DURANTE O ATENDIMENTO.</div>','det')},
+   {cap:'Em “Lista”, consulte os registros em sequência.',k:'li',ms:3200,html:BAR('Quadro de Ocorrências',B('📅 Calendário','',1)+B('☷ Lista','li',1))+K(R('04/09 • REUNIÕES','ANALISTA EXEMPLO 1')+R('09/09 • SUPORTE TÉCNICO','ANALISTA EXEMPLO 3')+R('15/09 • SISTEMA LENTO','ANALISTA EXEMPLO 2'))}
+  ],
+  'Configurações e solução de problemas':[
+   {cap:'Painel incompleto? Confira arquivos, competência e setor.',k:'flt',click:false,html:BAR('Painel Geral da Equipe',B('Setembro/2026 ▾','flt',1)+B('Todos os setores ▾','',1))+kpis('2','3.105','80%')+K('<span class="gd-warn">Faltam fechamentos? Importe o arquivo novo do analista.</span>')},
+   {cap:'Abra “Configurações” no menu lateral.',k:'cfg',html:BAR('Menu')+K(R('Painel Geral da Equipe')+R('Quadro de Ocorrências')+R('⚙ Configurações','','','cfg'))},
+   {cap:'“Limpar Banco de Dados” remove a base deste navegador.',k:'lim',html:K('<b>Configurações</b><div class="gd-muted" style="margin:4px 0 8px">Gerencie os fechamentos armazenados neste navegador.</div>'+R('Fechamentos armazenados','18')+`<div style="margin-top:8px">${B('Limpar Banco de Dados','lim')}</div>`)},
+   {cap:'Confirme só se quiser recomeçar a importação.',k:'canc',ms:3200,html:K('<b>Limpar fechamentos?</b><div class="gd-muted" style="margin:6px 0 10px">Todos os relatórios importados serão removidos deste navegador.</div>'+`<div style="text-align:right">${B('Cancelar','canc',1)} ${B('Limpar')}</div>`,'','max-width:340px;margin:18px auto 0')}
+  ]
+ };
+ const base=guideSection;
+ guideSection=function(title,paragraphs){return attachGuideDemo(base(title,paragraphs),scenes[title])};
+})();
+</script>
 </body>
 </html>
