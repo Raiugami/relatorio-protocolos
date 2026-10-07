@@ -664,8 +664,8 @@ main:has(#view-dashboard.active){height:100dvh;min-height:0;display:flex;flex-di
                 <select id="setup-area" required>
                     <option value="PROCON CADASTRO">PROCON CADASTRO</option>
                     <option value="PROCON MINUTA">PROCON MINUTA</option>
-                    <option value="PROCON AUDIÊNCIA">PROCON AUDIÊNCIA</option>
-                    <option value="OUTRA">Outra &#xE1;rea</option>
+                    <option value="PROCON AUDIÊNCIA">PROCON AUDIÊNCIA (em construção)</option>
+                    <option value="OUTRA" hidden>Outra &#xE1;rea (perfil legado)</option>
                     <option value="CONSUMIDOR.GOV" hidden>Consumidor.gov (perfil legado)</option>
                 </select>
             </div>
@@ -3086,6 +3086,30 @@ async function openFloatingCounter() {
  };
  const base=guideSection;
  guideSection=function(title,paragraphs){return attachGuideDemo(base(title,paragraphs),scenes[title])};
+})();
+</script>
+<script>
+// Setor PROCON AUDIÊNCIA em construção: impede a escolha e orienta o analista a definir outro setor.
+(()=>{
+ 'use strict';
+ const BLOCKED='PROCON AUDIÊNCIA';
+ const warn=()=>productDialog('Setor em construção','O setor PROCON AUDIÊNCIA ainda está em construção e não pode ser selecionado no momento.\n\nDefina outro setor para continuar.');
+ const select=document.getElementById('setup-area');
+ if(!select)return;
+ const remember=()=>{if(select.value!==BLOCKED)select.dataset.previous=select.value};
+ select.addEventListener('focus',remember);
+ select.addEventListener('pointerdown',remember);
+ select.addEventListener('change',()=>{
+  if(select.value!==BLOCKED){remember();return}
+  const saved=appData?.settings?.area,previous=select.dataset.previous||(saved!==BLOCKED&&[...select.options].some(o=>o.value===saved)?saved:'');
+  select.value=previous&&previous!==BLOCKED?previous:'PROCON CADASTRO';
+  warn();
+ });
+ const baseSubmit=completeInitialSetup;
+ completeInitialSetup=function(e){
+  if(select.value===BLOCKED){e?.preventDefault();select.value='PROCON CADASTRO';select.focus();warn();return}
+  return baseSubmit.apply(this,arguments);
+ };
 })();
 </script>
 </body>
